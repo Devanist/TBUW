@@ -1,0 +1,15 @@
+{
+    "graphics": [
+        {
+            "name": "bunny",
+            "path": "ludzik.png"
+        },
+        {
+            "name": "platform",
+            "path": "platform.jpg"
+        }
+    ],
+    "sounds": [
+        
+    ]
+}

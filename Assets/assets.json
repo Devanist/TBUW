@@ -2,11 +2,11 @@
     "graphics": [
         {
             "name": "bunny",
-            "path": "ludzik.png"
+            "path": "Assets/Gfx/ludzik.png"
         },
         {
             "name": "platform",
-            "path": "platform.jpg"
+            "path": "Assets/Gfx/platform.jpg"
         }
     ],
     "sounds": [

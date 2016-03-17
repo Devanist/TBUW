@@ -1,3 +1,5 @@
+define([], function(){
+
 /**
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
@@ -34,3 +36,7 @@ Entity.prototype = {
     }
     
 };
+
+return Entity;
+    
+});

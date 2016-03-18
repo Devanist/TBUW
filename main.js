@@ -22,18 +22,17 @@ var fpsWorker = new Worker('fps.js');
 loader.loadAssets(function(loader, resources){    
 
     document.addEventListener("keydown", KeyDown, false);
+    
+    var p1 = new Entities.Platform(resources.platform.texture);
+    
+    p1.setPosition({x: 370, y: 380});
+    p1.setScale({x: scale, y:scale});
 
-        //var bunny = new PIXI.Sprite(resources.bunny.texture);
-        var p1 = new Entities.Platform(resources.platform.texture);
-        
-        p1.setPosition({x: 370, y: 380});
-        p1.setScale({x: scale, y:scale});
+    rootStage.add(p1);
 
-        rootStage.add(p1);
+    animate();
 
-        animate();
-
-        function KeyDown(e) {
+    function KeyDown(e) {
         // Klawisz strzałka w lewo
         if (e.keyCode == 37) {
             bunny.position.x -= 5; 
@@ -50,13 +49,10 @@ loader.loadAssets(function(loader, resources){
 });
 
 function animate() {
-    // start the timer for the next animation loop
     requestAnimationFrame(animate);
     
-	//console.log(ticker.FPS);
     fpsWorker.postMessage(ticker.FPS);
     
-    // this is the main render call that makes pixi draw your container and its children.
     renderer.render(rootStage.getStage());
 }
 

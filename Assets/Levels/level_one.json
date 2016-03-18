@@ -1,0 +1,16 @@
+{
+    "name": "First level",
+    "gui": [
+        
+    ],
+    "entities": [
+        {
+            "type": "platform",
+            "position": {
+                "x": 370,
+                "y": 380
+            },
+            "texture": "platform"
+        }
+    ]
+}

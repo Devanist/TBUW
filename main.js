@@ -19,6 +19,10 @@ var loader = new Loader();
 var logic = new Logic();
 var fpsWorker = new Worker('fps.js');
 
+loader.setProgressCb(function(){
+    loader.incrementLoadedAssets();
+    console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
+});
 loader.loadAssets(function(loader, resources){    
 
     document.addEventListener("keydown", KeyDown, false);

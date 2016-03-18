@@ -1,9 +1,9 @@
-define(['Entity'], function(){
+define(['./Entity'], function(Entity){
     
     var Platform = function(sprite){
         Entity.call(this, sprite);
         this._isStatic = true;
-        this._moveVector.down = 0;
+        this._speedVector.y = 0;
     };
 
     Platform.prototype = Object.create(Entity.prototype, {

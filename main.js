@@ -7,57 +7,59 @@ define([
     './Core/Levels'
     ], function(PIXI, Loader, Logic, Stage, Entities, Levels){
 
-var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
-renderer.backgroundColor = 0xFFFFFF;
+    var w = window.innerWidth,
+        h = window.innerHeight;
 
-document.body.appendChild(renderer.view);
+    var renderer = new PIXI.WebGLRenderer(w, h);
+    renderer.backgroundColor = 0xFFFFFF;
 
-var ticker = new PIXI.ticker.Ticker();
-var rootStage = new Stage();
-var loader = new Loader();
-var logic = new Logic();
-var fpsWorker = new Worker('fps.js');
+    document.body.appendChild(renderer.view);
 
-loader.setProgressCb(function(){
-    loader.incrementLoadedAssets();
-    console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
-});
-loader.loadAssets(function(datloader, resources){    
+    var ticker = new PIXI.ticker.Ticker();
+    var rootStage = new Stage();
+    var loader = new Loader();
+    var logic = new Logic();
+    var fpsWorker = new Worker('fps.js');
 
-    loader.setResources(resources);
-    
-    document.addEventListener("keydown", KeyDown, false);
+    loader.setProgressCb(function(){
+        loader.incrementLoadedAssets();
+        console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
+    });
+    loader.loadAssets(function(datloader, resources){    
 
-    var gameStage = new Stage();
-    loader.loadStageConfig(gameStage, Levels.one.entities);
-    console.log(gameStage);
-    rootStage.add(gameStage);
+        loader.setResources(resources);
 
-    animate();
+        document.addEventListener("keydown", KeyDown, false);
 
-    function KeyDown(e) {
-        // Klawisz strzałka w lewo
-        if (e.keyCode == 37) {
-            bunny.position.x -= 5; 
-        } 
-        // Klawisz strzałka w prawo
-        else if (e.keyCode == 39) {
-            bunny.position.x += 5;
-        } 
-        // Klawisz spacja
-        else if (e.keyCode == 32){
-            
+        var gameStage = new Stage();
+        loader.loadStageConfig(gameStage, Levels.one.entities);
+        rootStage.add(gameStage);
+
+        animate();
+
+        function KeyDown(e) {
+            // Klawisz strzałka w lewo
+            if (e.keyCode == 37) {
+                bunny.position.x -= 5; 
+            } 
+            // Klawisz strzałka w prawo
+            else if (e.keyCode == 39) {
+                bunny.position.x += 5;
+            } 
+            // Klawisz spacja
+            else if (e.keyCode == 32){
+                
+            }
         }
-    }
-});
+    });
 
-function animate() {
-    requestAnimationFrame(animate);
-    
-    fpsWorker.postMessage(ticker.FPS);
-    
-    renderer.render(rootStage.getStage());
-}
+    function animate() {
+        requestAnimationFrame(animate);
+
+        fpsWorker.postMessage(ticker.FPS);
+        
+        renderer.render(rootStage.getStage());
+    }
 
     
 });

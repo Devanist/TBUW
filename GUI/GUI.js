@@ -1,10 +1,14 @@
-define([], function(){
+define([
+    
+], function(){
     
     /**
      * Kontener na elementy GUI.
      */
-    var GUI = function(){
-        
+    var GUI = {
+
     };
+    
+    return GUI;
     
 });

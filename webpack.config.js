@@ -7,11 +7,18 @@ module.exports = {
         filename: "bundle.js"
     },
     module: {
+        preLoaders: [
+            {
+                test: /\.json$/,
+                exclude: /node_modules/,
+                loader: 'json'
+            },
+        ],
         loaders: [
             {
                 test: /\.json$/,
-                include: path.join(__dirname, 'lib', 'pixi.js'),
-                loader: "json"
+                loader: 'json-loader',
+                include: path.join(__dirname, 'lib', 'pixi.js')
             }
         ]
     }

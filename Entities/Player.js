@@ -1,4 +1,4 @@
-define(['Creature'], function(Creature){
+define(['./Creature'], function(Creature){
     
     var Player = function(sprite){
         Creature.call(this, sprite);

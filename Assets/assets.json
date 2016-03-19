@@ -1,7 +1,7 @@
 {
     "graphics": [
         {
-            "name": "bunny",
+            "name": "player",
             "path": "Assets/Gfx/ludzik.png"
         },
         {

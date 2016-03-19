@@ -1,4 +1,4 @@
-define(['Entity'], function(Entity){
+define(['./Entity'], function(Entity){
     
     var Creature = function(sprite){
         Entity.call(this, sprite);
@@ -10,7 +10,7 @@ define(['Entity'], function(Entity){
             value: Creature,
             enumerable: false,
             writable: true,
-            configurable: true1
+            configurable: true
         }
     });
     

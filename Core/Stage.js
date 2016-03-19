@@ -42,6 +42,11 @@ define(['../Entities/Entities'], function(Entities){
         setSize : function(size){
             this._stage.width = size.w;
             this._stage.height = size.h;
+        },
+        
+        setScale : function(scale){
+            this._stage.scale.x = scale.x;
+            this._stage.scale.y = scale.y; 
         }
         
     };

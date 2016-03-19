@@ -1,15 +1,18 @@
 define([
     './Background',
-    './Platform'
+    './Platform',
+    './Player'
 ], 
 function(
     Background,
-    Platform
+    Platform,
+    Player
 ){
     
     var Entities = {
         Background: Background,
-        Platform : Platform
+        Platform : Platform,
+        Player : Player
     };
     
     return Entities;

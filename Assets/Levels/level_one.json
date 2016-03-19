@@ -28,6 +28,14 @@
                 "y": 450
             },
             "texture": "platform"
+        },
+        {
+            "type": "player",
+            "position": {
+                "x": 60,
+                "y": 390
+            },
+            "texture": "player"
         }
     ]
 }

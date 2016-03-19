@@ -1,4 +1,4 @@
-define([], function(){
+define(['../Entities/Entities'], function(Entities){
     
     /**
      * Klasa reprezentująca scenę.
@@ -9,6 +9,10 @@ define([], function(){
     };
     
     Stage.prototype = {
+        
+        getSprite: function(){
+            return this._stage;
+        },
         
         /**
          * Metoda dodaje element do sceny.
@@ -29,14 +33,7 @@ define([], function(){
                     this._elements.splice(i);
                 }
             }
-        },
-        
-        /**
-         * Metoda dodaje elementy do sceny na podstawie configu.
-         */
-        loadConfig : function(cfg){
-            
-        },
+        },        
         
         getStage : function(){
             return this._stage;

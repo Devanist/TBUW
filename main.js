@@ -3,13 +3,12 @@ define([
     './Core/Loader',
     './Core/Logic',
     './Core/Stage',
-    './Entities/Entities'
-    ], function(PIXI, Loader, Logic, Stage, Entities){
+    './Entities/Entities',
+    './Core/Levels'
+    ], function(PIXI, Loader, Logic, Stage, Entities, Levels){
 
 var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
 renderer.backgroundColor = 0xFFFFFF;
-
-var scale = window.innerWidth / 800;
 
 document.body.appendChild(renderer.view);
 
@@ -23,16 +22,16 @@ loader.setProgressCb(function(){
     loader.incrementLoadedAssets();
     console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
 });
-loader.loadAssets(function(loader, resources){    
+loader.loadAssets(function(datloader, resources){    
 
+    loader.setResources(resources);
+    
     document.addEventListener("keydown", KeyDown, false);
-    
-    var p1 = new Entities.Platform(resources.platform.texture);
-    
-    p1.setPosition({x: 370, y: 380});
-    p1.setScale({x: scale, y:scale});
 
-    rootStage.add(p1);
+    var gameStage = new Stage();
+    loader.loadStageConfig(gameStage, Levels.one.entities);
+    console.log(gameStage);
+    rootStage.add(gameStage);
 
     animate();
 

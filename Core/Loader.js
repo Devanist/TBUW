@@ -1,11 +1,15 @@
 ///https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData
-define(['../Assets/assets.json'], function(cfg){
-    
+define([
+    '../Assets/assets.json',
+    '../Entities/Entities'
+    ], function(cfg, Entities){
+
     var Loader = function () {
         this._cfg = cfg;
         this._progressCb = null;
         this._loadedAssets = 0;
         this._allAssets = this._cfg.graphics.length;
+        this._resources = null;
     };
 
     Loader.prototype = {
@@ -19,6 +23,7 @@ define(['../Assets/assets.json'], function(cfg){
             }
             
             PIXI.loader.once('complete', callback);
+            
             if(this._progressCb !== null){
                 PIXI.loader.on('progress', this._progressCb);
             }
@@ -40,6 +45,31 @@ define(['../Assets/assets.json'], function(cfg){
         
         incrementLoadedAssets : function(){
             this._loadedAssets += 1;
+        },
+        
+        /**
+         * Metoda dodaje elementy do sceny na podstawie configu.
+         */
+        loadStageConfig : function(stage, cfg){
+            
+            var l = cfg.length;
+            var e = null;
+            var temp = null;
+            
+            for(var i = 0; i < l; i++){
+                e = cfg[i];
+                if(e.type === "platform"){
+                    temp = new Entities.Platform(this._resources[e.texture].texture);
+                    temp.setPosition(e.position);
+                    temp.setScale({x: 1, y: 1});
+                    stage.add(temp);   
+                }
+            }
+            
+        },
+        
+        setResources : function(res){
+            this._resources = res;
         }
 
     };

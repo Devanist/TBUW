@@ -58,12 +58,17 @@ define([
             
             for(var i = 0; i < l; i++){
                 e = cfg[i];
-                if(e.type === "platform"){
-                    temp = new Entities.Platform(this._resources[e.texture].texture);
-                    temp.setPosition(e.position);
-                    temp.setScale({x: 1, y: 1});
-                    stage.add(temp);   
+                if(e.type === "background"){
+                    temp = new Entities.Background(this._resources[e.texture].texture);
                 }
+                else if(e.type === "platform"){
+                    temp = new Entities.Platform(this._resources[e.texture].texture);
+                }
+                
+                temp.setPosition(e.position);
+                temp.setScale({x: 0.7, y: 0.7});
+                stage.add(temp);
+                
             }
             
         },

@@ -7,6 +7,10 @@
         {
             "name": "platform",
             "path": "Assets/Gfx/platform.jpg"
+        },
+        {
+            "name": "tlo_miasto",
+            "path": "Assets/Gfx/tlo.jpg"
         }
     ],
     "sounds": [

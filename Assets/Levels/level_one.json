@@ -1,14 +1,31 @@
 {
     "name": "First level",
+    "background-color": "000000",
     "gui": [
         
     ],
     "entities": [
         {
+            "type": "background",
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "texture": "tlo_miasto"
+        },
+        {
             "type": "platform",
             "position": {
                 "x": 370,
                 "y": 380
+            },
+            "texture": "platform"
+        },
+        {
+            "type": "platform",
+            "position": {
+                "x": 20,
+                "y": 450
             },
             "texture": "platform"
         }

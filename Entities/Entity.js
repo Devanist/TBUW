@@ -4,7 +4,7 @@ define([], function(){
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
 var Entity = function(sprite){
-    this._isStatic = false;
+    this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
     this._speedVector = {
         x: 0,

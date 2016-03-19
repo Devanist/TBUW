@@ -1,10 +1,10 @@
-define(['./Entity'], function(Entity){
+define(['./Item'], function(Item){
     
     var Background = function(sprite){
-        Entity.call(this, sprite);
+        Item.call(this, sprite);
     };
     
-    Background.prototype = Object.create(Entity.prototype, {
+    Background.prototype = Object.create(Item.prototype, {
         constructor: {
             value: Background,
             writable: true,

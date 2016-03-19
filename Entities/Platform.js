@@ -1,12 +1,12 @@
-define(['./Entity'], function(Entity){
+define(['./Item'], function(Item){
     
     var Platform = function(sprite){
-        Entity.call(this, sprite);
+        Item.call(this, sprite);
         this._isStatic = true;
         this._speedVector.y = 0;
     };
 
-    Platform.prototype = Object.create(Entity.prototype, {
+    Platform.prototype = Object.create(Item.prototype, {
         constructor: {
             value: Platform,
             writable: true,

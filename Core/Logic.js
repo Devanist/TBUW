@@ -1,4 +1,4 @@
-define(['./Stage'], function(Stage){
+define(['Core/Stage'], function(Stage){
     
     var Logic = function(){
         this._stages = {};

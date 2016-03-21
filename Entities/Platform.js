@@ -1,4 +1,4 @@
-define(['./Item'], function(Item){
+define(['Entities/Item'], function(Item){
     
     var Platform = function(sprite){
         Item.call(this, sprite);

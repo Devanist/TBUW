@@ -1,4 +1,4 @@
-define(['./Item'], function(Item){
+define(['Entities/Item'], function(Item){
     
     var Background = function(sprite){
         Item.call(this, sprite);

@@ -1,4 +1,4 @@
-define(['./Entity'], function(Entity){
+define(['Entities/Entity'], function(Entity){
     
     var Creature = function(sprite){
         Entity.call(this, sprite);

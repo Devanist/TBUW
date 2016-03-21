@@ -1,4 +1,4 @@
-define(['../Entities/Entities'], function(Entities){
+define(['Entities/Entities'], function(Entities){
     
     /**
      * Klasa reprezentująca scenę.

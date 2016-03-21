@@ -1,7 +1,7 @@
 define([
-    './Background',
-    './Platform',
-    './Player'
+    'Entities/Background',
+    'Entities/Platform',
+    'Entities/Player'
 ], 
 function(
     Background,

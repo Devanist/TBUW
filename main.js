@@ -1,10 +1,17 @@
+require.config({
+	paths: {
+		text: 'lib/text',
+		json: 'lib/json'
+	},
+	baseUrl: '.'
+});
 define([
-    './lib/pixi.js',
-    './Core/Loader',
-    './Core/Logic',
-    './Core/Stage',
-    './Entities/Entities',
-    './Core/Levels'
+    'lib/pixi.js',
+    'Core/Loader',
+    'Core/Logic',
+    'Core/Stage',
+    'Entities/Entities',
+    'Core/Levels'
     ], function(PIXI, Loader, Logic, Stage, Entities, Levels){
 
     var w = window.innerWidth,

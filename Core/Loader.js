@@ -1,7 +1,7 @@
 ///https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData
 define([
-    '../Assets/assets.json',
-    '../Entities/Entities'
+    'json!Assets/assets.json',
+    'Entities/Entities'
     ], function(cfg, Entities){
 
     var Loader = function () {

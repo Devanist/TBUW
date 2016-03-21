@@ -1,5 +1,5 @@
 define([
-    '../Assets/Levels/level_one.json'
+    'json!Assets/Levels/level_one.json'
 ], function(one){
     
     var Levels = {

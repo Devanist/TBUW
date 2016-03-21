@@ -10,35 +10,36 @@ define([
     'Core/Loader',
     'Core/Logic',
     'Core/Stage',
-    'Entities/Entities',
-    'Core/Levels'
-    ], function(PIXI, Loader, Logic, Stage, Entities, Levels){
+    'Core/Level',
+    'Entities/Entities'
+    ], function(PIXI, Loader, Logic, Stage, Level, Entities){
 
-    var w = window.innerWidth,
-        h = window.innerHeight,
-        scale = window.innerWidth / 1280;
-
-    var renderer = new PIXI.WebGLRenderer(w, h);
+    var scale = window.innerWidth / 1280;
+    var w = window.innerWidth;    
+    var h = window.innerHeight;
+        
+    var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
+    var ticker = new PIXI.ticker.Ticker();
+    var loader = new Loader();
+    var rootStage = new Stage();
+    rootStage.setScale({ x: scale, y: scale });
+    var logic = new Logic(loader, rootStage);
+    var fpsWorker = new Worker('Core/FPS.js');
+    
     renderer.backgroundColor = 0xFFFFFF;
     renderer.autoResize = true;
     
-    window.onresize = function (event){    
-        w = window.innerWidth;    
+    window.onresize = function (event) {
+        w = window.innerWidth;
         h = window.innerHeight;
-        scale = window.innerWidth / 1280;    
-        renderer.view.style.width = w + "px";    
+        scale = window.innerWidth / 1280;
+        renderer.view.style.width = w + "px";
         renderer.view.style.height = h + "px";
-        rootStage.setScale({x: scale, y: scale});    
-        renderer.resize(w,h);
+        rootStage.setScale({ x: scale, y: scale });
+        renderer.resize(w, h);
     };
 
     document.body.appendChild(renderer.view);
-
-    var ticker = new PIXI.ticker.Ticker();
-    var rootStage = new Stage();
-    var loader = new Loader();
-    var logic = new Logic();
-    var fpsWorker = new Worker('fps.js');
 
     //Showing progress of loading assets.
     loader.setProgressCb(function(){
@@ -50,38 +51,17 @@ define([
         //Here assets are loaded, init the game.
         loader.setResources(resources);
 
-        document.addEventListener("keydown", KeyDown, false);
-
-        var gameStage = new Stage();
-        loader.loadStageConfig(gameStage, Levels.one.entities);
-        rootStage.add(gameStage);
-        rootStage.setScale({x: scale, y: scale});
-
-        animate();
-
-        function KeyDown(e) {
-            // Klawisz strzałka w lewo
-            if (e.keyCode == 37) {
-                bunny.position.x -= 5; 
-            } 
-            // Klawisz strzałka w prawo
-            else if (e.keyCode == 39) {
-                bunny.position.x += 5;
-            } 
-            // Klawisz spacja
-            else if (e.keyCode == 32){
-                
-            }
+        //document.addEventListener("keydown", KeyDown, false);
+        
+        logic.run(animate);
+        
+        function animate(){
+            logic.update();
+            fpsWorker.postMessage(ticker.FPS);
+            renderer.render(rootStage.getStage());
+            requestAnimationFrame(animate);
         }
+        
     });
 
-    function animate() {
-        requestAnimationFrame(animate);
-
-        fpsWorker.postMessage(ticker.FPS);
-        
-        renderer.render(rootStage.getStage());
-    }
-
-    
 });

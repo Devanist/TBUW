@@ -1,14 +1,23 @@
-define(['Core/Stage'], function(Stage){
+define([
+    'Core/Stage',
+    'Core/Levels',
+    'Core/Level'
+    ], function(Stage, Levels, Level){
     
-    var Logic = function(){
-        this._stages = {};
-        this._scale = window.innerWidth / 800;
+    var Logic = function(loader, rootStage){
+        this._loader = loader;
+        this._rootStage = rootStage;
+        this._levels = {};
     };
     
     Logic.prototype = {
         
-        addStage: function(name){
-            this._stages[name] = new Stage();
+        run : function(animate){
+            var gameStage = new Stage();
+            this._loader.loadStageConfig(gameStage, Levels.one.entities);
+            this._rootStage.add(gameStage);
+            
+            animate();
         },
         
         update : function(){

@@ -47,6 +47,10 @@ define([
             this._loadedAssets += 1;
         },
         
+        setResources : function(res){
+            this._resources = res;
+        },
+        
         /**
          * Metoda dodaje elementy do sceny na podstawie configu.
          */
@@ -73,10 +77,6 @@ define([
                 
             }
             
-        },
-        
-        setResources : function(res){
-            this._resources = res;
         }
 
     };

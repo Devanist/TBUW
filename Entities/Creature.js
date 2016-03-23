@@ -24,6 +24,15 @@ define(['Entities/Entity'], function(Entity){
     _p.getId = function () { 
         return this._id;
     };
+    _p.updateVelocity = function(val){
+        this._velocity.x += val.x;
+        this._velocity.y += val.y;
+    };
+    
+    _p.updatePosition = function(){
+        this._sprite.position.x += this._velocity.x;
+        this._sprite.position.y += this._velocity.y;
+    };
     
     return Creature;
     

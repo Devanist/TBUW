@@ -21,7 +21,7 @@ define([
         },
         
         update : function(){
-            
+            this._currentScreen.update();
         },
         
         getScale : function(){
@@ -29,9 +29,10 @@ define([
         },
         
         setKeyboardHandler: function (foo) {
+            var that = this;
             document.removeEventListener("keydown", this._keyboardHandler, false);
             this._keyboardHandler = foo;
-            document.addEventListener("keydown", this._keyboardHandler, false);
+            document.addEventListener("keydown", this._keyboardHandler.bind(that._currentScreen), false);
         },
         
         setCurrentScreen : function(screen){
@@ -41,6 +42,7 @@ define([
         initScreen : function(screen){
             this._currentScreen = new this._screens[screen]();            
             this._loader.loadStageConfig(this._currentScreen.getStage(), Levels.one.entities);
+            this._currentScreen.init();
             this.setKeyboardHandler(this._currentScreen.keyboardHandler);
             this._rootStage.add(this._currentScreen.getStage());
         }

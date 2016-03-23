@@ -31,7 +31,7 @@
         },
         {
             "type": "player",
-            "id": "main",
+            "id": "mainPlayer",
             "position": {
                 "x": 60,
                 "y": 390

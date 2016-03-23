@@ -61,6 +61,15 @@ define(['Entities/Entities'], function(Entities){
         setScale : function(scale){
             this._stage.scale.x = scale.x;
             this._stage.scale.y = scale.y; 
+        },
+        
+        getElement : function(id){
+            var l = this._elements.length;
+            for(var i = 0; i < l; i++){
+                if(this._elements[i].getId !== null && this._elements[i].getId !== undefined && this._elements[i].getId() === id){
+                    return this._elements[i];
+                }
+            }
         }
         
     };

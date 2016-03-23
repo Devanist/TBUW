@@ -1,7 +1,7 @@
 define(['Entities/Creature'], function(Creature){
     
-    var Player = function(sprite){
-        Creature.call(this, sprite);
+    var Player = function(id, sprite){
+        Creature.call(this, id, sprite);
     };
     
     Player.prototype = Object.create(Creature.prototype, {
@@ -12,6 +12,8 @@ define(['Entities/Creature'], function(Creature){
             configurable: true
         }
     });
+    
+    var _p = Player.prototype;
     
     return Player;
     

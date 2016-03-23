@@ -10,9 +10,8 @@ define([
     'Core/Loader',
     'Core/Logic',
     'Core/Stage',
-    'Core/Level',
     'Entities/Entities'
-    ], function(PIXI, Loader, Logic, Stage, Level, Entities){
+    ], function(PIXI, Loader, Logic, Stage, Entities){
 
     var scale = window.innerWidth / 1280;
     var w = window.innerWidth;    
@@ -50,8 +49,6 @@ define([
 
         //Here assets are loaded, init the game.
         loader.setResources(resources);
-
-        //document.addEventListener("keydown", KeyDown, false);
         
         logic.run(animate);
         

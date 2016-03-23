@@ -69,7 +69,7 @@ define([
                     temp = new Entities.Platform(this._resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
-                    temp = new Entities.Player(this._resources[e.texture].texture);
+                    temp = new Entities.Player(e.id, this._resources[e.texture].texture);
                 }
                 temp.setPosition(e.position);
                 temp.setScale({x: 0.7, y: 0.7});

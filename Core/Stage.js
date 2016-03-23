@@ -10,6 +10,9 @@ define(['Entities/Entities'], function(Entities){
     
     Stage.prototype = {
         
+        /**
+         * Zwraca obiekt PIXI.Container (na potrzeby Loadera)
+         */
         getSprite: function(){
             return this._stage;
         },
@@ -25,6 +28,7 @@ define(['Entities/Entities'], function(Entities){
         
         /**
          * Metoda usuwa element ze sceny.
+         * @param {string} id Identyfikator elementu
          */
         remove : function(id){
             var l = this._elements.length;
@@ -35,15 +39,25 @@ define(['Entities/Entities'], function(Entities){
             }
         },        
         
+        /**
+         * Zwraca obiekt PIXI.Container
+         * @returns {object}
+         */
         getStage : function(){
             return this._stage;
         },
         
+        /**
+         * Zmienia rozmiar sceny
+         */
         setSize : function(size){
             this._stage.width = size.w;
             this._stage.height = size.h;
         },
         
+        /**
+         * Zmienia skalę, w której rysowany jest obiekt
+         */
         setScale : function(scale){
             this._stage.scale.x = scale.x;
             this._stage.scale.y = scale.y; 

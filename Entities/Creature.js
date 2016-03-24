@@ -34,6 +34,14 @@ define(['Entities/Entity'], function(Entity){
         this._sprite.position.y += this._velocity.y;
     };
     
+    _p.getVelocityX = function () {
+        return this._velocity.x;
+    };
+    
+    _p.getVelocityY = function () {
+        return this._velocity.y;
+    };
+    
     return Creature;
     
 });

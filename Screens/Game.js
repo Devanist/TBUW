@@ -6,6 +6,8 @@ define([
     var GameScreen = function(){
         this._gameStage = new Stage();
         this._player = null;
+        this._GRAVITY = 0.5;
+        this._AIR_RES = 0.2;
     };
     
     GameScreen.prototype = {
@@ -39,6 +41,12 @@ define([
         
         update : function(){
             this._player.updatePosition();
+            this._player.updateVelocity(
+                {
+                    x: -(this._player.getVelocityX() * this._AIR_RES),
+                    y: -(this._player.getVelocityY() * this._GRAVITY)
+                }
+            );
         }
         
     };

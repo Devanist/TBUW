@@ -10,26 +10,27 @@ define([
     'Core/Loader',
     'Core/Logic',
     'Core/Stage',
-    'Entities/Entities'
-    ], function(PIXI, Loader, Logic, Stage, Entities){
+    'Core/Keyboard'
+    ], function(PIXI, Loader, Logic, Stage, Keyboard){
 
-    var scale = window.innerWidth / 1280;
+    var scale = window.innerHeight / 800;
     var w = window.innerWidth;    
     var h = window.innerHeight;
         
-    var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
+    var renderer = new PIXI.WebGLRenderer(window.innerHeight / 10 * 16, window.innerHeight);
     var ticker = new PIXI.ticker.Ticker();
     var loader = new Loader();
     var rootStage = new Stage();
+    var keyboard = new Keyboard();
     rootStage.setScale({ x: scale, y: scale });
-    var logic = new Logic(loader, rootStage);
+    var logic = new Logic(loader, rootStage, keyboard);
     var fpsWorker = new Worker('Core/FPS.js');
     
     renderer.backgroundColor = 0xFFFFFF;
     renderer.autoResize = true;
     
     window.onresize = function (event) {
-        w = window.innerWidth;
+        w = window.innerHeight / 10 * 16;
         h = window.innerHeight;
         scale = window.innerWidth / 1280;
         renderer.view.style.width = w + "px";
@@ -47,9 +48,10 @@ define([
     });
     loader.loadAssets(function(datloader, resources){    
 
-        //Here assets are loaded, init the game.
+        //Here assets are loaded, init the game, set input listeners.
         loader.setResources(resources);
-        
+        window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
+        window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
         logic.run(animate);
         
         function animate(){

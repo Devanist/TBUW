@@ -22,6 +22,10 @@ Entity.prototype = {
         this._sprite.position.y = pos.y;
     },
     
+    getPosition : function(){
+        return this._sprite.position;
+    },
+    
     updatePostion : function(pos){
         this._sprite.position.x += pos.x;
         this._sprite.position.y += pos.y;

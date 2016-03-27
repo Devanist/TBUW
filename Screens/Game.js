@@ -8,6 +8,11 @@ define([
         this._player = null;
         this._GRAVITY = 0.5;
         this._AIR_RES = 0.2;
+        this._updateWorker = new Worker('Screens/GameWorker.js');
+        this._updateWorker.onmessage = function(respond){
+            var anwser = JSON.parse(respond.data);
+            this._player.update(anwser.PLAYER);
+        }.bind(this);
     };
     
     GameScreen.prototype = {
@@ -39,14 +44,17 @@ define([
             return this._player;
         },
         
-        update : function(){
-            this._player.updatePosition();
-            this._player.updateVelocity(
-                {
-                    x: -(this._player.getVelocityX() * this._AIR_RES),
-                    y: -(this._player.getVelocityY() * this._GRAVITY)
+        update : function(keysState){
+            var data = {
+                KEYS_STATE: keysState,
+                GRAVITY: this._GRAVITY,
+                AIR_RES: this._AIR_RES,
+                PLAYER: {
+                    position: this._player.getPosition(),
+                    velocity: this._player.getVelocity()
                 }
-            );
+            };
+            this._updateWorker.postMessage(JSON.stringify(data));
         }
         
     };

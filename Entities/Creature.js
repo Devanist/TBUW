@@ -3,7 +3,7 @@ define(['Entities/Entity'], function(Entity){
     var Creature = function(id, sprite){
         Entity.call(this, sprite);
         this._isStatic = false;
-        this._velocity = {
+        this._data.velocity = {
             x: 0,
             y: 0
         };
@@ -25,10 +25,9 @@ define(['Entities/Entity'], function(Entity){
         return this._id;
     };
     
-    _p.update = function (o){
-        this._velocity = o.velocity;
-        this._sprite.position.x = o.position.x;
-        this._sprite.position.y = o.position.y;
+    _p.update = function (){
+        this._sprite.position.x = this._data.position.x;
+        this._sprite.position.y = this._data.position.y;
     };
     
     _p.getVelocity = function () {

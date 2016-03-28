@@ -2,6 +2,7 @@ define(['Entities/Item'], function(Item){
     
     var Background = function(sprite){
         Item.call(this, sprite);
+        this._data.type = "background";
     };
     
     Background.prototype = Object.create(Item.prototype, {

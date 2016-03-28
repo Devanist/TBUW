@@ -6,6 +6,10 @@ define([], function(){
 var Entity = function(sprite){
     this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
+    this._data = {
+        position: {x: 0, y: 0},
+        size: {w: 0, h: 0}
+    };
 };
 
 Entity.prototype = {
@@ -20,6 +24,8 @@ Entity.prototype = {
     setPosition : function(pos){
         this._sprite.position.x = pos.x;
         this._sprite.position.y = pos.y;
+        this._data.position.x = pos.x;
+        this._data.position.y = pos.y;
     },
     
     getPosition : function(){

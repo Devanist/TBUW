@@ -11,7 +11,12 @@ define([
         this._updateWorker = new Worker('Screens/GameWorker.js');
         this._updateWorker.onmessage = function(respond){
             var anwser = JSON.parse(respond.data);
-            this._player.update(anwser.PLAYER);
+            for(var i = 0; i < this._gameStage._elements.length; i++){
+                this._gameStage._elements[i]._data = anwser.ELEMENTS[i];
+                if(this._gameStage._elements[i].update){
+                    this._gameStage._elements[i].update();
+                }
+            }
         }.bind(this);
     };
     
@@ -24,36 +29,22 @@ define([
         init : function(){
             this._player = this._gameStage.getElement("mainPlayer");
         },
-
-        keyboardHandler: function (event) {
-            if (event.keyCode === Keyboard.KEYS.ARROW_RIGHT || event.keyCode === Keyboard.KEYS.D) {
-                this._player.updateVelocity({x: 5, y: 0});
-            }
-            else if (event.keyCode === Keyboard.KEYS.ARROW_LEFT || event.keyCode === Keyboard.KEYS.A) {
-                this._player.updateVelocity({x: -5, y: 0});
-            }
-            else if (event.keyCode === Keyboard.KEYS.ARROW_UP || event.keyCode === Keyboard.KEYS.W) {
-                this._player.updateVelocity({x: 0, y: -5});
-            }
-            else if (event.keyCode === Keyboard.KEYS.ARROW_DOWN || event.keyCode === Keyboard.KEYS.S) {
-                this._player.updateVelocity({x: 0, y: 5});
-            }
-        },
         
         getPlayer : function(){
             return this._player;
         },
         
         update : function(keysState){
+            
             var data = {
                 KEYS_STATE: keysState,
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                PLAYER: {
-                    position: this._player.getPosition(),
-                    velocity: this._player.getVelocity()
-                }
+                ELEMENTS: []
             };
+            for(var i = 0; i < this._gameStage._elements.length; i++){
+                data.ELEMENTS.push(this._gameStage._elements[i]._data);
+            }
             this._updateWorker.postMessage(JSON.stringify(data));
         }
         

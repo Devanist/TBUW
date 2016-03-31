@@ -8,10 +8,11 @@
         {
             "type": "background",
             "position": {
-                "x": 0,
+                "x": -60,
                 "y": 0
             },
-            "texture": "tlo_miasto"
+            "texture": "tlo_miasto",
+            "factor": 0.5
         },
         {
             "type": "platform",
@@ -37,6 +38,15 @@
                 "y": 390
             },
             "texture": "player"
+        },
+        {
+            "type": "background",
+            "position": {
+                "x": 120,
+                "y": 0
+            },
+            "texture": "pipe",
+            "factor": -2
         }
     ]
 }

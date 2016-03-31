@@ -11,6 +11,10 @@
         {
             "name": "tlo_miasto",
             "path": "Assets/Gfx/tlo.jpg"
+        },
+        {
+            "name": "pipe",
+            "path": "Assets/Gfx/pipe.png"
         }
     ],
     "sounds": [

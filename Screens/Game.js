@@ -11,6 +11,8 @@ define([
         this._updateWorker = new Worker('Screens/GameWorker.js');
         this._updateWorker.onmessage = function(respond){
             var anwser = JSON.parse(respond.data);
+            this._gameStage.getStage().position.x = anwser.CONTAINER.x;
+            this._gameStage.getStage().position.y = anwser.CONTAINER.y;
             for(var i = 0; i < this._gameStage._elements.length; i++){
                 this._gameStage._elements[i]._data = anwser.ELEMENTS[i];
                 if(this._gameStage._elements[i].update){
@@ -37,6 +39,7 @@ define([
         update : function(keysState){
             
             var data = {
+                CONTAINER: this._gameStage.getStage().position,
                 KEYS_STATE: keysState,
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,

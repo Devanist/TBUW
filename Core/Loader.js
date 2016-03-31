@@ -63,7 +63,7 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(this._resources[e.texture].texture);
+                    temp = new Entities.Background(this._resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "platform"){
                     temp = new Entities.Platform(this._resources[e.texture].texture);

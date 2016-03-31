@@ -1,9 +1,9 @@
 define(['Entities/Item'], function(Item){
     
-    var Background = function(sprite){
+    var Background = function(sprite, factor){
         Item.call(this, sprite);
         this._data.type = "background";
-        this._data.movingSpeedFactor = 0.5;
+        this._data.movingSpeedFactor = factor;
     };
     
     Background.prototype = Object.create(Item.prototype, {

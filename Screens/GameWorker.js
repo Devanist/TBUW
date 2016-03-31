@@ -10,6 +10,11 @@ self.onmessage = function(e){
         }
     }
     
+    var oldPlayerPos = {
+        x: PLAYER.position.x,
+        y: PLAYER.position.y 
+    };
+    
     //Obsłuż input usera
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D){
         PLAYER.velocity.x += 5;
@@ -28,9 +33,19 @@ self.onmessage = function(e){
     PLAYER.position.x += PLAYER.velocity.x;
     PLAYER.position.y += PLAYER.velocity.y;
     
+    //Wykryj kolizje
+    
+    
     //W razie potrzeby nanieś poprawkę na pozycję playera
     if(PLAYER.position.x < 0){
         PLAYER.position.x = 0;
+    }
+    
+    //Przemieść pozostałe elementy
+    for(var i = 0; i < world.ELEMENTS.length; i+=1){
+        if(world.ELEMENTS[i].type !== "player"){
+            world.ELEMENTS[i].position.x -= (PLAYER.position.x - oldPlayerPos.x) * world.ELEMENTS[i].movingSpeedFactor;
+        }
     }
     
     //Uaktualnij prędkość playera

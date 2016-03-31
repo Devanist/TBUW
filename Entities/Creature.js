@@ -25,11 +25,6 @@ define(['Entities/Entity'], function(Entity){
         return this._id;
     };
     
-    _p.update = function (){
-        this._sprite.position.x = this._data.position.x;
-        this._sprite.position.y = this._data.position.y;
-    };
-    
     _p.getVelocity = function () {
         return this._velocity;
     };

@@ -37,6 +37,11 @@ Entity.prototype = {
         this._sprite.position.y += pos.y;
     },
     
+    update : function (){
+        this._sprite.position.x = this._data.position.x;
+        this._sprite.position.y = this._data.position.y;
+    },
+    
     setScale : function(scale){
         this._sprite.scale.x = scale.x;
         this._sprite.scale.y = scale.y;

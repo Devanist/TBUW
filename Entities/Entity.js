@@ -6,9 +6,17 @@ define([], function(){
 var Entity = function(sprite){
     this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
-    this._data = {
-        position: {x: 0, y: 0},
-        size: {w: 0, h: 0}
+    this._data = {        
+        size: {
+            w: this._sprite.getBounds().width,
+            h: this._sprite.getBounds().height
+        },
+        position: {
+            x: 0,
+            y: 0,
+            endX: 0,
+            endY: 0
+        },
     };
 };
 
@@ -26,6 +34,8 @@ Entity.prototype = {
         this._sprite.position.y = pos.y;
         this._data.position.x = pos.x;
         this._data.position.y = pos.y;
+        this._data.position.endX = pos.x + this._data.size.w;
+        this._data.position.endY = pos.y + this._data.size.h;
     },
     
     getPosition : function(){
@@ -45,6 +55,8 @@ Entity.prototype = {
     setScale : function(scale){
         this._sprite.scale.x = scale.x;
         this._sprite.scale.y = scale.y;
+        this._data.position.endX = this._data.position.x + this._sprite.getBounds().width;
+        this._data.position.endY = this._data.position.y + this._sprite.getBounds().height;
     },
     
     getSprite : function(){

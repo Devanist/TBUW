@@ -32,7 +32,7 @@ define([
     window.onresize = function (event) {
         w = window.innerHeight / 10 * 16;
         h = window.innerHeight;
-        scale = window.innerWidth / 1280;
+        scale = window.innerHeight / 800;
         renderer.view.style.width = w + "px";
         renderer.view.style.height = h + "px";
         rootStage.setScale({ x: scale, y: scale });

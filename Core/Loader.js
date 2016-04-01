@@ -67,6 +67,7 @@ define([
                 }
                 else if(e.type === "platform"){
                     temp = new Entities.Platform(this._resources[e.texture].texture);
+                    console.log(this._resources[e.texture]);
                 }
                 else if(e.type === "player"){
                     temp = new Entities.Player(e.id, this._resources[e.texture].texture);

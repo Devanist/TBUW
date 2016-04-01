@@ -1,17 +1,28 @@
+var world = null;
+var PLAYER_START_POS_X = 60;
+var elementsQuantity = null;
+var PLAYER = null;
+var oldPlayerPos = {};
+var x = 0, y = 0, ex = 0, ey = 0, temp = null;
+
 self.onmessage = function(e){
     
-    var world = JSON.parse(e.data);
-    var PLAYER_START_POS_X = 60;
+    world = JSON.parse(e.data);
     
-    var PLAYER = null;
+    if(elementsQuantity === null){
+        elementsQuantity = world.ELEMENTS.length;
+    }
     
-    for(var i = 0; i < world.ELEMENTS.length; i+=1){
+    //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
+    for(var i = 0; i < elementsQuantity; i+=1){
         if(world.ELEMENTS[i].type === "player"){
             PLAYER = world.ELEMENTS[i];
         }
+        world.ELEMENTS[i].position.endX = world.ELEMENTS[i].position.x + world.ELEMENTS[i].size.w;
+        world.ELEMENTS[i].position.endY = world.ELEMENTS[i].position.y + world.ELEMENTS[i].size.h;
     }
     
-    var oldPlayerPos = {
+    oldPlayerPos = {
         x: PLAYER.position.x,
         y: PLAYER.position.y 
     };
@@ -33,9 +44,23 @@ self.onmessage = function(e){
     //Uaktualnij pozycję playera
     PLAYER.position.x += PLAYER.velocity.x;
     PLAYER.position.y += PLAYER.velocity.y;
+    PLAYER.position.endX += PLAYER.velocity.x;
+    PLAYER.position.endY += PLAYER.velocity.y;
     
     //Wykryj kolizje
-    
+    x = PLAYER.position.x;
+    ex = PLAYER.position.endX;
+    y = PLAYER.position.y;
+    ey = PLAYER.position.endY;
+    for(var i = 0; i < elementsQuantity; i += 1){
+        if(world.ELEMENTS[i].type !== "background" && world.ELEMENTS[i].type !== "player"){
+            temp = world.ELEMENTS[i].position;
+            if( !(x > temp.endX || ex < temp.x || 
+                y > temp.endY || ey < temp.y)){
+                console.log('kolizja');
+            }
+        }
+    }
     
     //W razie potrzeby nanieś poprawkę na pozycję playera
     if(PLAYER.position.x < 0){
@@ -45,7 +70,7 @@ self.onmessage = function(e){
     //PARALLAX
     if(PLAYER.position.x > PLAYER_START_POS_X){
         
-        for(var i = 0; i < world.ELEMENTS.length; i+=1){
+        for(var i = 0; i < elementsQuantity; i+=1){
             if(world.ELEMENTS[i].type === "background"){
                 world.ELEMENTS[i].position.x += (PLAYER.position.x - oldPlayerPos.x) * world.ELEMENTS[i].movingSpeedFactor;
             }
@@ -54,7 +79,7 @@ self.onmessage = function(e){
     }
     
     //Przemieść kamerę
-    world.CONTAINER.x = -PLAYER.position.x + 60;
+    world.CONTAINER.x = -PLAYER.position.x + PLAYER_START_POS_X;
     if(world.CONTAINER.x >= 0){
         world.CONTAINER.x = 0;
     }

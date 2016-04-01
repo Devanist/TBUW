@@ -13,6 +13,8 @@ define([
             var anwser = JSON.parse(respond.data);
             this._gameStage.getStage().position.x = anwser.CONTAINER.x;
             this._gameStage.getStage().position.y = anwser.CONTAINER.y;
+            this._gameStage.getStage().position.endX = anwser.CONTAINER.endX;
+            this._gameStage.getStage().position.endY = anwser.CONTAINER.endY;
             for(var i = 0; i < this._gameStage._elements.length; i++){
                 this._gameStage._elements[i]._data = anwser.ELEMENTS[i];
                 if(this._gameStage._elements[i].update){
@@ -47,6 +49,8 @@ define([
             };
             for(var i = 0; i < this._gameStage._elements.length; i++){
                 data.ELEMENTS.push(this._gameStage._elements[i]._data);
+                this._gameStage._elements[i]._data.size.w = this._gameStage._elements[i]._sprite.getBounds().width;
+                this._gameStage._elements[i]._data.size.h = this._gameStage._elements[i]._sprite.getBounds().height; 
             }
             this._updateWorker.postMessage(JSON.stringify(data));
         }

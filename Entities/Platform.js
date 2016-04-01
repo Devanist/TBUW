@@ -4,7 +4,7 @@ define(['Entities/Item'], function(Item){
         Item.call(this, sprite);
         this._isStatic = true;
         this._data.type = "platform";
-        this._data.movingSpeedFactor = 0.75;
+        this._data.movingSpeedFactor = 1;
     };
 
     Platform.prototype = Object.create(Item.prototype, {

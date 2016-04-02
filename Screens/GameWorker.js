@@ -59,23 +59,51 @@ self.onmessage = function(e){
     collisionOccured = false;
     for(var i = 0; i < elementsQuantity; i += 1){
         if(world.ELEMENTS[i].type !== "background" && world.ELEMENTS[i].type !== "player"){
-            temp = world.ELEMENTS[i].position;
-            if( !(x > temp.endX || ex < temp.x || 
-                y > temp.endY || ey < temp.y)){
+            temp = world.ELEMENTS[i];
+            if( !(x > temp.position.endX || ex < temp.position.x || 
+                y > temp.position.endY || ey < temp.position.y)){
                 
                 collisionOccured = true;
                 
-                //czy player jest powyzej
-                if(y <= temp.y && temp.endY >= ey){
-                    PLAYER.state.inAir = false;
-                    PLAYER.velocity.y = 0;
-                    PLAYER.position.y = temp.y - PLAYER.size.h;
-                    PLAYER.position.endY = PLAYER.position.y + PLAYER.size.h + 1;
+                //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
+                if(y <= temp.position.y && temp.position.endY >= ey){
+                    if(temp.type === "platform"){
+                        PLAYER.state.inAir = false;
+                        PLAYER.velocity.y = 0;
+                        PLAYER.position.y = temp.position.y - PLAYER.size.h + 1;
+                    }
+                }
+                //Jeżeli player jest pod obiektem
+                else if(y >= temp.position.y && temp.position.endY <= ey){
+                    if(temp.type === "platform"){
+                        PLAYER.velocity.y = 0;
+                        PLAYER.position.y = temp.position.endY + 1;
+                    }
                 }
                 
+                //Jeżeli player jest na lewo od obiektu
+                else if(ex >= temp.position.x && x <= temp.position.x){
+                    if(temp.type === "platform"){
+                        PLAYER.velocity.x = 0;
+                        PLAYER.position.x = temp.position.x - PLAYER.size.w;
+                    }
+                }
+                
+                //Jeżeli gracz jest na prawo od obiektu
+                else if(x <= temp.position.endX && temp.position.endX <= ex){
+                    if(temp.type === "platform"){
+                        PLAYER.velocity.x = 0;
+                        PLAYER.position.x = temp.position.endX + 1;
+                    }
+                }
+                
+                //Uaktualnienie pozycji końcowego x i y
+                PLAYER.position.endY = PLAYER.position.y + PLAYER.size.h;
+                PLAYER.position.endX = PLAYER.position.x + PLAYER.size.w;
             }
         }
     }
+    //Obsłuż, jeśli nie wystąpiła kolizja
     if(collisionOccured === false){
         PLAYER.state.inAir = true;
     }

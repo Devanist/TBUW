@@ -4,6 +4,7 @@ var elementsQuantity = null;
 var PLAYER = null;
 var oldPlayerPos = {};
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
+var collisionOccured = false;
 
 self.onmessage = function(e){
     
@@ -35,7 +36,10 @@ self.onmessage = function(e){
         PLAYER.velocity.x -= 7;
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W){
-        PLAYER.velocity.y -= 7;
+        if(PLAYER.state.inAir === false){
+            PLAYER.velocity.y -= 15;
+            console.log('up');
+        }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
         PLAYER.velocity.y += 7;
@@ -52,14 +56,28 @@ self.onmessage = function(e){
     ex = PLAYER.position.endX;
     y = PLAYER.position.y;
     ey = PLAYER.position.endY;
+    collisionOccured = false;
     for(var i = 0; i < elementsQuantity; i += 1){
         if(world.ELEMENTS[i].type !== "background" && world.ELEMENTS[i].type !== "player"){
             temp = world.ELEMENTS[i].position;
             if( !(x > temp.endX || ex < temp.x || 
                 y > temp.endY || ey < temp.y)){
-                console.log('kolizja');
+                
+                collisionOccured = true;
+                
+                //czy player jest powyzej
+                if(y <= temp.y && temp.endY >= ey){
+                    PLAYER.state.inAir = false;
+                    PLAYER.velocity.y = 0;
+                    PLAYER.position.y = temp.y - PLAYER.size.h;
+                    PLAYER.position.endY = PLAYER.position.y + PLAYER.size.h + 1;
+                }
+                
             }
         }
+    }
+    if(collisionOccured === false){
+        PLAYER.state.inAir = true;
     }
     
     //W razie potrzeby nanieś poprawkę na pozycję playera
@@ -86,7 +104,7 @@ self.onmessage = function(e){
     
     //Uaktualnij prędkość playera
     PLAYER.velocity.x = -(PLAYER.velocity.x * world.AIR_RES);
-    PLAYER.velocity.y = -(PLAYER.velocity.y * world.GRAVITY);
+    PLAYER.velocity.y +=  world.GRAVITY;
     
     postMessage(JSON.stringify(world));
     

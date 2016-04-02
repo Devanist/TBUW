@@ -6,7 +6,7 @@ define([
     var GameScreen = function(){
         this._gameStage = new Stage();
         this._player = null;
-        this._GRAVITY = 0.5;
+        this._GRAVITY = 0.7;
         this._AIR_RES = 0.2;
         this._updateWorker = new Worker('Screens/GameWorker.js');
         this._updateWorker.onmessage = function(respond){

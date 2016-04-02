@@ -42,7 +42,7 @@
         {
             "type": "background",
             "position": {
-                "x": 120,
+                "x": 320,
                 "y": 0
             },
             "texture": "pipe",

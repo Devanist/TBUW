@@ -3,6 +3,9 @@ define(['Entities/Creature'], function(Creature){
     var Player = function(id, sprite){
         Creature.call(this, id, sprite);
         this._data.type = "player";
+        this._data.state = {
+            inAir: false
+        };
     };
     
     Player.prototype = Object.create(Creature.prototype, {

@@ -62,13 +62,6 @@ Entity.prototype = {
         
     },
     
-    setScale : function(scale){
-        this._sprite.scale.x = scale.x;
-        this._sprite.scale.y = scale.y;
-        this._data.position.endX = this._data.position.x + this._sprite.getBounds().width;
-        this._data.position.endY = this._data.position.y + this._sprite.getBounds().height;
-    },
-    
     getSprite : function(){
         return this._sprite;
     },

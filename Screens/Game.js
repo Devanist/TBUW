@@ -48,9 +48,9 @@ define([
                 ELEMENTS: []
             };
             for(var i = 0; i < this._gameStage._elements.length; i++){
-                data.ELEMENTS.push(this._gameStage._elements[i]._data);
-                this._gameStage._elements[i]._data.size.w = this._gameStage._elements[i]._sprite.getBounds().width;
-                this._gameStage._elements[i]._data.size.h = this._gameStage._elements[i]._sprite.getBounds().height; 
+                this._gameStage._elements[i]._data.size.w = this._gameStage._elements[i]._sprite.getLocalBounds().width;
+                this._gameStage._elements[i]._data.size.h = this._gameStage._elements[i]._sprite.getLocalBounds().height;
+                data.ELEMENTS.push(this._gameStage._elements[i]._data); 
             }
             this._updateWorker.postMessage(JSON.stringify(data));
         }

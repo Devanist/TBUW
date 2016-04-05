@@ -6,16 +6,20 @@ define([
     'Core/Keyboard'
     ], function(PIXI, Loader, Logic, Stage, Keyboard){
 
-    var scale = window.innerHeight / 800;
-    var w = window.innerWidth;    
     var h = window.innerHeight;
+    var w = h * 1.6;
+
+    var scale = {
+        y : h / 800,
+        x : w / 1280
+    };
         
     var renderer = new PIXI.WebGLRenderer(window.innerHeight / 10 * 16, window.innerHeight);
     var ticker = new PIXI.ticker.Ticker();
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
-    rootStage.setScale({ x: scale, y: scale });
+    rootStage.setScale({ x: scale.x, y: scale.y });
     var logic = new Logic(loader, rootStage, keyboard);
     var fpsWorker = new Worker('Core/FPS.js');
     
@@ -23,12 +27,13 @@ define([
     renderer.autoResize = true;
     
     window.onresize = function (event) {
-        w = window.innerHeight / 10 * 16;
         h = window.innerHeight;
-        scale = window.innerHeight / 800;
+        w = h * 1.6;
+        scale.y = h / 800;
+        scale.x = w / 1280;
         renderer.view.style.width = w + "px";
         renderer.view.style.height = h + "px";
-        rootStage.setScale({ x: scale, y: scale });
+        rootStage.setScale({ x: scale.x, y: scale.y });
         renderer.resize(w, h);
     };
 

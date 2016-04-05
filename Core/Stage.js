@@ -62,7 +62,7 @@ define(['Entities/Entities'], function(Entities){
             this._stage.scale.x = scale.x;
             this._stage.scale.y = scale.y;
             for(var i = 0; i < this._elements.length; i += 1){
-                
+                //this._elements[i].setScale(scale);
             } 
         },
         

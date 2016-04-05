@@ -75,7 +75,6 @@ define([
                     temp = new Entities.Player(e.id, this._resources[e.texture].texture);
                 }
                 temp.setPosition(e.position);
-                temp.setScale({x: 0.7, y: 0.7});
                 stage.add(temp);
 
                 if (isDebug) {

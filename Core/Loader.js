@@ -1,8 +1,9 @@
 ///https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData
 define([
     'json!Assets/assets.json',
-    'Entities/Entities'
-    ], function(cfg, Entities){
+    'Entities/Entities',
+    'Debug/BoundaryBox'
+    ], function(cfg, Entities, BoundaryBox){
 
     var Loader = function () {
         this._cfg = cfg;
@@ -78,10 +79,7 @@ define([
                 stage.add(temp);
 
                 if (isDebug) {
-                    var graphics = new PIXI.Graphics();
-                    graphics.lineStyle(1, 0x00F600);
-                    graphics.drawRect(temp.getPosition().x, temp.getPosition().y, temp._sprite.getBounds().width, temp._sprite.getBounds().height);
-                    stage.getStage().addChild(graphics);
+                    temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
                 }
                 
             }

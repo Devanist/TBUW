@@ -42,6 +42,10 @@ Entity.prototype = {
         return this._sprite.position;
     },
     
+    getSize : function(){
+        return this._data.size;
+    },
+    
     updatePostion : function(pos){
         this._sprite.position.x += pos.x;
         this._sprite.position.y += pos.y;
@@ -50,6 +54,12 @@ Entity.prototype = {
     update : function (){
         this._sprite.position.x = this._data.position.x;
         this._sprite.position.y = this._data.position.y;
+        
+        if(this.d_BBox !== undefined && this.d_BBox !== null){
+            this.d_BBox.update(this._data.position, this._data.size);
+            this.d_BBox.draw();
+        }
+        
     },
     
     setScale : function(scale){
@@ -61,6 +71,11 @@ Entity.prototype = {
     
     getSprite : function(){
         return this._sprite;
+    },
+    
+    debug_addBoundaryBox : function(bbox){
+        this.d_BBox = bbox;
+        this._sprite.parent.addChild(this.d_BBox.getBox());
     }
     
 };

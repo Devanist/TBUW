@@ -40,7 +40,6 @@ self.onmessage = function(e){
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W){
         if(PLAYER.state.inAir === false){
             PLAYER.velocity.y -= 15;
-            console.log('up');
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){

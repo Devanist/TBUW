@@ -54,11 +54,12 @@ define([
         /**
          * Metoda dodaje elementy do sceny na podstawie configu.
          */
-        loadStageConfig : function(stage, cfg){
+        loadStageConfig : function(stage, cfg, debug){
             
             var l = cfg.length;
             var e = null;
             var temp = null;
+            var isDebug = debug || false;
             
             for(var i = 0; i < l; i++){
                 e = cfg[i];
@@ -75,6 +76,13 @@ define([
                 temp.setPosition(e.position);
                 temp.setScale({x: 0.7, y: 0.7});
                 stage.add(temp);
+
+                if (isDebug) {
+                    var graphics = new PIXI.Graphics();
+                    graphics.lineStyle(1, 0x00F600);
+                    graphics.drawRect(temp.getPosition().x, temp.getPosition().y, temp._sprite.getBounds().width, temp._sprite.getBounds().height);
+                    stage.getStage().addChild(graphics);
+                }
                 
             }
             

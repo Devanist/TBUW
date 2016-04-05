@@ -34,7 +34,7 @@
             "type": "platform",
             "position": {
                 "x": 20,
-                "y": 290
+                "y": 270
             },
             "texture": "platform"
         },
@@ -43,7 +43,7 @@
             "id": "mainPlayer",
             "position": {
                 "x": 180,
-                "y": 390
+                "y": 360
             },
             "texture": "player"
         },

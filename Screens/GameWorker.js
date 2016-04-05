@@ -25,7 +25,9 @@ self.onmessage = function(e){
     
     oldPlayerPos = {
         x: PLAYER.position.x,
-        y: PLAYER.position.y 
+        y: PLAYER.position.y, 
+        ex: PLAYER.position.endX,
+        ey: PLAYER.position.endY
     };
     
     //Obsłuż input usera
@@ -66,15 +68,15 @@ self.onmessage = function(e){
                 collisionOccured = true;
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if(y <= temp.position.y && temp.position.endY >= ey){
+                if(y <= temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = temp.position.y - PLAYER.size.h + 1;
+                        PLAYER.position.y = temp.position.y - PLAYER.size.h - 1;
                     }
                 }
                 //Jeżeli player jest pod obiektem
-                else if(y >= temp.position.y && temp.position.endY <= ey){
+                else if(y >= temp.position.y && temp.position.endY <= ey && oldPlayerPos.y >= temp.position.endY){
                     if(temp.type === "platform"){
                         PLAYER.velocity.y = 0;
                         PLAYER.position.y = temp.position.endY + 1;

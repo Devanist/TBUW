@@ -33,7 +33,7 @@ define([
         
         initScreen : function(screen){
             this._currentScreen = new this._screens[screen]();            
-            this._loader.loadStageConfig(this._currentScreen.getStage(), Levels.one.entities, true);
+            this._loader.loadStageConfig(this._currentScreen.getStage(), Levels.one.entities);
             this._currentScreen.init();
             this._rootStage.add(this._currentScreen.getStage());
         }

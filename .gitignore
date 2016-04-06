@@ -4,13 +4,8 @@ Opis.docx
 TBUW.jsproj
 TBUW.jsproj.user
 TBUW_TemporaryKey.pfx
-WinJS/**
 bin/**
 bld/**
 css/**
-default.html
-default.js
 images/
-lib/pixi.js.map
 package.appxmanifest
-rConfig.js

@@ -1,9 +1,6 @@
 {
-    "name": "First level",
+    "name": "TEST level",
     "background-color": "000000",
-    "gui": [
-        
-    ],
     "entities": [
         {
             "type": "background",

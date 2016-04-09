@@ -4,13 +4,15 @@ define([
     'Core/Screens'
     ], function(Stage, Levels, Screens){
     
-    var Logic = function(loader, rootStage, keyboard, touch){
+    var Logic = function(loader, rootStage, keyboard, mouse, touch){
+
         this._loader = loader;
         this._rootStage = rootStage;
         this._screens = Screens;
-        this._currentScreen = null;
+        this._currentScreen = {name: "", screen: null};
         this._keyboard = keyboard;
         this._touch = touch;
+        this._mouse = mouse;
     };
     
     Logic.prototype = {
@@ -21,22 +23,23 @@ define([
         },
         
         update : function(){
-            this._currentScreen.update(this._keyboard.getKeysState());
+            var updateResult = this._currentScreen.screen.update(this._keyboard.getKeysState(), this._mouse.getClicks());
+            if(updateResult.action === "RESTART"){
+                console.log('restarting screen');
+                this.initScreen(this._currentScreen.name);
+            }
         },
         
-        getScale : function(){
-            return this._scale;
-        },
-        
-        setCurrentScreen : function(screen){
-            this._currentScreen = screen;
+        setCurrentScreen : function(name){
+            this._currentScreen.name = name;
+            this._currentScreen.screen = new this._screens[name]();
         },
         
         initScreen : function(screen){
-            this._currentScreen = new this._screens[screen]();            
-            this._loader.loadStageConfig(this._currentScreen.getStage(), Levels.one.entities);
-            this._currentScreen.init();
-            this._rootStage.add(this._currentScreen.getStage());
+            this.setCurrentScreen(screen);
+            this._loader.loadStageConfig(this._currentScreen.screen.getGameStage(), Levels.one.entities);
+            this._currentScreen.screen.loadGUI();
+            this._rootStage.add(this._currentScreen.screen.getStage());
         }
     };
     

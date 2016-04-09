@@ -37,7 +37,7 @@ define([
          * Metoda zwracająca stan klawiszy.
          * @returns {object}
          */
-        getKeysState: function (key) {
+        getKeysState: function () {
             return this._state;
         },
         

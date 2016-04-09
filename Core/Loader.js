@@ -2,8 +2,9 @@
 define([
     'json!Assets/assets.json',
     'Entities/Entities',
-    'Debug/BoundaryBox'
-    ], function(cfg, Entities, BoundaryBox){
+    'Debug/BoundaryBox',
+    'GUI/GUI'
+    ], function(cfg, Entities, BoundaryBox, GUI){
 
     var Loader = function () {
         this._cfg = cfg;
@@ -50,6 +51,14 @@ define([
         
         setResources : function(res){
             this._resources = res;
+            
+            for(var gui in GUI){
+                if(GUI.hasOwnProperty(gui)){
+                    if(gui === "Button"){
+                        GUI[gui]._spriteSource = this._resources["GUI_Button"].texture;
+                    }
+                }
+            }
         },
         
         /**
@@ -69,7 +78,6 @@ define([
                 }
                 else if(e.type === "platform"){
                     temp = new Entities.Platform(this._resources[e.texture].texture);
-                    console.log(this._resources[e.texture]);
                 }
                 else if(e.type === "player"){
                     temp = new Entities.Player(e.id, this._resources[e.texture].texture);

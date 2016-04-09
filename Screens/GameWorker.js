@@ -22,7 +22,7 @@ self.onmessage = function(e){
         world.ELEMENTS[i].position.endX = world.ELEMENTS[i].position.x + world.ELEMENTS[i].size.w;
         world.ELEMENTS[i].position.endY = world.ELEMENTS[i].position.y + world.ELEMENTS[i].size.h;
     }
-    
+
     oldPlayerPos = {
         x: PLAYER.position.x,
         y: PLAYER.position.y, 

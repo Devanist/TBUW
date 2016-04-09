@@ -5,8 +5,9 @@ define([
     'Core/Stage',
     'Core/Keyboard',
     'Core/TouchDevice',
+    'Core/Mouse',
     'Core/Utils'
-    ], function(PIXI, Loader, Logic, Stage, Keyboard, TouchDevice, Utils){
+    ], function(PIXI, Loader, Logic, Stage, Keyboard, TouchDevice, Mouse, Utils){
 
     var h = window.innerHeight;
     var w = h * 1.6;
@@ -25,9 +26,9 @@ define([
     if(Utils.isTouchDevice()){
         touch = new TouchDevice();
     }
-    
+    var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
-    var logic = new Logic(loader, rootStage, keyboard, touch);
+    var logic = new Logic(loader, rootStage, keyboard, mouse, touch);
     var fpsWorker = new Worker('Core/FPS.js');
     
     renderer.backgroundColor = 0xFFFFFF;
@@ -55,12 +56,15 @@ define([
 
         //Here assets are loaded, init the game, set input listeners.
         loader.setResources(resources);
+        
         window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
         window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
         window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
         window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
         window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
+        window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
+
         logic.run(animate);
         
         function animate(){

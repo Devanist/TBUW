@@ -8,7 +8,7 @@ define([
         this._loader = loader;
         this._rootStage = rootStage;
         this._screens = Screens;
-        this._currentScreen = null;
+        this._currentScreen = {name: "", screen: null};
         this._keyboard = keyboard;
         this._mouse = mouse;
     };
@@ -21,18 +21,23 @@ define([
         },
         
         update : function(){
-            this._currentScreen.update(this._keyboard.getKeysState(), this._mouse.getClicks());
+            var updateResult = this._currentScreen.screen.update(this._keyboard.getKeysState(), this._mouse.getClicks());
+            if(updateResult.action === "RESTART"){
+                console.log('restarting screen');
+                this.initScreen(this._currentScreen.name);
+            }
         },
         
-        setCurrentScreen : function(screen){
-            this._currentScreen = screen;
+        setCurrentScreen : function(name){
+            this._currentScreen.name = name;
+            this._currentScreen.screen = new this._screens[name]();
         },
         
         initScreen : function(screen){
-            this._currentScreen = new this._screens[screen]();            
-            this._loader.loadStageConfig(this._currentScreen.getGameStage(), Levels.one.entities);
-            this._currentScreen.loadGUI();
-            this._rootStage.add(this._currentScreen.getStage());
+            this.setCurrentScreen(screen);
+            this._loader.loadStageConfig(this._currentScreen.screen.getGameStage(), Levels.one.entities);
+            this._currentScreen.screen.loadGUI();
+            this._rootStage.add(this._currentScreen.screen.getStage());
         }
     };
     

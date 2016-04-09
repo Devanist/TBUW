@@ -1,11 +1,12 @@
 define([
+    'Core/Screen',
     'Core/Stage',
     'Core/Keyboard',
     'GUI/GUI'
-    ], function(Stage, Keyboard, GUI){
+    ], function(Screen, Stage, Keyboard, GUI){
     
     var GameScreen = function(){
-        this._stage = new Stage();
+        Screen.call(this);
         this._gameStage = new Stage();
         this._guiStage = new Stage();
         this._stage.add(this._gameStage);
@@ -34,9 +35,8 @@ define([
                     var player = temp;
                     this._isPause = true;
                     var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, function(){
-                        player._data.position = {x: 180, y: 360};
-                        this._guiStage.remove("RETRY");
-                        this._isPause = false;
+                        this._onUpdateAction = this.EVENT.RESTART;
+                        this._nextScreen = "game";
                     }.bind(this));
                     Restart.init(GUI.Button._spriteSource);
                     this._guiStage.add(Restart);
@@ -99,6 +99,8 @@ define([
                 this._updateWorker.postMessage(JSON.stringify(data));
             
             }
+            
+            return {action: this._onUpdateAction, changeTo: this._nextScreen};
         }
         
     };

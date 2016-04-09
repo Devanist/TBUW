@@ -15,6 +15,10 @@
         {
             "name": "pipe",
             "path": "Assets/Gfx/pipe.png"
+        },
+        {
+            "name": "GUI_Button",
+            "path": "Assets/Gfx/GUI_Button.png"
         }
     ],
     "sounds": [

@@ -3,8 +3,9 @@ define([
     'Core/Loader',
     'Core/Logic',
     'Core/Stage',
-    'Core/Keyboard'
-    ], function(PIXI, Loader, Logic, Stage, Keyboard){
+    'Core/Keyboard',
+    'Core/Mouse'
+    ], function(PIXI, Loader, Logic, Stage, Keyboard, Mouse){
 
     var h = window.innerHeight;
     var w = h * 1.6;
@@ -19,8 +20,9 @@ define([
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
+    var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
-    var logic = new Logic(loader, rootStage, keyboard);
+    var logic = new Logic(loader, rootStage, keyboard, mouse);
     var fpsWorker = new Worker('Core/FPS.js');
     
     renderer.backgroundColor = 0xFFFFFF;
@@ -48,8 +50,11 @@ define([
 
         //Here assets are loaded, init the game, set input listeners.
         loader.setResources(resources);
+        
         window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
+        window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
+        
         logic.run(animate);
         
         function animate(){

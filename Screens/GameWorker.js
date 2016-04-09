@@ -10,17 +10,18 @@ self.onmessage = function(e){
     
     world = JSON.parse(e.data);
     
-    if(elementsQuantity === null){
-        elementsQuantity = world.ELEMENTS.length;
-    }
+    elementsQuantity = world.ELEMENTS.length;
     
     //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
+    var temp = null;
     for(var i = 0; i < elementsQuantity; i+=1){
-        if(world.ELEMENTS[i].type === "player"){
-            PLAYER = world.ELEMENTS[i];
+        temp = world.ELEMENTS[i];
+        
+        if(temp.type === "player"){
+            PLAYER = temp;
         }
-        world.ELEMENTS[i].position.endX = world.ELEMENTS[i].position.x + world.ELEMENTS[i].size.w;
-        world.ELEMENTS[i].position.endY = world.ELEMENTS[i].position.y + world.ELEMENTS[i].size.h;
+        temp.position.endX = temp.position.x + temp.size.w;
+        temp.position.endY = temp.position.y + temp.size.h;
     }
 
     oldPlayerPos = {
@@ -59,8 +60,8 @@ self.onmessage = function(e){
     ey = PLAYER.position.endY;
     collisionOccured = false;
     for(var i = 0; i < elementsQuantity; i += 1){
-        if(world.ELEMENTS[i].type !== "background" && world.ELEMENTS[i].type !== "player"){
-            temp = world.ELEMENTS[i];
+        temp = world.ELEMENTS[i];
+        if(temp.type !== "background" && temp.type !== "player"){
             if( !(x > temp.position.endX || ex < temp.position.x || 
                 y > temp.position.endY || ey < temp.position.y)){
                 
@@ -118,8 +119,9 @@ self.onmessage = function(e){
     if(PLAYER.position.x > PLAYER_START_POS_X){
         
         for(var i = 0; i < elementsQuantity; i+=1){
-            if(world.ELEMENTS[i].type === "background"){
-                world.ELEMENTS[i].position.x += (PLAYER.position.x - oldPlayerPos.x) * world.ELEMENTS[i].movingSpeedFactor;
+            temp = world.ELEMENTS[i];
+            if(temp.type === "background"){
+                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
             }
         }
         

@@ -23,7 +23,8 @@ define([
             
             this._gameStage.getStage().position = anwser.CONTAINER;
             
-            for(var i = 0; i < anwser.ELEMENTS.length; i++){
+            var l = anwser.ELEMENTS.length;
+            for(var i = 0; i < l; i++){
                 var temp = this._gameStage._elements[i];
                 temp._data = anwser.ELEMENTS[i];
                 
@@ -32,15 +33,12 @@ define([
                 }
                 
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
-                    var player = temp;
                     this._isPause = true;
                     var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, PIXI.loader.resources.GUI_Button.texture, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
                     this._guiStage.add(Restart);
-                    console.log(this._guiStage.getStage());
-                    console.log(this._gameStage.getStage());
                 }
             }
             
@@ -89,10 +87,13 @@ define([
                     ELEMENTS: []
                 };
                 
-                for(var i = 0; i < this._gameStage._elements.length; i++){
-                    this._gameStage._elements[i]._data.size.w = this._gameStage._elements[i]._sprite.getLocalBounds().width;
-                    this._gameStage._elements[i]._data.size.h = this._gameStage._elements[i]._sprite.getLocalBounds().height;
-                    data.ELEMENTS.push(this._gameStage._elements[i]._data); 
+                var l = this._gameStage._elements.length;
+                var temp = null;
+                for(var i = 0; i < l; i++){
+                    temp = this._gameStage._elements[i];
+                    temp._data.size.w = temp._sprite.getLocalBounds().width;
+                    temp._data.size.h = temp._sprite.getLocalBounds().height;
+                    data.ELEMENTS.push(temp._data); 
                 }
                 
                 this._updateWorker.postMessage(JSON.stringify(data));

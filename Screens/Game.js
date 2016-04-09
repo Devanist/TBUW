@@ -34,11 +34,10 @@ define([
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
                     var player = temp;
                     this._isPause = true;
-                    var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, function(){
+                    var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, PIXI.loader.resources.GUI_Button.texture, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
-                    Restart.init(GUI.Button._spriteSource);
                     this._guiStage.add(Restart);
                     console.log(this._guiStage.getStage());
                     console.log(this._gameStage.getStage());

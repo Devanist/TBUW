@@ -1,13 +1,11 @@
 define([], function () {
 	
-	var BaseElement = function (id, position) {
-        this._sprite = null;
+	var BaseElement = function (id, position, sprite) {
+        this._sprite = new PIXI.Sprite(sprite);
+        this._sprite.position = position;
         this._id = id;
         this._data = {
-            position : {
-                x: position.x,
-                y: position.y
-            },
+            position : position,
             type : ""
         };
 	};
@@ -17,15 +15,6 @@ define([], function () {
 		getType: function () {
 			return this._data.type;
 		},
-        
-        setSpriteSource : function(src){
-            this._spriteSource = src;
-        },
-        
-        init : function(){
-            this._sprite = new PIXI.Sprite(this.__proto__.constructor._spriteSource);
-            this._sprite.position = this._data.position;
-        },
         
         getId : function(){
             return this._id;

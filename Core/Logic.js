@@ -4,12 +4,13 @@ define([
     'Core/Screens'
     ], function(Stage, Levels, Screens){
     
-    var Logic = function(loader, rootStage, keyboard){
+    var Logic = function(loader, rootStage, keyboard, touch){
         this._loader = loader;
         this._rootStage = rootStage;
         this._screens = Screens;
         this._currentScreen = null;
         this._keyboard = keyboard;
+        this._touch = touch;
     };
     
     Logic.prototype = {

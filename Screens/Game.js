@@ -1,10 +1,15 @@
 define([
     'Core/Stage',
-    'Core/Keyboard'
-    ], function(Stage, Keyboard){
+    'Core/Utils',
+    'Core/TouchController'
+    ], function(Stage, Utils, TouchController){
     
     var GameScreen = function(){
         this._gameStage = new Stage();
+        if(Utils.isTouchDevice()){
+            this._touchController = new TouchController();
+            this._gameStage.getStage().addChild(this._touchController.getStage());
+        }
         this._player = null;
         this._GRAVITY = 0.7;
         this._AIR_RES = 0.2;

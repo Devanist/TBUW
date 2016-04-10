@@ -91,11 +91,17 @@ define([
             
             //Obsługa dotyku
             if(Utils.isTouchDevice()){
-                l = touches.length;                
+                l = touches.length;
+                var l3 = this._touchController.getStage()._elements.length;                
                 for(var j = 0; j < l; j += 1){
                     for(var i = 0; i < l2; i += 1){
                         if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                             this._guiStage._elements[i].triggerCallback();
+                        }                     
+                    }
+                    for(i = 0; i < l3; i+=1){
+                        if(this._touchController.getStage()._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                            this._touchController.getStage()._elements[i].triggerCallback();
                         }
                     }
                 }

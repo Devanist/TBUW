@@ -19,7 +19,13 @@ define([
         },
         
         handleTouchEnd : function(e){
+            e.preventDefault();
             console.log('touch end!');
+            var touches = e.changedTouches;
+            for(var i = 0; i < touches.length; i++) {
+                var idx = this.ongoingTouchIndexById(touches[i].identifier);
+                this._onGoingTouches.splice(idx, 1);
+            }
         },
         
         handleTouchCancel : function(e){

@@ -9,7 +9,7 @@ function(Stage, GUI){
         
         console.log(PIXI.loader.resources);
         
-        this._button_a = new GUI.Button("button_a", {x: 1000, y: 700}, PIXI.loader.resources.core_button_a.texture, null);
+        this._button_a = new GUI.Button("button_a", {x: 1000, y: 700}, PIXI.loader.resources.core_button_a.texture, function(){console.log('button a touched');});
         this._button_b = new GUI.Button("button_b", {x: 1100, y: 600}, PIXI.loader.resources.core_button_b.texture, null);
         this._button_x = new GUI.Button("button_x", {x: 900, y: 600}, PIXI.loader.resources.core_button_x.texture, null);
         this._button_y = new GUI.Button("button_y", {x: 1000, y: 500}, PIXI.loader.resources.core_button_y.texture, null);

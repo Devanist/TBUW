@@ -58,6 +58,10 @@ define([
                 }
             }
             return -1;    // not found
+        },
+        
+        getTouches : function(){
+            return this._onGoingTouches;
         }
         
     };

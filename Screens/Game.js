@@ -15,7 +15,7 @@ define([
         this._stage.add(this._guiStage);
         if(Utils.isTouchDevice()){
             this._touchController = new TouchController();
-            this._gameStage.getStage().addChild(this._touchController.getStage());
+            this._stage.add(this._touchController.getStage());
         }
         this._GRAVITY = 0.7;
         this._AIR_RES = 0.2;
@@ -75,12 +75,28 @@ define([
          * Metoda przygotowująca dane i wysyłająca je do workera.
          * @param {object} keysState Obecny stan klawiszy.
          */
-        update : function(keysState, clicks){
+        update : function(keysState, clicks, touches){
             
-            for(var j = 0; j < clicks.length; j += 1){
-                for(var i = 0; i < this._guiStage._elements.length; i += 1){
+            
+            //Obsługa kliknięć
+            var l = clicks.length;
+            var l2 = this._guiStage._elements.length;
+            for(var j = 0; j < l; j += 1){
+                for(var i = 0; i < l2; i += 1){
                     if(this._guiStage._elements[i]._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                         this._guiStage._elements[i].triggerCallback();
+                    }
+                }
+            }
+            
+            //Obsługa dotyku
+            if(Utils.isTouchDevice()){
+                l = touches.length;                
+                for(var j = 0; j < l; j += 1){
+                    for(var i = 0; i < l2; i += 1){
+                        if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                            this._guiStage._elements[i].triggerCallback();
+                        }
                     }
                 }
             }

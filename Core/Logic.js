@@ -4,14 +4,14 @@ define([
     'Core/Screens'
     ], function(Stage, Levels, Screens){
     
-    var Logic = function(loader, rootStage, keyboard, mouse, touch){
+    var Logic = function(loader, rootStage, keyboard, mouse, touchDevice){
 
         this._loader = loader;
         this._rootStage = rootStage;
         this._screens = Screens;
         this._currentScreen = {name: "", screen: null};
         this._keyboard = keyboard;
-        this._touch = touch;
+        this._touchDevice = touchDevice;
         this._mouse = mouse;
     };
     
@@ -23,7 +23,11 @@ define([
         },
         
         update : function(){
-            var updateResult = this._currentScreen.screen.update(this._keyboard.getKeysState(), this._mouse.getClicks());
+            var updateResult = this._currentScreen.screen.update(
+                this._keyboard.getKeysState(), 
+                this._mouse.getClicks(),
+                this._touchDevice.getTouches()
+            );
             if(updateResult.action === "RESTART"){
                 console.log('restarting screen');
                 this.initScreen(this._currentScreen.name);

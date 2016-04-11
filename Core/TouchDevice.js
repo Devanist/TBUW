@@ -11,7 +11,6 @@ define([
         
         handleTouchStart : function(e){
             e.preventDefault();
-            //console.log('touch' + e.changedTouches[0].identifier + 'start!');
             var touches = e.changedTouches;
             for (var i = 0; i < touches.length; i++) {
                 this._onGoingTouches.push(this.copyTouch(touches[i]));
@@ -20,7 +19,6 @@ define([
         
         handleTouchEnd : function(e){
             e.preventDefault();
-            console.log('touch end!');
             var touches = e.changedTouches;
             for(var i = 0; i < touches.length; i++) {
                 var idx = this.ongoingTouchIndexById(touches[i].identifier);
@@ -30,7 +28,6 @@ define([
         
         handleTouchCancel : function(e){
             e.preventDefault();
-            console.log('canceling touch');
             var touches = evt.changedTouches;
   
             for (var i = 0; i < touches.length; i++) {
@@ -40,12 +37,10 @@ define([
         
         handleTouchMove : function(e){
             e.preventDefault();
-            console.log('moving touch');
             var touches = e.changedTouches;
             for (var i = 0; i < touches.length; i++) {
                 var idx = this.ongoingTouchIndexById(touches[i].identifier);
                 if (idx >= 0) {
-                    console.log("continuing touch "+idx);
                     this._onGoingTouches.splice(idx, 1, this.copyTouch(touches[i]));
                 }
             }

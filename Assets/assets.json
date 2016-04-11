@@ -1,6 +1,30 @@
 {
     "graphics": [
         {
+            "name": "core_button_a",
+            "path": "Assets/Gfx/Core/button_a.png"
+        },
+        {
+            "name": "core_button_b",
+            "path": "Assets/Gfx/Core/button_b.png"
+        },
+        {
+            "name": "core_button_x",
+            "path": "Assets/Gfx/Core/button_x.png"
+        },
+        {
+            "name": "core_button_y",
+            "path": "Assets/Gfx/Core/button_y.png"
+        },
+        {
+            "name": "core_ring",
+            "path": "Assets/Gfx/Core/ring.png"
+        },
+        {
+            "name": "core_stick",
+            "path": "Assets/Gfx/Core/stick.png"
+        },
+        {
             "name": "player",
             "path": "Assets/Gfx/ludzik.png"
         },

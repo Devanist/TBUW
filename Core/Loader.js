@@ -51,14 +51,6 @@ define([
         
         setResources : function(res){
             this._resources = res;
-            
-            for(var gui in GUI){
-                if(GUI.hasOwnProperty(gui)){
-                    if(gui === "Button"){
-                        GUI[gui]._spriteSource = this._resources["GUI_Button"].texture;
-                    }
-                }
-            }
         },
         
         /**

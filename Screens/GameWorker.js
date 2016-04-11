@@ -32,13 +32,13 @@ self.onmessage = function(e){
     };
     
     //Obsłuż input usera
-    if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D){
+    if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
         PLAYER.velocity.x += 7;
     }
-    if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A){
+    if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
         PLAYER.velocity.x -= 7;
     }
-    if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W){
+    if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
             PLAYER.velocity.y -= 15;
         }

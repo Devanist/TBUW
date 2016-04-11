@@ -1,9 +1,11 @@
 define([
     'Core/Screen',
     'Core/Stage',
+    'Core/Utils',
     'Core/Keyboard',
-    'GUI/GUI'
-    ], function(Screen, Stage, Keyboard, GUI){
+    'GUI/GUI',
+    'Core/TouchController'
+    ], function(Screen, Stage, Utils, Keyboard, GUI, TouchController){
     
     var GameScreen = function(){
         Screen.call(this);
@@ -11,6 +13,10 @@ define([
         this._guiStage = new Stage();
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
+        if(Utils.isTouchDevice()){
+            this._touchController = new TouchController();
+            this._stage.add(this._touchController.getStage());
+        }
         this._GRAVITY = 0.7;
         this._AIR_RES = 0.2;
         this._isPause = false;
@@ -67,13 +73,31 @@ define([
          * Metoda przygotowująca dane i wysyłająca je do workera.
          * @param {object} keysState Obecny stan klawiszy.
          */
-        update : function(keysState, clicks){
+        update : function(keysState, clicks, touches, touchController){
             
-            for(var j = 0; j < clicks.length; j += 1){
-                for(var i = 0; i < this._guiStage._elements.length; i += 1){
+            
+            //Obsługa kliknięć
+            var l = clicks.length;
+            var l2 = this._guiStage._elements.length;
+            for(var j = 0; j < l; j += 1){
+                for(var i = 0; i < l2; i += 1){
                     if(this._guiStage._elements[i]._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                         this._guiStage._elements[i].triggerCallback();
                     }
+                }
+            }
+            
+            //Obsługa dotyku
+            if(Utils.isTouchDevice()){
+                l = touches.length;
+                this._touchController.updateState(touches);
+                var l3 = this._touchController.getStage()._elements.length;                
+                for(var j = 0; j < l; j += 1){
+                    for(var i = 0; i < l2; i += 1){
+                        if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                            this._guiStage._elements[i].triggerCallback();
+                        }                     
+                    }                    
                 }
             }
             
@@ -82,6 +106,7 @@ define([
                 var data = {
                     CONTAINER: this._gameStage.getStage().position,
                     KEYS_STATE: keysState,
+                    VCONTROLLER: this._touchController.getState(),
                     GRAVITY: this._GRAVITY,
                     AIR_RES: this._AIR_RES,
                     ELEMENTS: []

@@ -25,6 +25,10 @@ define(['GUI/BaseElement'], function(Base){
         this._callback = cb;
     };
     
+    _p.getBounds = function(){
+        return this._sprite.getLocalBounds();
+    };
+    
 	return Button;
 
 });

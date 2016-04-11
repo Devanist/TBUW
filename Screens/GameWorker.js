@@ -37,7 +37,7 @@ self.onmessage = function(e){
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A){
         PLAYER.velocity.x -= 7;
     }
-    if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W){
+    if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
             PLAYER.velocity.y -= 15;
         }

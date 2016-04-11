@@ -75,7 +75,7 @@ define([
          * Metoda przygotowująca dane i wysyłająca je do workera.
          * @param {object} keysState Obecny stan klawiszy.
          */
-        update : function(keysState, clicks, touches){
+        update : function(keysState, clicks, touches, touchController){
             
             
             //Obsługa kliknięć
@@ -92,18 +92,14 @@ define([
             //Obsługa dotyku
             if(Utils.isTouchDevice()){
                 l = touches.length;
+                this._touchController.updateState(touches);
                 var l3 = this._touchController.getStage()._elements.length;                
                 for(var j = 0; j < l; j += 1){
                     for(var i = 0; i < l2; i += 1){
                         if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                             this._guiStage._elements[i].triggerCallback();
                         }                     
-                    }
-                    for(i = 0; i < l3; i+=1){
-                        if(this._touchController.getStage()._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                            this._touchController.getStage()._elements[i].triggerCallback();
-                        }
-                    }
+                    }                    
                 }
             }
             
@@ -112,6 +108,7 @@ define([
                 var data = {
                     CONTAINER: this._gameStage.getStage().position,
                     KEYS_STATE: keysState,
+                    VCONTROLLER: this._touchController.getState(),
                     GRAVITY: this._GRAVITY,
                     AIR_RES: this._AIR_RES,
                     ELEMENTS: []

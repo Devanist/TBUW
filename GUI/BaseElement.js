@@ -22,6 +22,16 @@ define([], function () {
         
         getSprite : function(){
             return this._sprite;
+        },
+        
+        move: function(vec){
+            this._sprite.position.x += vec.x;
+            this._sprite.position.y += vec.y;
+        },
+        
+        setPosition: function(pos){
+            this._sprite.position.x = pos.x;
+            this._sprite.position.y = pos.y;
         }
 		
 	};

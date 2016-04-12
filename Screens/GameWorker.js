@@ -52,7 +52,7 @@ self.onmessage = function(e){
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
-        PLAYER.velocity.y += 7;
+        //PLAYER.velocity.y += 7;
     }
     
     //Uaktualnij pozycję playera

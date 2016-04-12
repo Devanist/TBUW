@@ -13,6 +13,10 @@ define([
         this._guiStage = new Stage();
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
+        
+        var portret = new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture);
+        this._guiStage.add(portret);
+        
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
             this._stage.add(this._touchController.getStage());

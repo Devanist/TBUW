@@ -30,7 +30,7 @@
         },
         {
             "name": "platform",
-            "path": "Assets/Gfx/platform.jpg"
+            "path": "Assets/Gfx/platforma.png"
         },
         {
             "name": "tlo_miasto",
@@ -43,6 +43,10 @@
         {
             "name": "GUI_Button",
             "path": "Assets/Gfx/GUI_Button.png"
+        },
+        {
+            "name": "portret",
+            "path": "Assets/Gfx/portret.png"
         }
     ],
     "sounds": [

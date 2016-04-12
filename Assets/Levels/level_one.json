@@ -36,6 +36,22 @@
             "texture": "platform"
         },
         {
+            "type": "platform",
+            "position": {
+                "x": 770,
+                "y": 500
+            },
+            "texture": "platform"
+        },
+        {
+            "type": "platform",
+            "position": {
+                "x": 1170,
+                "y": 480
+            },
+            "texture": "platform"
+        },
+        {
             "type": "player",
             "id": "mainPlayer",
             "position": {

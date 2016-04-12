@@ -41,7 +41,7 @@ define([
         
         initScreen : function(screen){
             this.setCurrentScreen(screen);
-            this._loader.loadStageConfig(this._currentScreen.screen.getGameStage(), Levels.one.entities, true);
+            this._loader.loadStageConfig(this._currentScreen.screen.getGameStage(), Levels.one.entities);
             this._currentScreen.screen.loadGUI();
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

@@ -7,6 +7,7 @@ var Entity = function(sprite){
     this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
     this._data = {        
+        direction: 1,
         size: {
             w: this._sprite.getBounds().width,
             h: this._sprite.getBounds().height
@@ -17,6 +18,12 @@ var Entity = function(sprite){
             endX: 0,
             endY: 0
         },
+        offset: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        }
     };
 };
 
@@ -52,6 +59,14 @@ Entity.prototype = {
     },
     
     update : function (){
+        if(this._sprite.scale.x > 0 && this._data.direction === -1){
+            this._sprite.scale.x *= this._data.direction;
+            this._sprite.anchor.x = 1;
+        }
+        if(this._sprite.scale.x < 0 && this._data.direction === 1){
+            this._sprite.scale.x *= -this._data.direction;
+            this._sprite.anchor.x = 0;
+        }
         this._sprite.position.x = this._data.position.x;
         this._sprite.position.y = this._data.position.y;
         

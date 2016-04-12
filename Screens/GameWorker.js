@@ -1,5 +1,5 @@
 var world = null;
-var PLAYER_START_POS_X = 60;
+var PLAYER_START_POS_X = 150;
 var elementsQuantity = null;
 var PLAYER = null;
 var oldPlayerPos = {};
@@ -16,7 +16,8 @@ self.onmessage = function(e){
     var temp = null;
     for(var i = 0; i < elementsQuantity; i+=1){
         temp = world.ELEMENTS[i];
-        
+        temp.size.w += temp.offset.width;
+        temp.size.h += temp.offset.height;
         if(temp.type === "player"){
             PLAYER = temp;
         }
@@ -34,9 +35,16 @@ self.onmessage = function(e){
     //Obsłuż input usera
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
         PLAYER.velocity.x += 7;
+        if(PLAYER.direction == -1){
+            PLAYER.direction = 1;
+        }
     }
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
         PLAYER.velocity.x -= 7;
+        if(PLAYER.direction == 1){
+            PLAYER.direction = -1;
+
+        }
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){

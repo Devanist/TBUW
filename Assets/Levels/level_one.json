@@ -1,14 +1,23 @@
 {
     "name": "TEST level",
     "background-color": "000000",
+    "background": [{
+        "type": "background",
+        "position": {
+            "x": 0,
+            "y": 0
+        },
+        "texture": "tlo_miasto",
+        "factor": 0
+    }],
     "entities": [
         {
             "type": "background",
             "position": {
-                "x": -60,
-                "y": 0
+                "x": 100,
+                "y": 375
             },
-            "texture": "tlo_miasto",
+            "texture": "budynek_1",
             "factor": 0.5
         },
         {

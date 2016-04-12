@@ -47,6 +47,14 @@
         {
             "name": "portret",
             "path": "Assets/Gfx/portret.png"
+        },
+        {
+            "name": "budynek_1",
+            "path": "Assets/Gfx/bud1.png"
+        },
+        {
+            "name": "budynek_2",
+            "path": "Assets/Gfx/bud2.png"
         }
     ],
     "sounds": [

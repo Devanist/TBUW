@@ -26,7 +26,7 @@ define([
     var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
     var logic = new Logic(loader, rootStage, keyboard, mouse, touch);
-    var fpsWorker = new Worker('Core/FPS.js');
+    //var fpsWorker = new Worker('Core/FPS.js');
     
     renderer.backgroundColor = 0xFFFFFF;
     renderer.autoResize = true;
@@ -68,7 +68,7 @@ define([
         
         function animate(){
             logic.update();
-            fpsWorker.postMessage(ticker.FPS);
+            //fpsWorker.postMessage(ticker.FPS);
             renderer.render(rootStage.getStage());
             requestAnimationFrame(animate);
         }

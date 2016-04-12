@@ -9,8 +9,10 @@ define([
     
     var GameScreen = function(){
         Screen.call(this);
+        this._background = new Stage();
         this._gameStage = new Stage();
         this._guiStage = new Stage();
+        this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
         
@@ -73,6 +75,10 @@ define([
             return this._stage;
         },
         
+        
+        getBackgroundStage : function(){
+            return this._background;
+        },
         /**
          * Metoda przygotowująca dane i wysyłająca je do workera.
          * @param {object} keysState Obecny stan klawiszy.

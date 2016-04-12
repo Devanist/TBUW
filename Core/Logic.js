@@ -11,7 +11,7 @@ define([
         this._screens = Screens;
         this._currentScreen = {name: "", screen: null};
         this._keyboard = keyboard;
-        this._touchDevice = touchDevice;
+        this._touchDevice = touchDevice || null;
         this._mouse = mouse;
     };
     

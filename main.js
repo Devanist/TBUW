@@ -22,10 +22,7 @@ define([
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
-    var touch = null;
-    if(Utils.isTouchDevice()){
-        touch = new TouchDevice();
-    }
+    var touch = new TouchDevice();
     var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
     var logic = new Logic(loader, rootStage, keyboard, mouse, touch);
@@ -59,10 +56,12 @@ define([
         
         window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
-        window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
-        window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
-        window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
-        window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
+        if (Utils.isTouchDevice()) {
+            window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
+            window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
+            window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
+            window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
+        }
         window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
 
         logic.run(animate);

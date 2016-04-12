@@ -13,8 +13,8 @@ define([
         this._guiStage = new Stage();
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
+        this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
-            this._touchController = new TouchController();
             this._stage.add(this._touchController.getStage());
         }
         this._GRAVITY = 0.7;

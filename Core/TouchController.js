@@ -81,14 +81,12 @@ function(Stage, GUI){
                             
                             var dx = this._stickPosition.x + this._state.AXIS_X;
                             var dy = this._stickPosition.y + this._state.AXIS_Y;
-                            console.log(this._stickPosition);
                             this._analog_stick.setPosition(
                                 {
                                     x: dx , 
                                     y: dy
                                 }
                             );
-                            console.log(this._stickPosition);
                         }
                         break;
                     }

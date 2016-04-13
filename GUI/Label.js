@@ -20,7 +20,7 @@ function(Base){
     _p = Label.prototype;
     
     _p.setText = function(text){
-        this._data.text = text;
+        this._sprite.text = text;
     };
     
     return Label;

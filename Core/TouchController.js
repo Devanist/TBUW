@@ -9,10 +9,10 @@ function(Stage, GUI){
         this._stickInitialTouch = {x: null, y: null};
         this._stickPosition = {x: 140, y: 600};
         
-        this._button_a = new GUI.Button("BUTTON_A", {x: 1000, y: 700}, PIXI.loader.resources.core_button_a.texture, null);
-        this._button_b = new GUI.Button("BUTTON_B", {x: 1100, y: 600}, PIXI.loader.resources.core_button_b.texture, null);
-        this._button_x = new GUI.Button("BUTTON_X", {x: 900, y: 600}, PIXI.loader.resources.core_button_x.texture, null);
-        this._button_y = new GUI.Button("BUTTON_Y", {x: 1000, y: 500}, PIXI.loader.resources.core_button_y.texture, null);
+        this._button_a = new GUI.Image("BUTTON_A", {x: 1000, y: 700}, PIXI.loader.resources.core_button_a.texture);
+        this._button_b = new GUI.Image("BUTTON_B", {x: 1100, y: 600}, PIXI.loader.resources.core_button_b.texture);
+        this._button_x = new GUI.Image("BUTTON_X", {x: 900, y: 600}, PIXI.loader.resources.core_button_x.texture);
+        this._button_y = new GUI.Image("BUTTON_Y", {x: 1000, y: 500}, PIXI.loader.resources.core_button_y.texture);
         
         this._analog_ring = new GUI.Image("ANALOG_RING", {x:70, y:530}, PIXI.loader.resources.core_ring.texture);
         

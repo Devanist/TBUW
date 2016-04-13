@@ -1,6 +1,6 @@
 define(['GUI/BaseElement'], function(Base){
 
-	var Button = function(id, position, sprite, cb){
+	var Button = function(id, position, sprite, text, cb){
 		Base.call(this, id, position, sprite);
         this._data.type = "button";
 		this._callback = cb;

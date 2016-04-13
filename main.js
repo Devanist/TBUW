@@ -18,7 +18,6 @@ define([
     };
         
     var renderer = new PIXI.WebGLRenderer(window.innerHeight / 10 * 16, window.innerHeight);
-    var ticker = new PIXI.ticker.Ticker();
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
@@ -68,7 +67,6 @@ define([
         
         function animate(){
             logic.update();
-            //fpsWorker.postMessage(ticker.FPS);
             renderer.render(rootStage.getStage());
             requestAnimationFrame(animate);
         }

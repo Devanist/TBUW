@@ -80,7 +80,8 @@ define([
          */
         update : function(keysState, clicks, touches, touchController){
             
-            this._background._elements[0]._sprite.width = window.innerWidth;
+            //this._background._elements[0]._sprite.width = window.innerWidth;
+            this._background._elements[0]._sprite.scale.x = 1.29;
             
             var temp = null;
             

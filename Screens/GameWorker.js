@@ -1,5 +1,5 @@
 var world = null;
-var PLAYER_START_POS_X = 150;
+var CAMERA_OFFSET = 250;
 var elementsQuantity = null;
 var PLAYER = null;
 var oldPlayerPos = {};
@@ -124,7 +124,7 @@ self.onmessage = function(e){
     }
     
     //PARALLAX
-    if(PLAYER.position.x > PLAYER_START_POS_X){
+    if(PLAYER.position.x > CAMERA_OFFSET){
         
         for(var i = 0; i < elementsQuantity; i+=1){
             temp = world.ELEMENTS[i];
@@ -136,7 +136,7 @@ self.onmessage = function(e){
     }
     
     //Przemieść kamerę
-    world.CONTAINER.x = -PLAYER.position.x + PLAYER_START_POS_X;
+    world.CONTAINER.x = -PLAYER.position.x + CAMERA_OFFSET;
     if(world.CONTAINER.x >= 0){
         world.CONTAINER.x = 0;
     }

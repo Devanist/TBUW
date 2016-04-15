@@ -14,7 +14,7 @@ define([
 
     var scale = {
         y : h / 800,
-        x : h * 1.6 / 1280
+        x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio
     };
         
     var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);

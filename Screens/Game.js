@@ -16,9 +16,6 @@ define([
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
         
-        this._ticker = new PIXI.ticker.Ticker();
-        this._ticker.start();
-        
         var portret = new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture);
         this._guiStage.add(portret);
         
@@ -49,10 +46,12 @@ define([
                 
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
                     this._isPause = true;
+                    
                     var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.loader.resources.GUI_Button.texture, "RETRY", {}, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
+                    
                     this._guiStage.add(Restart);
                 }
             }
@@ -62,13 +61,6 @@ define([
     };
     
     GameScreen.prototype = {
-        
-        /**
-         * Dodaje elementy GUI do Stage po poprzednim załadowaniu poziomu, aby GUI rysowało się nad wszystkim innym.
-         */
-        loadGUI : function(){
-            
-        },
         
         getGameStage : function(){
             return this._gameStage;
@@ -89,15 +81,17 @@ define([
         update : function(keysState, clicks, touches, touchController){
             
             this._background._elements[0]._sprite.width = window.innerWidth;
-            console.log(this._background._elements[0]._sprite.width);
+            
+            var temp = null;
             
             //Obsługa kliknięć
             var l = clicks.length;
             var l2 = this._guiStage._elements.length;
             for(var j = 0; j < l; j += 1){
                 for(var i = 0; i < l2; i += 1){
-                    if(this._guiStage._elements[i]._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
-                        this._guiStage._elements[i].triggerCallback();
+                    temp = this._guiStage._elements[i];
+                    if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                        temp.triggerCallback();
                     }
                 }
             }
@@ -108,9 +102,10 @@ define([
                 this._touchController.updateState(touches);
                 var l3 = this._touchController.getStage()._elements.length;                
                 for(var j = 0; j < l; j += 1){
-                    for(var i = 0; i < l2; i += 1){
-                        if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                            this._guiStage._elements[i].triggerCallback();
+                    for(i = 0; i < l2; i += 1){
+                        temp = this._guiStage._elements[i];
+                        if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                            temp.triggerCallback();
                         }                     
                     }                    
                 }
@@ -127,9 +122,8 @@ define([
                     ELEMENTS: []
                 };
                 
-                var l = this._gameStage._elements.length;
-                var temp = null;
-                for(var i = 0; i < l; i++){
+                l = this._gameStage._elements.length;
+                for(i = 0; i < l; i++){
                     temp = this._gameStage._elements[i];
                     temp._data.size.w = temp._sprite.getLocalBounds().width;
                     temp._data.size.h = temp._sprite.getLocalBounds().height;

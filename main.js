@@ -10,11 +10,11 @@ define([
     ], function(PIXI, Loader, Logic, Stage, Keyboard, TouchDevice, Mouse, Utils){
 
     var h = window.innerHeight;
-    var w = h * 1.6;
+    var w = window.innerWidth;
 
     var scale = {
         y : h / 800,
-        x : w / 1280
+        x : h * 1.6 / 1280
     };
         
     var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
@@ -25,7 +25,6 @@ define([
     var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
     var logic = new Logic(loader, rootStage, keyboard, mouse, touch);
-    //var fpsWorker = new Worker('Core/FPS.js');
     
     renderer.backgroundColor = 0xFFFFFF;
     renderer.autoResize = true;
@@ -34,7 +33,7 @@ define([
         h = window.innerHeight;
         w = window.innerWidth;
         scale.y = h / 800;
-        scale.x = w / 1280;
+        scale.x = h * 1.6 / 1280;
         renderer.view.style.width = w + "px";
         renderer.view.style.height = h + "px";
         rootStage.setScale({ x: scale.x, y: scale.y });

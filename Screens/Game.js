@@ -81,7 +81,7 @@ define([
         update : function(keysState, clicks, touches, touchController){
             
             //this._background._elements[0]._sprite.width = window.innerWidth;
-            this._background._elements[0]._sprite.scale.x = 1.29;
+            this._background._elements[0]._sprite.scale.x = window.innerWidth / 1280 + 0.4;
             
             var temp = null;
             

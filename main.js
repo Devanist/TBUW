@@ -17,7 +17,7 @@ define([
         x : w / 1280
     };
         
-    var renderer = new PIXI.WebGLRenderer(window.innerHeight / 10 * 16, window.innerHeight);
+    var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
@@ -32,7 +32,7 @@ define([
     
     window.onresize = function (event) {
         h = window.innerHeight;
-        w = h * 1.6;
+        w = window.innerWidth;
         scale.y = h / 800;
         scale.x = w / 1280;
         renderer.view.style.width = w + "px";
@@ -66,7 +66,6 @@ define([
         logic.run(animate);
         
         function animate(){
-            logic.update();
             renderer.render(rootStage.getStage());
             requestAnimationFrame(animate);
         }

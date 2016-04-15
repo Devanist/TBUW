@@ -22,9 +22,6 @@ define([
         var portret = new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture);
         this._guiStage.add(portret);
         
-        this._fps = new GUI.Label("fps", {x: 20, y: 220}, "FPS: " + this._ticker.elapsedMS.toString(), {});
-        this._guiStage.add(this._fps);
-        
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
             this._stage.add(this._touchController.getStage());
@@ -52,7 +49,7 @@ define([
                 
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
                     this._isPause = true;
-                    var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, PIXI.loader.resources.GUI_Button.texture, "RETRY", function(){
+                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.loader.resources.GUI_Button.texture, "RETRY", {}, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
@@ -91,7 +88,8 @@ define([
          */
         update : function(keysState, clicks, touches, touchController){
             
-            this._fps.setText("fps" + (1000 /this._ticker.elapsedMS).toString());
+            this._background._elements[0]._sprite.width = window.innerWidth;
+            console.log(this._background._elements[0]._sprite.width);
             
             //Obsługa kliknięć
             var l = clicks.length;

@@ -20,6 +20,7 @@ define([
         run : function(animate){
             this.initScreen("game");
             animate();
+            this.update();
         },
         
         update : function(){
@@ -32,6 +33,9 @@ define([
                 console.log('restarting screen');
                 this.initScreen(this._currentScreen.name);
             }
+            setTimeout(function(){
+                this.update();
+            }.bind(this), 16);
         },
         
         setCurrentScreen : function(name){

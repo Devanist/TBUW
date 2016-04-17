@@ -1,5 +1,8 @@
 define([], function(){
     
+    /**
+     * Showing boundary boxes of sprites.
+     */
     var BoundaryBox = function(position, size){
         
         this._box = new PIXI.Graphics();

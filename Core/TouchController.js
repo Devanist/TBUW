@@ -4,6 +4,9 @@ define([
 ], 
 function(Stage, GUI){
     
+    /**
+     * Virtual controller for touch devices.
+     */
     var TouchController = function(){
         this._stage = new Stage();
         this._stickInitialTouch = {x: null, y: null};

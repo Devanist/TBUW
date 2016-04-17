@@ -1,6 +1,5 @@
 {
     "name": "TEST level",
-    "background-color": "000000",
     "background": [{
         "type": "background",
         "position": {

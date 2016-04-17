@@ -45,8 +45,10 @@ define([
         
         initScreen : function(screen){
             this.setCurrentScreen(screen);
-            this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
-            this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
+            if(screen === "game"){
+                this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
+                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
+            }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }
     };

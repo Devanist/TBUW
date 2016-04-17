@@ -35,9 +35,18 @@ define(['Entities/Entities'], function(Entities){
             for(var i = 0; i < l; i++){
                 if(this._elements[i].id === id){
                     this._elements.splice(i);
+                    this._stage.removeChild(i);
                 }
             }
-        },        
+        },       
+        
+        removeAll : function(){
+            var l = this._elements.length;
+            for(var i = 0; i < l; i++){
+                this._elements.splice(i);
+                this._stage.removeChild(i);
+            }
+        },
         
         /**
          * Zwraca obiekt PIXI.Container

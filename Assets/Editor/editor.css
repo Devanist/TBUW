@@ -33,6 +33,12 @@ body {
 }
 #entity_selection input{
     margin-top:6px;
+    width: 205px;
+    display: block;
+}
+#asset_selection{
+    width: 205px;
+    border-right: 1px solid black;
 }
 #clear_selection_button{
     position: relative;
@@ -40,6 +46,17 @@ body {
     left: 5px;
 }
 #sprite_preview{
+    margin-left: 20px;
     display: block;
-    height: 140px;
+    max-width: 140px;
+    max-height: 140px;
+}
+#message_box{
+    font-size: small;
+}
+.error_message{
+    color: red;
+}
+#details_box{
+    display: none;
 }

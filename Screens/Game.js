@@ -60,83 +60,84 @@ define([
         
     };
     
-    GameScreen.prototype = {
+    GameScreen.prototype = Object.create(Screen.prototype, {
+        constructor: {
+            value: GameScreen,
+            enumerable: false,
+            configurable: true,
+            writable: true
+        }
+    });
+    
+    var _p = GameScreen.prototype;
         
-        getGameStage : function(){
-            return this._gameStage;
-        },
+    _p.getMainStage = function(){
+        return this._gameStage;
+    };
         
-        getStage : function(){
-            return this._stage;
-        },
+    /**
+     * Metoda przygotowująca dane i wysyłająca je do workera.
+     * @param {object} keysState Obecny stan klawiszy.
+     */
+    _p.update = function(keysState, clicks, touches, touchController){
         
+        //Background scaling
+        this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
         
-        getBackgroundStage : function(){
-            return this._background;
-        },
-        /**
-         * Metoda przygotowująca dane i wysyłająca je do workera.
-         * @param {object} keysState Obecny stan klawiszy.
-         */
-        update : function(keysState, clicks, touches, touchController){
-            
-            this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
-            
-            var temp = null;
-            
-            //Obsługa kliknięć
-            var l = clicks.length;
-            var l2 = this._guiStage._elements.length;
-            for(var j = 0; j < l; j += 1){
-                for(var i = 0; i < l2; i += 1){
-                    temp = this._guiStage._elements[i];
-                    if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
-                        temp.triggerCallback();
-                    }
+        var temp = null;
+        
+        //Mouse clicks handling
+        var l = clicks.length;
+        var l2 = this._guiStage._elements.length;
+        for(var j = 0; j < l; j += 1){
+            for(var i = 0; i < l2; i += 1){
+                temp = this._guiStage._elements[i];
+                if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                    temp.triggerCallback();
                 }
             }
-            
-            //Obsługa dotyku
-            if(Utils.isTouchDevice()){
-                l = touches.length;
-                this._touchController.updateState(touches);
-                var l3 = this._touchController.getStage()._elements.length;                
-                for(var j = 0; j < l; j += 1){
-                    for(i = 0; i < l2; i += 1){
-                        temp = this._guiStage._elements[i];
-                        if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                            temp.triggerCallback();
-                        }                     
-                    }                    
-                }
-            }
-            
-            if(!this._isPause){
-            
-                var data = {
-                    CONTAINER: this._gameStage.getStage().position,
-                    KEYS_STATE: keysState,
-                    VCONTROLLER: this._touchController.getState(),
-                    GRAVITY: this._GRAVITY,
-                    AIR_RES: this._AIR_RES,
-                    ELEMENTS: []
-                };
-                
-                l = this._gameStage._elements.length;
-                for(i = 0; i < l; i++){
-                    temp = this._gameStage._elements[i];
-                    temp._data.size.w = temp._sprite.getLocalBounds().width;
-                    temp._data.size.h = temp._sprite.getLocalBounds().height;
-                    data.ELEMENTS.push(temp._data); 
-                }
-                
-                this._updateWorker.postMessage(JSON.stringify(data));
-            
-            }
-            
-            return {action: this._onUpdateAction, changeTo: this._nextScreen};
         }
         
+        //Touch handling
+        if(Utils.isTouchDevice()){
+            l = touches.length;
+            this._touchController.updateState(touches);
+            var l3 = this._touchController.getStage()._elements.length;                
+            for(var j = 0; j < l; j += 1){
+                for(i = 0; i < l2; i += 1){
+                    temp = this._guiStage._elements[i];
+                    if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                        temp.triggerCallback();
+                    }                     
+                }                    
+            }
+        }
+        
+        if(!this._isPause){
+        
+            //Preparing data and sending it to worker.
+            var data = {
+                CONTAINER: this._gameStage.getStage().position,
+                KEYS_STATE: keysState,
+                VCONTROLLER: this._touchController.getState(),
+                GRAVITY: this._GRAVITY,
+                AIR_RES: this._AIR_RES,
+                ELEMENTS: []
+            };
+            
+            l = this._gameStage._elements.length;
+            for(i = 0; i < l; i++){
+                temp = this._gameStage._elements[i];
+                temp._data.size.w = temp._sprite.getLocalBounds().width;
+                temp._data.size.h = temp._sprite.getLocalBounds().height;
+                data.ELEMENTS.push(temp._data); 
+            }
+            
+            this._updateWorker.postMessage(JSON.stringify(data));
+        
+        }
+        
+        return {action: this._onUpdateAction, changeTo: this._nextScreen};
     };
     
     return GameScreen;

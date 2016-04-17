@@ -1,7 +1,7 @@
 define([
     'Core/Stage',
     'Core/Levels',
-    'Core/Screens'
+    'Screens/Screens'
     ], function(Stage, Levels, Screens){
     
     var Logic = function(loader, rootStage, keyboard, mouse, touchDevice){
@@ -18,7 +18,7 @@ define([
     Logic.prototype = {
         
         run : function(animate){
-            this.initScreen("game");
+            this.initScreen("editor");
             animate();
             this.update();
         },
@@ -46,7 +46,7 @@ define([
         initScreen : function(screen){
             this.setCurrentScreen(screen);
             this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
-            this._loader.loadStageConfig(this._currentScreen.screen.getGameStage(), Levels.one.entities);
+            this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
             this._rootStage.add(this._currentScreen.screen.getStage());
         }
     };

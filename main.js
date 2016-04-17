@@ -14,9 +14,10 @@ define([
 
     var scale = {
         y : h / 800,
-        x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio
+        x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
     };
-        
+
+    //Initialize PIXI and devices.
     var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
     var loader = new Loader();
     var rootStage = new Stage();

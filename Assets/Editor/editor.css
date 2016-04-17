@@ -1,0 +1,45 @@
+body {
+    font-family: "Helvetica";
+}
+#toolbox{
+    position: absolute;
+    top: 0;
+    left: 960px;
+    background-color: grey;
+    width: 640px;
+    height: 600px;
+}
+#toolbox_content{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#toolbox_content input{
+    margin-right:5px;
+}
+#add_entity_button{
+    display: block;
+}
+#library{
+    position: absolute;
+    top: 600px;
+    left: 0;
+    background-color: #AEAEAE;
+    width: 1600px;
+    height: 175px;
+}
+#library section{
+    margin-left: 5px;
+    float:left;
+}
+#entity_selection input{
+    margin-top:6px;
+}
+#clear_selection_button{
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+#sprite_preview{
+    display: block;
+    height: 140px;
+}

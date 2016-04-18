@@ -3,7 +3,8 @@ define([], function(){
 /**
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
-var Entity = function(sprite){
+var Entity = function(id, sprite){
+    this._id = id;
     this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
     this._data = {        
@@ -34,6 +35,10 @@ Entity.prototype = {
      */
     isStatic : function(){
         return this._isStatic;
+    },
+    
+    getId : function(){
+        return this._id;
     },
     
     setPosition : function(pos){

@@ -66,10 +66,10 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(this._resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, this._resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "platform"){
-                    temp = new Entities.Platform(this._resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, this._resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
                     temp = new Entities.Player(e.id, this._resources[e.texture].texture);

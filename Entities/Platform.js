@@ -1,7 +1,7 @@
 define(['Entities/Item'], function(Item){
     
-    var Platform = function(sprite){
-        Item.call(this, sprite);
+    var Platform = function(id, sprite){
+        Item.call(this, id, sprite);
         this._isStatic = true;
         this._data.type = "platform";
         this._data.movingSpeedFactor = 1;

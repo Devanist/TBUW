@@ -70,6 +70,7 @@ function(Screen, Stage, Entities, $){
         $("#add_new_button").on("click", function(e){
             this._curId = this._level.entities.length;
             this._selectedElement = {
+                id: this._curId,
                 type: null,
                 texture: null,
                 position: {
@@ -77,6 +78,11 @@ function(Screen, Stage, Entities, $){
                     y: 0
                 }
             };
+            $("#details_box").hide();
+            $("#position-x").val(0);
+            $("#position-y").val(0);
+            $("#entities_list").val("");
+            $("#assets_list").val("");
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
         }.bind(this));
         
@@ -143,10 +149,10 @@ function(Screen, Stage, Entities, $){
                     $("#elements_list").append('<li>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + '</li>');
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
+                $("#position-x").val(this._selectedElement.position.x);
+                $("#position-y").val(this._selectedElement.position.y);
                 $("#details_box").show();
                 this.updateStage("game");
-                console.log(this._gameStage);
-                console.log(this._level);
             }
             else{
                 $("#message_box").removeClass("error_message");
@@ -172,6 +178,28 @@ function(Screen, Stage, Entities, $){
             }
         }.bind(this));
         
+        $("#position-x").on("change", function(){
+            this._selectedElement.position.x = $("#position-x").val();
+            for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                    this._gameStage._elements[i]._sprite.position.x = $("#position-x").val();
+                    break;
+                }
+            }
+            console.log(this._gameStage._elements[i]._sprite);
+        }.bind(this));
+        
+        $("#position-y").on("change", function(){
+            this._selectedElement.position.y = $("#position-y").val();
+            for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                    this._gameStage._elements[i]._sprite.position.y = $("#position-y").val();
+                    break;
+                }
+            }
+            console.log(this._gameStage._elements[i]._sprite);
+        }.bind(this));
+        
     };
     
     _p.getMainStage = function(){
@@ -180,8 +208,10 @@ function(Screen, Stage, Entities, $){
     
     _p.update = function(){
         
-        this._canvas.setAttribute("height", "600");
-        this._canvas.setAttribute("width", "960");
+       window.innerHeight = 600;
+       window.innerWidth = 960;
+       // this._canvas.setAttribute("height", "600");
+       // this._canvas.setAttribute("width", "960");
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen};
     };
@@ -206,10 +236,10 @@ function(Screen, Stage, Entities, $){
                 e = this._level.entities[i];
                 console.log(e);
                 if(e.type === "Background"){
-                    temp = new Entities.Background(PIXI.loader.resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "Platform"){
-                    temp = new Entities.Platform(PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "Player"){
                     temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);

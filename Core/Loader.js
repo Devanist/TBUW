@@ -6,6 +6,9 @@ define([
     'GUI/GUI'
     ], function(cfg, Entities, BoundaryBox, GUI){
 
+    /**
+     * Wrapper for PIXI.loader
+     */
     var Loader = function () {
         this._cfg = cfg;
         this._progressCb = null;
@@ -16,6 +19,10 @@ define([
 
     Loader.prototype = {
 
+        /**
+         * Method loading all assets given in config. When they all are loaded it triggers given callback function.
+         * @param {function} callback Callback method
+         */
         loadAssets : function(callback){
             var t = null;
             
@@ -33,28 +40,42 @@ define([
             PIXI.loader.load();
         },
         
+        /**
+         * Sets the onprogress callback function.
+         * @param {function} cb Callback method
+         */
         setProgressCb : function(cb){
             this._progressCb = cb;
         },
         
+        /**
+         * Method returns the quantity of already loaded assets.
+         * @returns {int}
+         */
         assetsLoaded : function(){
             return this._loadedAssets;
         },
         
+        /**
+         * Method returns the quantity of all assets that should be loaded.
+         * @returns {int}
+         */
         allAssets : function(){
             return this._allAssets;
         },
         
+        /**
+         * Method increment the loaded assets counter.
+         */
         incrementLoadedAssets : function(){
             this._loadedAssets += 1;
         },
         
-        setResources : function(res){
-            this._resources = res;
-        },
-        
         /**
-         * Metoda dodaje elementy do sceny na podstawie configu.
+         * Method creates the elements from given config and injects them into given stage.
+         * @param {object} stage Stage that you want inject elements into
+         * @param {object} cfg Config file
+         * @param {boolean} debug If this is true, boundary boxes will be showed
          */
         loadStageConfig : function(stage, cfg, debug){
             
@@ -66,13 +87,13 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(this._resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(PIXI.loader.resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "platform"){
-                    temp = new Entities.Platform(this._resources[e.texture].texture);
+                    temp = new Entities.Platform(PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
-                    temp = new Entities.Player(e.id, this._resources[e.texture].texture);
+                    temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 temp.setPosition(e.position);
                 stage.add(temp);

@@ -83,6 +83,7 @@ function(Screen, Stage, Entities, $){
             $("#details_box").hide();
             $("#position-x").val(0);
             $("#position-y").val(0);
+            $("#factor").val("");
             $("#entities_list").val("");
             $("#assets_list").val("");
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
@@ -123,6 +124,7 @@ function(Screen, Stage, Entities, $){
             '<section id="details_box">'+
                 '<label>X:</label><input type="text" id="position-x">'+
                 '<label>Y:</label><input type="text" id="position-y">'+
+                '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
             '</section>'
         );
         
@@ -146,6 +148,16 @@ function(Screen, Stage, Entities, $){
         $("#entities_list").on("input", function(e){
             if(Entities.hasOwnProperty($("#entities_list").val())){
                 this._selectedElement.type = $("#entities_list").val();
+                if($("#entities_list").val() === "Background"){
+                    this._selectedElement.factor = 1;
+                    $("#factor").show().val(1);
+                    $("#factor_label").show();
+                }
+                else{
+                    this._selectedElement.factor = undefined;
+                    $("#factor").hide().val("");
+                    $("#factor_label").hide();
+                }
             }
         }.bind(this));
         
@@ -157,8 +169,8 @@ function(Screen, Stage, Entities, $){
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
                 this._level.entities[this._curId] = this._selectedElement;
-                if($("li #el" + this._curId).length === 0){
-                    $("#elements_list").append('<li>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + '</li>');
+                if($("li #el_" + this._curId).length === 0){
+                    $("#elements_list").append('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + '</li>');
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
                 $("#position-x").val(this._selectedElement.position.x);
@@ -184,6 +196,13 @@ function(Screen, Stage, Entities, $){
             if(PIXI.loader.resources.hasOwnProperty($("#assets_list").val())){
                 $("#sprite_preview").attr("src", PIXI.loader.resources[$("#assets_list").val()].url);
                 this._selectedElement.texture = $("#assets_list").val();
+                for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                    if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#assets_list").val()].texture);
+                        $("#el_"+this._curId).text(this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture);
+                        break;
+                    }
+                }
             }
             else{
                 $("#sprite_preview").attr("src", "Assets/Editor/No_image.png");

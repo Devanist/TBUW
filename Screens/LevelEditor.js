@@ -54,6 +54,8 @@ function(Screen, Stage, Entities, $){
     
     _p.appendToolBox = function(){
         
+        var that = this;
+        
         $(this._canvas).after("<section id='toolbox'></section>");
 
         $("#toolbox").append(
@@ -85,6 +87,16 @@ function(Screen, Stage, Entities, $){
             $("#assets_list").val("");
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
         }.bind(this));
+        
+        $("#save_button").on("click", function(){
+            var data = JSON.stringify(that._level);
+            var linkData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(data);
+            window.open(linkData);
+        });
+        
+        $("#level_name").on("change", function(){
+            that._level.name = $("#level_name").val();
+        });
         
     };
     

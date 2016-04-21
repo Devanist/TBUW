@@ -120,6 +120,22 @@ function(Screen, Stage, Entities, $){
             that._level.name = $("#level_name").val();
         });
         
+        $("body").on("click", "ul#elements_list li", function(e){
+            console.log(e);
+            that._curId = e.target.id.substring(3);
+            that._selectedElement = that._level.entities[that._curId];
+            $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
+            $("#position-x").val(that._selectedElement.position.x);
+            $("#position-y").val(that._selectedElement.position.y);
+            $("#entities_list").val(that._selectedElement.type);
+            $("#assets_list").val(that._selectedElement.texture);
+            if(that._selectedElement.type !== "Background"){
+                $("#factor").hide();
+                $("#factor_label").hide();
+            }
+            $("#details_box").show();
+        });
+        
     };
     
     _p.appendAssetsLibrary = function(){

@@ -60,3 +60,6 @@ body {
 #details_box{
     display: none;
 }
+#elements_list li{
+    cursor: pointer;
+}

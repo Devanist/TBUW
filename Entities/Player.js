@@ -1,7 +1,8 @@
 define([
-    'Entities/Creature'
+    'Entities/Creature',
+    'Currencies/Currencies'
 ], 
-function(Creature){
+function(Creature, Currencies){
     
     var Player = function(id, sprite){
         Creature.call(this, id, sprite);
@@ -13,7 +14,7 @@ function(Creature){
         this._data.offset.width = -3;
         this._data.offset.height = -11;
         this._data.position.endY = this._data.position.y + this._data.size.h;
-        this._currencies = [];
+        this._currencies = new Currencies();
     };
     
     Player.prototype = Object.create(Creature.prototype, {

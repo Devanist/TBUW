@@ -6,7 +6,9 @@ define([], function () {
         this._id = id;
         this._data = {
             position : position,
-            type : ""
+            type : "",
+            rotation: 0,
+            currentRotationAngle: 0
         };
 	};
 	
@@ -32,6 +34,10 @@ define([], function () {
         setPosition: function(pos){
             this._sprite.position.x = pos.x;
             this._sprite.position.y = pos.y;
+        },
+        
+        setRotation : function(val){
+            this._data.rotation = val;
         }
 		
 	};

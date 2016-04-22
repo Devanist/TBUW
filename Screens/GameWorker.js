@@ -145,6 +145,13 @@ self.onmessage = function(e){
     PLAYER.velocity.x = -(PLAYER.velocity.x * world.AIR_RES);
     PLAYER.velocity.y +=  world.GRAVITY;
     
+    //GUI
+    var l = world.GUI_ELEMENTS.length;
+    for(var i = 0; i < l; i+=1){
+        temp = world.GUI_ELEMENTS[i];
+        temp.currentRotationAngle += temp.rotation;
+    }
+    
     postMessage(JSON.stringify(world));
     
 };

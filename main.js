@@ -65,7 +65,6 @@ define([
         logic.run(animate);
         
         function animate(){
-            console.log(rootStage);
             renderer.render(rootStage.getStage());
             requestAnimationFrame(animate);
         }

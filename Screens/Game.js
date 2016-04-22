@@ -16,8 +16,9 @@ define([
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
         
-        var portret = new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture);
-        this._guiStage.add(portret);
+        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
+        
+        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
         
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
@@ -32,12 +33,12 @@ define([
         this._updateWorker.onmessage = function(respond){
             
             var anwser = JSON.parse(respond.data);
-            
+            var temp = null;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
             var l = anwser.ELEMENTS.length;
             for(var i = 0; i < l; i++){
-                var temp = this._gameStage._elements[i];
+                temp = this._gameStage._elements[i];
                 temp._data = anwser.ELEMENTS[i];
                 
                 if(temp.update){
@@ -54,6 +55,13 @@ define([
                     
                     this._guiStage.add(Restart);
                 }
+            }
+            
+            l = anwser.GUI_ELEMENTS.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                temp._data = anwser.GUI_ELEMENTS[i];
+                temp._sprite.rotation = temp._data.currentRotationAngle;
             }
             
         }.bind(this);
@@ -122,7 +130,8 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                ELEMENTS: []
+                ELEMENTS: [],
+                GUI_ELEMENTS: []
             };
             
             l = this._gameStage._elements.length;
@@ -131,6 +140,12 @@ define([
                 temp._data.size.w = temp._sprite.getLocalBounds().width;
                 temp._data.size.h = temp._sprite.getLocalBounds().height;
                 data.ELEMENTS.push(temp._data); 
+            }
+            
+            l = this._guiStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                data.GUI_ELEMENTS.push(temp._data);
             }
             
             this._updateWorker.postMessage(JSON.stringify(data));

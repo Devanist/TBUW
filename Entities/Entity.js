@@ -23,7 +23,9 @@ var Entity = function(sprite){
             y: 0,
             width: 0,
             height: 0
-        }
+        },
+        rotation: 0,
+        currentRotationAngle: 0
     };
 };
 
@@ -84,6 +86,15 @@ Entity.prototype = {
     debug_addBoundaryBox : function(bbox){
         this.d_BBox = bbox;
         this._sprite.parent.addChild(this.d_BBox.getBox());
+    },
+    
+    setRotationAngle : function(val){
+        this._data.rotation = val;
+    },
+    
+    rotate : function(angle){
+        this._data.currentRotationAngle = angle;
+        this._sprite.rotation = angle;
     }
     
 };

@@ -95,6 +95,10 @@ define([
                 else if(e.type === "player"){
                     temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
                 }
+                else if(e.type === "BlockCoin"){
+                    temp = new Entities.BlockCoin(e.quantity);
+                }
+                console.log(e);
                 temp.setPosition(e.position);
                 stage.add(temp);
 

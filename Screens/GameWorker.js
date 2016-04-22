@@ -18,6 +18,7 @@ self.onmessage = function(e){
         temp = world.ELEMENTS[i];
         temp.size.w += temp.offset.width;
         temp.size.h += temp.offset.height;
+        temp.currentRotationAngle += temp.rotation;
         if(temp.type === "player"){
             PLAYER = temp;
         }
@@ -74,6 +75,10 @@ self.onmessage = function(e){
                 y > temp.position.endY || ey < temp.position.y)){
                 
                 collisionOccured = true;
+                
+                if(temp.type === "BlockCoin"){
+                    continue;
+                }
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
                 if(y <= temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){

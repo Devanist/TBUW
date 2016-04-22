@@ -1,8 +1,9 @@
 define(['Entities/Entity'], function(Entity){
     
-    var Collectible = function(sprite, position){
+    var Collectible = function(sprite){
         Entity.call(this, sprite);
-        this.setPosition(position);
+        this._sprite.anchor.x = 0.5;
+        this._sprite.anchor.y = 0.5;
         this._currency = null;
     };
     

@@ -78,6 +78,14 @@
             "texture": "platform"
         },
         {
+            "type": "BlockCoin",
+            "position": {
+                "x": 820,
+                "y": 440
+            },
+            "quantity": 1
+        },
+        {
             "type": "player",
             "id": "mainPlayer",
             "position": {

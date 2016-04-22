@@ -36,8 +36,13 @@ define([], function () {
             this._sprite.position.y = pos.y;
         },
         
-        setRotation : function(val){
+        setRotationAngle : function(val){
             this._data.rotation = val;
+        },
+        
+        rotate : function(angle){
+            this._data.currentRotationAngle = angle;
+            this._sprite.rotation = angle;
         }
 		
 	};

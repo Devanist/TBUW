@@ -40,6 +40,7 @@ define([
             for(var i = 0; i < l; i++){
                 temp = this._gameStage._elements[i];
                 temp._data = anwser.ELEMENTS[i];
+                temp._sprite.rotation = anwser.ELEMENTS[i].currentRotationAngle;
                 
                 if(temp.update){
                     temp.update();

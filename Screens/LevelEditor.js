@@ -223,9 +223,17 @@ function(Screen, Stage, Entities, $){
             }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
-                this._level.entities[this._curId] = this._selectedElement;
-                if($("li #el_" + this._curId).length === 0){
-                    $("#elements_list").append('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                if(this._selectedElement.type === "Background"){
+                    this._level.entities.splice(0, 0, this._selectedElement);
+                    if($("li #el_" + this._curId).length === 0){
+                        $("#elements_list").prepend('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                    }
+                }
+                else{
+                    this._level.entities[this._curId] = this._selectedElement;
+                    if($("li #el_" + this._curId).length === 0){
+                        $("#elements_list").append('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                    }
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
                 $("#position-x").val(this._selectedElement.position.x);

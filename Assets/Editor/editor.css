@@ -63,3 +63,6 @@ body {
 #elements_list li{
     cursor: pointer;
 }
+#level_background{
+    display: block;
+}

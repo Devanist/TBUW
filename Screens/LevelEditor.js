@@ -8,7 +8,8 @@ function(Screen, Stage, Entities, $){
     
     var LevelEditor = function(){
         Screen.call(this);
-        this._background = new Stage();
+        this._background = new Stage(0, "", 1);
+        this._background.add(new Entities.Background());
         this._gameStage = new Stage();
         
         this._stage.add(this._background);
@@ -63,6 +64,7 @@ function(Screen, Stage, Entities, $){
                 '<input id="level_name" type="text" placeholder="Level name"/>' + 
                 '<input id="save_button" type="button" value="Save"/>' + 
                 '<input id="load_button" type="file" value="Load"/>' + 
+                '<input id="level_background" list="assets" placeholder="Select a sprite for a background">' +
                 '<h2>Elements list</h2>' +
                 '<input type="button" id="add_new_button" value="Add new element">' + 
                 '<section id="used_elements"><ul id="elements_list"></ul></section>' +
@@ -88,6 +90,22 @@ function(Screen, Stage, Entities, $){
             $("#assets_list").val("");
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
         }.bind(this));
+        
+        $("#level_background").on("input", function(){
+            if(PIXI.loader.resources.hasOwnProperty($("#level_background").val())){
+                that._background._elements[0]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#level_background").val()].texture);
+                that._level.background[0] = {
+                    id: 0,
+                    type: "background",
+                    position: {
+                        x: 0,
+                        y: 0
+                    },
+                    texture: $("#level_background").val(),
+                    factor: 0
+                };                
+            }
+        });
         
         $("#save_button").on("click", function(){
             var data = JSON.stringify(that._level);

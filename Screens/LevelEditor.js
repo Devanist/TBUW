@@ -128,7 +128,7 @@ function(Screen, Stage, Entities, $){
                 var temp = null;
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];
-                    $("#elements_list").append('<li id="el_' + temp.id +'">' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</li>');
+                    $("#elements_list").append('<li id="el_' + temp.id +'"><img title="Remove this element" id="remove_' + temp.id + '" src="Assets/Editor/cross.png"/>' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</li>');
                 }
             };
             reader.readAsText(file);
@@ -226,13 +226,13 @@ function(Screen, Stage, Entities, $){
                 if(this._selectedElement.type === "Background"){
                     this._level.entities.splice(0, 0, this._selectedElement);
                     if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").prepend('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                        $("#elements_list").prepend('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
                     }
                 }
                 else{
                     this._level.entities[this._curId] = this._selectedElement;
                     if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").append('<li id="el_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                        $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
                     }
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);

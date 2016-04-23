@@ -63,6 +63,9 @@ body {
 #elements_list li{
     cursor: pointer;
 }
+#elements_list li:hover{
+    color: red;
+}
 #level_background{
     display: block;
 }

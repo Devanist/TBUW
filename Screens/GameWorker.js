@@ -74,20 +74,22 @@ self.onmessage = function(e){
             if( !(x > temp.position.endX || ex < temp.position.x || 
                 y > temp.position.endY || ey < temp.position.y)){
                 
-                collisionOccured = true;
-                
                 if(temp.type === "BlockCoin"){
+                    console.log(temp.type);
                     continue;
                 }
                 
+                collisionOccured = true;
+                
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if(y <= temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){
+                if(y < temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
                         PLAYER.velocity.y = 0;
                         PLAYER.position.y = temp.position.y - PLAYER.size.h - 1;
                     }
                 }
+                
                 //Jeżeli player jest pod obiektem
                 else if(y >= temp.position.y && temp.position.endY <= ey && oldPlayerPos.y >= temp.position.endY){
                     if(temp.type === "platform"){

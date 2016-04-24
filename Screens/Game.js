@@ -58,6 +58,11 @@ define([
                 }
             }
             
+            l = anwser.REMOVE_LIST.length;
+            for(i = 0; i < l; i+=1){
+                //obsługa usuwanych elementów
+            }
+            
             l = anwser.GUI_ELEMENTS.length;
             for(i = 0; i < l; i+=1){
                 temp = this._guiStage._elements[i];

@@ -70,7 +70,7 @@ define([
             this.setCurrentScreen(screen);
             if(screen === "game"){
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
-                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
+                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities, true);
             }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

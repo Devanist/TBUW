@@ -60,3 +60,12 @@ body {
 #details_box{
     display: none;
 }
+#elements_list li{
+    cursor: pointer;
+}
+#elements_list li:hover{
+    color: red;
+}
+#level_background{
+    display: block;
+}

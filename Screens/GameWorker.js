@@ -5,15 +5,16 @@ var PLAYER = null;
 var oldPlayerPos = {};
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
+var temp = null;
 
 self.onmessage = function(e){
     
     world = JSON.parse(e.data);
+    world.REMOVE_LIST = [];
     
     elementsQuantity = world.ELEMENTS.length;
     
     //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
-    var temp = null;
     for(var i = 0; i < elementsQuantity; i+=1){
         temp = world.ELEMENTS[i];
         temp.size.w += temp.offset.width;
@@ -68,7 +69,7 @@ self.onmessage = function(e){
     y = PLAYER.position.y;
     ey = PLAYER.position.endY;
     collisionOccured = false;
-    for(var i = 0; i < elementsQuantity; i += 1){
+    for(i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "background" && temp.type !== "player"){
             
@@ -90,7 +91,7 @@ self.onmessage = function(e){
             if( !(x > tex || ex < tx || y > tey || ey < ty)){
                 
                 if(temp.type === "BlockCoin"){
-                    console.log(temp.type);
+                    world.REMOVE_LIST.push(temp.id);
                     continue;
                 }
                 
@@ -148,7 +149,7 @@ self.onmessage = function(e){
     //PARALLAX
     if(PLAYER.position.x > CAMERA_OFFSET){
         
-        for(var i = 0; i < elementsQuantity; i+=1){
+        for(i = 0; i < elementsQuantity; i+=1){
             temp = world.ELEMENTS[i];
             if(temp.type === "background"){
                 temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
@@ -169,7 +170,7 @@ self.onmessage = function(e){
     
     //GUI
     var l = world.GUI_ELEMENTS.length;
-    for(var i = 0; i < l; i+=1){
+    for(i = 0; i < l; i+=1){
         temp = world.GUI_ELEMENTS[i];
         temp.currentRotationAngle += temp.rotation;
     }

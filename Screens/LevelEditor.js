@@ -8,7 +8,8 @@ function(Screen, Stage, Entities, $){
     
     var LevelEditor = function(){
         Screen.call(this);
-        this._background = new Stage();
+        this._background = new Stage(0, "", 1);
+        this._background.add(new Entities.Background());
         this._gameStage = new Stage();
         
         this._stage.add(this._background);
@@ -54,13 +55,16 @@ function(Screen, Stage, Entities, $){
     
     _p.appendToolBox = function(){
         
+        var that = this;
+        
         $(this._canvas).after("<section id='toolbox'></section>");
 
         $("#toolbox").append(
             '<section id="toolbox_content">' +
                 '<input id="level_name" type="text" placeholder="Level name"/>' + 
                 '<input id="save_button" type="button" value="Save"/>' + 
-                '<input id="load_button" type="button" value="Load"/>' + 
+                '<input id="load_button" type="file" value="Load"/>' + 
+                '<input id="level_background" list="assets" placeholder="Select a sprite for a background">' +
                 '<h2>Elements list</h2>' +
                 '<input type="button" id="add_new_button" value="Add new element">' + 
                 '<section id="used_elements"><ul id="elements_list"></ul></section>' +
@@ -70,6 +74,7 @@ function(Screen, Stage, Entities, $){
         $("#add_new_button").on("click", function(e){
             this._curId = this._level.entities.length;
             this._selectedElement = {
+                id: this._curId,
                 type: null,
                 texture: null,
                 position: {
@@ -77,8 +82,77 @@ function(Screen, Stage, Entities, $){
                     y: 0
                 }
             };
+            $("#details_box").hide();
+            $("#position-x").val(0);
+            $("#position-y").val(0);
+            $("#factor").val("");
+            $("#entities_list").val("");
+            $("#assets_list").val("");
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
         }.bind(this));
+        
+        $("#level_background").on("input", function(){
+            if(PIXI.loader.resources.hasOwnProperty($("#level_background").val())){
+                that._background._elements[0]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#level_background").val()].texture);
+                that._level.background[0] = {
+                    id: 0,
+                    type: "background",
+                    position: {
+                        x: 0,
+                        y: 0
+                    },
+                    texture: $("#level_background").val(),
+                    factor: 0
+                };                
+            }
+        });
+        
+        $("#save_button").on("click", function(){
+            var data = JSON.stringify(that._level);
+            var linkData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(data);
+            window.open(linkData);
+        });
+        
+        $("#load_button").on("change", function(e){
+            var file = e.target.files[0];
+            if(!file){
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e){
+                var contents = e.target.result;
+                that._level = JSON.parse(contents);
+                console.log(that._level);
+                that.updateStage("game");
+                $("#level_name").val(that._level.name);
+                var temp = null;
+                for(var i = 0; i < that._level.entities.length; i += 1){
+                    temp = that._level.entities[i];
+                    $("#elements_list").append('<li id="el_' + temp.id +'"><img title="Remove this element" id="remove_' + temp.id + '" src="Assets/Editor/cross.png"/>' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</li>');
+                }
+            };
+            reader.readAsText(file);
+        });
+        
+        $("#level_name").on("change", function(){
+            that._level.name = $("#level_name").val();
+        });
+        
+        $("body").on("click", "ul#elements_list li", function(e){
+            console.log(e);
+            that._curId = e.target.id.substring(3);
+            that._selectedElement = that._level.entities[that._curId];
+            $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
+            $("#position-x").val(that._selectedElement.position.x);
+            $("#position-y").val(that._selectedElement.position.y);
+            $("#entities_list").val(that._selectedElement.type);
+            $("#assets_list").val(that._selectedElement.texture);
+            if(that._selectedElement.type !== "Background"){
+                $("#factor").hide();
+                $("#factor_label").hide();
+            }
+            $("#details_box").show();
+        });
         
     };
     
@@ -105,6 +179,7 @@ function(Screen, Stage, Entities, $){
             '<section id="details_box">'+
                 '<label>X:</label><input type="text" id="position-x">'+
                 '<label>Y:</label><input type="text" id="position-y">'+
+                '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
             '</section>'
         );
         
@@ -128,6 +203,16 @@ function(Screen, Stage, Entities, $){
         $("#entities_list").on("input", function(e){
             if(Entities.hasOwnProperty($("#entities_list").val())){
                 this._selectedElement.type = $("#entities_list").val();
+                if($("#entities_list").val() === "Background"){
+                    this._selectedElement.factor = 1;
+                    $("#factor").show().val(1);
+                    $("#factor_label").show();
+                }
+                else{
+                    this._selectedElement.factor = undefined;
+                    $("#factor").hide().val("");
+                    $("#factor_label").hide();
+                }
             }
         }.bind(this));
         
@@ -138,15 +223,23 @@ function(Screen, Stage, Entities, $){
             }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
-                this._level.entities[this._curId] = this._selectedElement;
-                if($("li #el" + this._curId).length === 0){
-                    $("#elements_list").append('<li>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + '</li>');
+                if(this._selectedElement.type === "Background"){
+                    this._level.entities.splice(0, 0, this._selectedElement);
+                    if($("li #el_" + this._curId).length === 0){
+                        $("#elements_list").prepend('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                    }
+                }
+                else{
+                    this._level.entities[this._curId] = this._selectedElement;
+                    if($("li #el_" + this._curId).length === 0){
+                        $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                    }
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
+                $("#position-x").val(this._selectedElement.position.x);
+                $("#position-y").val(this._selectedElement.position.y);
                 $("#details_box").show();
                 this.updateStage("game");
-                console.log(this._gameStage);
-                console.log(this._level);
             }
             else{
                 $("#message_box").removeClass("error_message");
@@ -166,10 +259,41 @@ function(Screen, Stage, Entities, $){
             if(PIXI.loader.resources.hasOwnProperty($("#assets_list").val())){
                 $("#sprite_preview").attr("src", PIXI.loader.resources[$("#assets_list").val()].url);
                 this._selectedElement.texture = $("#assets_list").val();
+                for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                    if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#assets_list").val()].texture);
+                        $("#el_"+this._curId).text(this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                        break;
+                    }
+                }
             }
             else{
                 $("#sprite_preview").attr("src", "Assets/Editor/No_image.png");
             }
+        }.bind(this));
+        
+        $("#position-x").on("change", function(){
+            this._selectedElement.position.x = $("#position-x").val();
+            for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                    this._gameStage._elements[i]._sprite.position.x = $("#position-x").val();
+                    $("#el_"+this._selectedElement.id).text(this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    break;
+                }
+            }
+            console.log(this._gameStage._elements[i]._sprite);
+        }.bind(this));
+        
+        $("#position-y").on("change", function(){
+            this._selectedElement.position.y = $("#position-y").val();
+            for(var i = 0; i < this._gameStage._elements.length; i+=1){
+                if(this._selectedElement.id === this._gameStage._elements[i]._id){
+                    this._gameStage._elements[i]._sprite.position.y = $("#position-y").val();
+                    $("#el_"+this._selectedElement.id).text(this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    break;
+                }
+            }
+            console.log(this._gameStage._elements[i]._sprite);
         }.bind(this));
         
     };
@@ -180,8 +304,10 @@ function(Screen, Stage, Entities, $){
     
     _p.update = function(){
         
-        this._canvas.setAttribute("height", "600");
-        this._canvas.setAttribute("width", "960");
+       window.innerHeight = 600;
+       window.innerWidth = 960;
+       // this._canvas.setAttribute("height", "600");
+       // this._canvas.setAttribute("width", "960");
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen};
     };
@@ -206,10 +332,10 @@ function(Screen, Stage, Entities, $){
                 e = this._level.entities[i];
                 console.log(e);
                 if(e.type === "Background"){
-                    temp = new Entities.Background(PIXI.loader.resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "Platform"){
-                    temp = new Entities.Platform(PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "Player"){
                     temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);

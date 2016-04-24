@@ -4,6 +4,7 @@ define(['Entities/Entity'], function(Entity){
         Entity.call(this, sprite);
         this._sprite.anchor.x = 0.5;
         this._sprite.anchor.y = 0.5;
+        this._data.anchor = this._sprite.anchor;
         this._currency = null;
     };
     

@@ -103,7 +103,16 @@ define([
                 stage.add(temp);
 
                 if (isDebug) {
-                    temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    if(temp._data.anchor === undefined || temp._data.anchor === null){
+                        temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    }
+                    else{
+                        var pos = temp.getPosition();
+                        var size = temp.getSize();
+                        pos.x = pos.x - size.w * temp._data.anchor.x;
+                        pos.y = pos.y - size.h * temp._data.anchor.y;
+                        temp.debug_addBoundaryBox(new BoundaryBox(pos, size, temp._data.anchor));
+                    }
                 }
                 
             }

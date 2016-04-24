@@ -71,8 +71,23 @@ self.onmessage = function(e){
     for(var i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "background" && temp.type !== "player"){
-            if( !(x > temp.position.endX || ex < temp.position.x || 
-                y > temp.position.endY || ey < temp.position.y)){
+            
+            var tx, tex, ty, tey;
+            
+            if(temp.anchor !== undefined){
+                tx = temp.position.x - temp.anchor.x * temp.size.w;
+                tex = tx + temp.size.w;
+                ty = temp.position.y - temp.anchor.y * temp.size.h;
+                tey = ty + temp.size.h;
+            }
+            else{
+                tx = temp.position.x;
+                tex = temp.position.endX;
+                ty = temp.position.y;
+                tey = temp.position.endY;
+            }
+            
+            if( !(x > tex || ex < tx || y > tey || ey < ty)){
                 
                 if(temp.type === "BlockCoin"){
                     console.log(temp.type);
@@ -82,32 +97,32 @@ self.onmessage = function(e){
                 collisionOccured = true;
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if(y < temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){
+                if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = temp.position.y - PLAYER.size.h - 1;
+                        PLAYER.position.y = ty - PLAYER.size.h - 1;
                     }
                 }
                 
                 //Jeżeli player jest pod obiektem
-                else if(y >= temp.position.y && temp.position.endY <= ey && oldPlayerPos.y >= temp.position.endY){
+                else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
                     if(temp.type === "platform"){
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = temp.position.endY + 1;
+                        PLAYER.position.y = tey + 1;
                     }
                 }
                 
                 //Jeżeli player jest na lewo od obiektu
-                else if(ex >= temp.position.x && x <= temp.position.x){
+                else if(ex >= tx && x <= tx){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.x - PLAYER.size.w;
+                        PLAYER.position.x = tx - PLAYER.size.w;
                     }
                 }
                 
                 //Jeżeli gracz jest na prawo od obiektu
-                else if(x <= temp.position.endX && temp.position.endX <= ex){
+                else if(x <= tex && tex <= ex){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = temp.position.endX + 1;

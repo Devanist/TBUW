@@ -33,9 +33,10 @@ define(['Entities/Entities'], function(Entities){
         remove : function(id){
             var l = this._elements.length;
             for(var i = 0; i < l; i++){
-                if(this._elements[i].id === id){
-                    this._elements.splice(i);
-                    this._stage.removeChild(i);
+                if(this._elements[i].getId() === id){
+                    var erasedElement = this._elements.splice(i, 1)[0];
+                    this._stage.removeChild(erasedElement._sprite);
+                    break;
                 }
             }
         },       

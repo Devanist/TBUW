@@ -28,6 +28,10 @@ function(Creature, Currencies){
     
     var _p = Player.prototype;
     
+    _p.collectCurrency = function(currency){
+        this._currencies.addQuantity(currency);
+    };
+    
     return Player;
     
 });

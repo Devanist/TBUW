@@ -87,23 +87,32 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(PIXI.loader.resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "platform"){
-                    temp = new Entities.Platform(PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
                     temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "BlockCoin"){
-                    temp = new Entities.BlockCoin(e.quantity);
+                    temp = new Entities.BlockCoin(e.id, e.quantity);
                 }
                 console.log(e);
                 temp.setPosition(e.position);
                 stage.add(temp);
 
                 if (isDebug) {
-                    temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    if(temp._data.anchor === undefined || temp._data.anchor === null){
+                        temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    }
+                    else{
+                        var pos = temp.getPosition();
+                        var size = temp.getSize();
+                        pos.x = pos.x - size.w * temp._data.anchor.x;
+                        pos.y = pos.y - size.h * temp._data.anchor.y;
+                        temp.debug_addBoundaryBox(new BoundaryBox(pos, size, temp._data.anchor));
+                    }
                 }
                 
             }

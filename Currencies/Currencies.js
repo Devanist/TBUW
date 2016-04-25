@@ -13,7 +13,7 @@ define(['Currencies/BlockCoin'], function(BlockCoin){
          */
         getQuantity : function(name){
             if(this._currencies.hasOwnProperty(name)){
-                return this._currencies[name].getQuantity;
+                return this._currencies[name].getQuantity();
             }
         },
         
@@ -24,6 +24,10 @@ define(['Currencies/BlockCoin'], function(BlockCoin){
             if(this._currencies.hasOwnProperty(name)){
                 return this._currencies[name];
             }
+        },
+        
+        addQuantity: function(currency){
+            this._currencies[currency.name].addQuantity(currency.quantity);
         }
     };
     

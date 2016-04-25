@@ -1,7 +1,7 @@
 define(['Entities/Entity'], function(Entity){
     
-    var Item = function(sprite) {
-        Entity.call(this, sprite);
+    var Item = function(id, sprite) {
+        Entity.call(this, id, sprite);
         this._isStatic = true;
     };
     

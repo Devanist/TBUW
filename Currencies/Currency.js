@@ -33,6 +33,10 @@ define([], function(){
          */
         setQuantity : function(number){
             this._quantity = number;
+        },
+        
+        addQuantity : function(number){
+            this._quantity += number;
         }
         
     };

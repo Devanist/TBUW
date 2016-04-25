@@ -19,6 +19,7 @@ define([
         this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
         
         this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
+        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190, y: 40}, 0));
         
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
@@ -39,6 +40,9 @@ define([
             var l = anwser.ELEMENTS.length;
             for(var i = 0; i < l; i++){
                 temp = this._gameStage._elements[i];
+                if(this._player === undefined && temp._data.type === "player"){
+                    this._player = temp;
+                }
                 temp._data = anwser.ELEMENTS[i];
                 temp._sprite.rotation = anwser.ELEMENTS[i].currentRotationAngle;
                 
@@ -58,10 +62,29 @@ define([
                 }
             }
             
+            l = anwser.REMOVE_LIST.length;
+            for(i = 0; i < l; i+=1){
+                for(j = 0; j < this._gameStage._elements.length; j+=1){
+                    if(anwser.REMOVE_LIST[i] === this._gameStage._elements[j].getId()){
+                        
+                        if(this._gameStage._elements[j].getType() === "BlockCoin"){
+                            this._player.collectCurrency(this._gameStage._elements[j].collect());
+                            this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                        }
+                        
+                        break;
+                        
+                    }
+                }
+            }
+            
             l = anwser.GUI_ELEMENTS.length;
             for(i = 0; i < l; i+=1){
                 temp = this._guiStage._elements[i];
                 temp._data = anwser.GUI_ELEMENTS[i];
+                if(temp.getId() === "blockcoinValue"){
+                    temp.setText(this._player._currencies.getQuantity("BlockCoin"));
+                }
                 temp._sprite.rotation = temp._data.currentRotationAngle;
             }
             

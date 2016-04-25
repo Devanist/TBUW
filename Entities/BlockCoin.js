@@ -4,8 +4,8 @@ define([
 ], 
 function(Currency, Collectible){
     
-    var BlockCoin = function(quantity, position) {
-        Collectible.call(this, PIXI.loader.resources.blockcoin.texture, position);
+    var BlockCoin = function(id, quantity, position) {
+        Collectible.call(this, id, PIXI.loader.resources.blockcoin.texture, position);
         this._currency = new Currency();
         this._currency.setQuantity(quantity);
         this._data.type = "BlockCoin";

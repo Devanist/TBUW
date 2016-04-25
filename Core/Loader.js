@@ -6,6 +6,9 @@ define([
     'GUI/GUI'
     ], function(cfg, Entities, BoundaryBox, GUI){
 
+    /**
+     * Wrapper for PIXI.loader
+     */
     var Loader = function () {
         this._cfg = cfg;
         this._progressCb = null;
@@ -16,6 +19,10 @@ define([
 
     Loader.prototype = {
 
+        /**
+         * Method loading all assets given in config. When they all are loaded it triggers given callback function.
+         * @param {function} callback Callback method
+         */
         loadAssets : function(callback){
             var t = null;
             
@@ -33,28 +40,42 @@ define([
             PIXI.loader.load();
         },
         
+        /**
+         * Sets the onprogress callback function.
+         * @param {function} cb Callback method
+         */
         setProgressCb : function(cb){
             this._progressCb = cb;
         },
         
+        /**
+         * Method returns the quantity of already loaded assets.
+         * @returns {int}
+         */
         assetsLoaded : function(){
             return this._loadedAssets;
         },
         
+        /**
+         * Method returns the quantity of all assets that should be loaded.
+         * @returns {int}
+         */
         allAssets : function(){
             return this._allAssets;
         },
         
+        /**
+         * Method increment the loaded assets counter.
+         */
         incrementLoadedAssets : function(){
             this._loadedAssets += 1;
         },
         
-        setResources : function(res){
-            this._resources = res;
-        },
-        
         /**
-         * Metoda dodaje elementy do sceny na podstawie configu.
+         * Method creates the elements from given config and injects them into given stage.
+         * @param {object} stage Stage that you want inject elements into
+         * @param {object} cfg Config file
+         * @param {boolean} debug If this is true, boundary boxes will be showed
          */
         loadStageConfig : function(stage, cfg, debug){
             
@@ -66,19 +87,32 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(e.id, this._resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
                 }
                 else if(e.type === "platform"){
-                    temp = new Entities.Platform(e.id, this._resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
-                    temp = new Entities.Player(e.id, this._resources[e.texture].texture);
+                    temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
                 }
+                else if(e.type === "BlockCoin"){
+                    temp = new Entities.BlockCoin(e.id, e.quantity);
+                }
+                console.log(e);
                 temp.setPosition(e.position);
                 stage.add(temp);
 
                 if (isDebug) {
-                    temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    if(temp._data.anchor === undefined || temp._data.anchor === null){
+                        temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
+                    }
+                    else{
+                        var pos = temp.getPosition();
+                        var size = temp.getSize();
+                        pos.x = pos.x - size.w * temp._data.anchor.x;
+                        pos.y = pos.y - size.h * temp._data.anchor.y;
+                        temp.debug_addBoundaryBox(new BoundaryBox(pos, size, temp._data.anchor));
+                    }
                 }
                 
             }

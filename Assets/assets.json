@@ -55,6 +55,10 @@
         {
             "name": "budynek_2",
             "path": "Assets/Gfx/bud2.png"
+        },
+        {
+            "name": "blockcoin",
+            "path": "Assets/Gfx/blockcoin.jpg"
         }
     ],
     "sounds": [

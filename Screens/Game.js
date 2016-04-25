@@ -16,8 +16,10 @@ define([
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
         
-        var portret = new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture);
-        this._guiStage.add(portret);
+        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
+        
+        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
+        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190, y: 40}, 0));
         
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
@@ -32,13 +34,17 @@ define([
         this._updateWorker.onmessage = function(respond){
             
             var anwser = JSON.parse(respond.data);
-            
+            var temp = null;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
             var l = anwser.ELEMENTS.length;
             for(var i = 0; i < l; i++){
-                var temp = this._gameStage._elements[i];
+                temp = this._gameStage._elements[i];
+                if(this._player === undefined && temp._data.type === "player"){
+                    this._player = temp;
+                }
                 temp._data = anwser.ELEMENTS[i];
+                temp._sprite.rotation = anwser.ELEMENTS[i].currentRotationAngle;
                 
                 if(temp.update){
                     temp.update();
@@ -54,6 +60,32 @@ define([
                     
                     this._guiStage.add(Restart);
                 }
+            }
+            
+            l = anwser.REMOVE_LIST.length;
+            for(i = 0; i < l; i+=1){
+                for(j = 0; j < this._gameStage._elements.length; j+=1){
+                    if(anwser.REMOVE_LIST[i] === this._gameStage._elements[j].getId()){
+                        
+                        if(this._gameStage._elements[j].getType() === "BlockCoin"){
+                            this._player.collectCurrency(this._gameStage._elements[j].collect());
+                            this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                        }
+                        
+                        break;
+                        
+                    }
+                }
+            }
+            
+            l = anwser.GUI_ELEMENTS.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                temp._data = anwser.GUI_ELEMENTS[i];
+                if(temp.getId() === "blockcoinValue"){
+                    temp.setText(this._player._currencies.getQuantity("BlockCoin"));
+                }
+                temp._sprite.rotation = temp._data.currentRotationAngle;
             }
             
         }.bind(this);
@@ -103,7 +135,7 @@ define([
             l = touches.length;
             this._touchController.updateState(touches);
             var l3 = this._touchController.getStage()._elements.length;                
-            for(var j = 0; j < l; j += 1){
+            for(j = 0; j < l; j += 1){
                 for(i = 0; i < l2; i += 1){
                     temp = this._guiStage._elements[i];
                     if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
@@ -122,7 +154,8 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                ELEMENTS: []
+                ELEMENTS: [],
+                GUI_ELEMENTS: []
             };
             
             l = this._gameStage._elements.length;
@@ -131,6 +164,12 @@ define([
                 temp._data.size.w = temp._sprite.getLocalBounds().width;
                 temp._data.size.h = temp._sprite.getLocalBounds().height;
                 data.ELEMENTS.push(temp._data); 
+            }
+            
+            l = this._guiStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                data.GUI_ELEMENTS.push(temp._data);
             }
             
             this._updateWorker.postMessage(JSON.stringify(data));

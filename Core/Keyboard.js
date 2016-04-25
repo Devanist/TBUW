@@ -2,39 +2,42 @@ define([
 
 ], function () {
 
-        var Keyboard = function () {
+    /**
+     * Class representing the keyboard state.
+     */
+    var Keyboard = function () {
 
-            //Lista klawiszy z ich kodami
-            this.KEYS = {
-                ARROW_UP: 38,
-                ARROW_DOWN: 40,
-                ARROW_LEFT: 37,
-                ARROW_RIGHT: 39,
-                W: 87,
-                S: 83,
-                A: 65,
-                D: 68
-            };
+        //List of keys and their codes.
+        this.KEYS = {
+            ARROW_UP: 38,
+            ARROW_DOWN: 40,
+            ARROW_LEFT: 37,
+            ARROW_RIGHT: 39,
+            W: 87,
+            S: 83,
+            A: 65,
+            D: 68
+        };
 
-            //Lista stanów klawiszy
-            this._state = {
-                ARROW_UP: false,
-                ARROW_DOWN: false,
-                ARROW_LEFT: false,
-                ARROW_RIGHT: false,
-                W: false,
-                S: false,
-                A: false,
-                D: false
-            };
-        
-    };
+        //List of states of keys
+        this._state = {
+            ARROW_UP: false,
+            ARROW_DOWN: false,
+            ARROW_LEFT: false,
+            ARROW_RIGHT: false,
+            W: false,
+            S: false,
+            A: false,
+            D: false
+        };
+    
+};
     
     
     Keyboard.prototype = {
         
         /**
-         * Metoda zwracająca stan klawiszy.
+         * Method returns the keyboard's state.
          * @returns {object}
          */
         getKeysState: function () {
@@ -42,9 +45,9 @@ define([
         },
         
         /**
-         * Metoda zmieniająca stan danego klawisza na podany.
-         * @param {string} key Nazwa klawisza
-         * @param {boolean} val Stan określający, czy klawisz jest wciśnięty, czy nie
+         * Method changes the given key state.
+         * @param {string} key Name or code of key
+         * @param {boolean} val Key's new state
          */
         setKeyState: function (key, val) {
             if (typeof (key) === "string") {
@@ -59,10 +62,18 @@ define([
             }
         },
         
+        /**
+         * Setting the key state to true
+         * @param {object} event Keyboard event
+         */
         handleKeyDown: function (event) {
             this.setKeyState(event.keyCode, true);
         },
         
+        /**
+         * Setting the key state to false
+         * @param {object} event Keyboard event
+         */
         handleKeyUp : function(event){
             this.setKeyState(event.keyCode, false);
         }

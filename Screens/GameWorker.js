@@ -5,19 +5,21 @@ var PLAYER = null;
 var oldPlayerPos = {};
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
+var temp = null;
 
 self.onmessage = function(e){
     
     world = JSON.parse(e.data);
+    world.REMOVE_LIST = [];
     
     elementsQuantity = world.ELEMENTS.length;
     
     //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
-    var temp = null;
     for(var i = 0; i < elementsQuantity; i+=1){
         temp = world.ELEMENTS[i];
         temp.size.w += temp.offset.width;
         temp.size.h += temp.offset.height;
+        temp.currentRotationAngle += temp.rotation;
         if(temp.type === "player"){
             PLAYER = temp;
         }
@@ -67,40 +69,61 @@ self.onmessage = function(e){
     y = PLAYER.position.y;
     ey = PLAYER.position.endY;
     collisionOccured = false;
-    for(var i = 0; i < elementsQuantity; i += 1){
+    for(i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "background" && temp.type !== "player"){
-            if( !(x > temp.position.endX || ex < temp.position.x || 
-                y > temp.position.endY || ey < temp.position.y)){
+            
+            var tx, tex, ty, tey;
+            
+            if(temp.anchor !== undefined){
+                tx = temp.position.x - temp.anchor.x * temp.size.w;
+                tex = tx + temp.size.w;
+                ty = temp.position.y - temp.anchor.y * temp.size.h;
+                tey = ty + temp.size.h;
+            }
+            else{
+                tx = temp.position.x;
+                tex = temp.position.endX;
+                ty = temp.position.y;
+                tey = temp.position.endY;
+            }
+            
+            if( !(x > tex || ex < tx || y > tey || ey < ty)){
+                
+                if(temp.type === "BlockCoin"){
+                    world.REMOVE_LIST.push(temp.id);
+                    continue;
+                }
                 
                 collisionOccured = true;
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if(y <= temp.position.y && temp.position.endY >= ey && oldPlayerPos.ey <= temp.position.y){
+                if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = temp.position.y - PLAYER.size.h - 1;
+                        PLAYER.position.y = ty - PLAYER.size.h - 1;
                     }
                 }
+                
                 //Jeżeli player jest pod obiektem
-                else if(y >= temp.position.y && temp.position.endY <= ey && oldPlayerPos.y >= temp.position.endY){
+                else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
                     if(temp.type === "platform"){
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = temp.position.endY + 1;
+                        PLAYER.position.y = tey + 1;
                     }
                 }
                 
                 //Jeżeli player jest na lewo od obiektu
-                else if(ex >= temp.position.x && x <= temp.position.x){
+                else if(ex >= tx && x <= tx){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.x - PLAYER.size.w;
+                        PLAYER.position.x = tx - PLAYER.size.w;
                     }
                 }
                 
                 //Jeżeli gracz jest na prawo od obiektu
-                else if(x <= temp.position.endX && temp.position.endX <= ex){
+                else if(x <= tex && tex <= ex){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = temp.position.endX + 1;
@@ -126,7 +149,7 @@ self.onmessage = function(e){
     //PARALLAX
     if(PLAYER.position.x > CAMERA_OFFSET){
         
-        for(var i = 0; i < elementsQuantity; i+=1){
+        for(i = 0; i < elementsQuantity; i+=1){
             temp = world.ELEMENTS[i];
             if(temp.type === "background"){
                 temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
@@ -144,6 +167,13 @@ self.onmessage = function(e){
     //Uaktualnij prędkość playera
     PLAYER.velocity.x = -(PLAYER.velocity.x * world.AIR_RES);
     PLAYER.velocity.y +=  world.GRAVITY;
+    
+    //GUI
+    var l = world.GUI_ELEMENTS.length;
+    for(i = 0; i < l; i+=1){
+        temp = world.GUI_ELEMENTS[i];
+        temp.currentRotationAngle += temp.rotation;
+    }
     
     postMessage(JSON.stringify(world));
     

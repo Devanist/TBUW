@@ -51,7 +51,6 @@ define([
     loader.loadAssets(function(datloader, resources){    
 
         //Here assets are loaded, init the game, set input listeners.
-        loader.setResources(resources);
         
         window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);

@@ -1,18 +1,21 @@
 define([
     'Entities/Background',
     'Entities/Platform',
-    'Entities/Player'
+    'Entities/Player',
+    'Entities/BlockCoin'
 ], 
 function(
     Background,
     Platform,
-    Player
+    Player,
+    BlockCoin
 ){
     
     var Entities = {
         Background: Background,
         Platform : Platform,
-        Player : Player
+        Player : Player,
+        BlockCoin : BlockCoin
     };
     
     return Entities;

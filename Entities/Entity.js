@@ -4,10 +4,12 @@ define([], function(){
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
 var Entity = function(id, sprite){
+
     this._id = id;
     this._isStatic = null;
     this._sprite = new PIXI.Sprite(sprite);
-    this._data = {        
+    this._data = {
+        id : id,
         direction: 1,
         size: {
             w: this._sprite.getBounds().width,
@@ -24,7 +26,9 @@ var Entity = function(id, sprite){
             y: 0,
             width: 0,
             height: 0
-        }
+        },
+        rotation: 0,
+        currentRotationAngle: 0
     };
 };
 
@@ -38,7 +42,7 @@ Entity.prototype = {
     },
     
     getId : function(){
-        return this._id;
+        return this._data.id;
     },
     
     setPosition : function(pos){
@@ -89,6 +93,19 @@ Entity.prototype = {
     debug_addBoundaryBox : function(bbox){
         this.d_BBox = bbox;
         this._sprite.parent.addChild(this.d_BBox.getBox());
+    },
+    
+    setRotationAngle : function(val){
+        this._data.rotation = val;
+    },
+    
+    rotate : function(angle){
+        this._data.currentRotationAngle = angle;
+        this._sprite.rotation = angle;
+    },
+    
+    getType : function(){
+        return this._data.type;
     }
     
 };

@@ -6,8 +6,9 @@ define([
     'Core/Keyboard',
     'Core/TouchDevice',
     'Core/Mouse',
-    'Core/Utils'
-    ], function(PIXI, Loader, Logic, Stage, Keyboard, TouchDevice, Mouse, Utils){
+    'Core/Utils',
+    'Core/Speaker'
+    ], function(PIXI, Loader, Logic, Stage, Keyboard, TouchDevice, Mouse, Utils, Speaker){
 
     var h = window.innerHeight;
     var w = window.innerWidth;
@@ -22,10 +23,11 @@ define([
     var loader = new Loader();
     var rootStage = new Stage();
     var keyboard = new Keyboard();
+    var speaker = new Speaker();
     var touch = new TouchDevice();
     var mouse = new Mouse();
     rootStage.setScale({ x: scale.x, y: scale.y });
-    var logic = new Logic(loader, rootStage, keyboard, mouse, touch);
+    var logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
     
     renderer.backgroundColor = 0xFFFFFF;
     renderer.autoResize = true;
@@ -54,12 +56,14 @@ define([
         
         window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
+        
         if (Utils.isTouchDevice()) {
             window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
             window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
             window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
             window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
         }
+        
         window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
 
         logic.run(animate);

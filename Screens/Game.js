@@ -2,19 +2,21 @@ define([
     'Core/Screen',
     'Core/Stage',
     'Core/Utils',
-    'Core/Keyboard',
     'GUI/GUI',
     'Core/TouchController'
-    ], function(Screen, Stage, Utils, Keyboard, GUI, TouchController){
+    ], function(Screen, Stage, Utils, GUI, TouchController){
     
     var GameScreen = function(){
         Screen.call(this);
+        
         this._background = new Stage();
         this._gameStage = new Stage();
         this._guiStage = new Stage();
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
+        
+        this._sounds = [];
         
         this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
         
@@ -63,12 +65,14 @@ define([
             }
             
             l = anwser.REMOVE_LIST.length;
+            var l2 = this._gameStage._elements.length;
             for(i = 0; i < l; i+=1){
-                for(j = 0; j < this._gameStage._elements.length; j+=1){
-                    if(anwser.REMOVE_LIST[i] === this._gameStage._elements[j].getId()){
+                for(j = 0; j < l2; j+=1){
+                    temp = this._gameStage._elements[j];
+                    if(anwser.REMOVE_LIST[i] === temp.getId()){
                         
-                        if(this._gameStage._elements[j].getType() === "BlockCoin"){
-                            this._player.collectCurrency(this._gameStage._elements[j].collect());
+                        if(temp.getType() === "BlockCoin"){
+                            this._player.collectCurrency(temp.collect());
                             this._gameStage.remove(anwser.REMOVE_LIST[i]);
                         }
                         
@@ -106,6 +110,10 @@ define([
     _p.getMainStage = function(){
         return this._gameStage;
     };
+    
+    _p.getSoundsContainer = function(){
+        return this._sounds;
+    };
         
     /**
      * Metoda przygotowująca dane i wysyłająca je do workera.
@@ -134,7 +142,7 @@ define([
         if(Utils.isTouchDevice()){
             l = touches.length;
             this._touchController.updateState(touches);
-            var l3 = this._touchController.getStage()._elements.length;                
+            l2 = this._touchController.getStage()._elements.length;                
             for(j = 0; j < l; j += 1){
                 for(i = 0; i < l2; i += 1){
                     temp = this._guiStage._elements[i];
@@ -176,7 +184,7 @@ define([
         
         }
         
-        return {action: this._onUpdateAction, changeTo: this._nextScreen};
+        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
     };
     
     return GameScreen;

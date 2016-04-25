@@ -12,12 +12,13 @@ define([
      * @param {Mouse} mouse Mouse object
      * @param {TouchDevice} touchDevice TouchDevice object
      */
-    var Logic = function(loader, rootStage, keyboard, mouse, touchDevice){
+    var Logic = function(loader, rootStage, speaker, keyboard, mouse, touchDevice){
 
         this._loader = loader;
         this._rootStage = rootStage;
         this._screens = Screens;
         this._currentScreen = {name: "", screen: null};
+        this._speaker = speaker;
         this._keyboard = keyboard;
         this._touchDevice = touchDevice || null;
         this._mouse = mouse;
@@ -47,6 +48,9 @@ define([
             if(updateResult.action === "RESTART"){
                 console.log('restarting screen');
                 this.initScreen(this._currentScreen.name);
+            }
+            else{
+                this._speaker.update(updateResult.playSound);
             }
             setTimeout(function(){
                 this.update();

@@ -13,8 +13,8 @@ define([
         this._cfg = cfg;
         this._progressCb = null;
         this._loadedAssets = 0;
-        this._allAssets = this._cfg.graphics.length;
-        this._resources = null;
+        this._areSoundsLoaded = false;
+        this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
     };
 
     Loader.prototype = {
@@ -23,15 +23,27 @@ define([
          * Method loading all assets given in config. When they all are loaded it triggers given callback function.
          * @param {function} callback Callback method
          */
-        loadAssets : function(callback){
+        loadAssets : function(callback, speaker){
             var t = null;
+            var that = this;
             
             for(var i = 0; i < this._allAssets; i++){
                 t = this._cfg.graphics[i];
                 PIXI.loader.add(t.name, t.path);
             }
             
-            PIXI.loader.once('complete', callback);
+            this.loadSounds(cfg.sounds, speaker);
+            
+            PIXI.loader.once('complete', function cb(){
+                if(that._areSoundsLoaded){
+                    callback();
+                }
+                else{
+                    setTimeout(function(){
+                        cb();
+                    }.bind(this), 100);
+                }
+            });
             
             if(this._progressCb !== null){
                 PIXI.loader.on('progress', this._progressCb);
@@ -69,6 +81,33 @@ define([
          */
         incrementLoadedAssets : function(){
             this._loadedAssets += 1;
+        },
+        
+        loadSounds : function(cfg, speaker){
+            var request = null;
+            var that = this;
+            var ls = 0;
+            if(cfg.length === 0){
+                that._areSoundsLoaded = true;
+                console.log('Sounds are loaded');
+                return;
+            }
+            for(var i = 0; i < cfg.length; i+=1){
+                request = new XMLHttpRequest();
+                request.open("GET", cfg[i].url, true);
+                request.responseType = "arraybuffer";
+                
+                request.onload = function(){
+                    ls += 1;
+                    console.log(this);
+                    speaker.addSoundToLibrary(request.response);
+                    that.incrementLoadedAssets();
+                    if(ls === cfg.length){
+                        console.log('Sounds are loaded');
+                        that._areSoundsLoaded = true;
+                    }
+                };
+            }
         },
         
         /**

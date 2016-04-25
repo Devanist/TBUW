@@ -135,7 +135,7 @@ define([
             l = touches.length;
             this._touchController.updateState(touches);
             var l3 = this._touchController.getStage()._elements.length;                
-            for(var j = 0; j < l; j += 1){
+            for(j = 0; j < l; j += 1){
                 for(i = 0; i < l2; i += 1){
                     temp = this._guiStage._elements[i];
                     if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){

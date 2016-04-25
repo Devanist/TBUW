@@ -62,6 +62,9 @@
         }
     ],
     "sounds": [
-        
+        {
+            "name": "jump",
+            "path": "Assets/Sfx/jump.ogg"
+        }
     ]
 }

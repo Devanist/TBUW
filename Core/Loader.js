@@ -17,6 +17,7 @@ define([
         this._graphicAssets = this._cfg.graphics.length;
         this._audioAssets = this._cfg.sounds.length;
         this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
+        //this._spritesheets = [];
     };
 
     Loader.prototype = {
@@ -31,6 +32,9 @@ define([
             
             for(var i = 0; i < this._graphicAssets; i++){
                 t = this._cfg.graphics[i];
+                // if(t.frames){
+                //     this._spritesheets.push({name: t.name, frames: t.frames});
+                // }
                 PIXI.loader.add(t.name, t.path);
             }
 
@@ -38,6 +42,7 @@ define([
             
             PIXI.loader.once('complete', function cb(){
                 if(that._areSoundsLoaded){
+                    
                     callback();
                 }
                 else{
@@ -140,7 +145,11 @@ define([
                     temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
                 }
                 else if(e.type === "player"){
-                    temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
+                    var frames = [];
+                    for(var j = 0; j < 5; j+=1){
+                        frames.push(PIXI.Texture.fromFrame('walrus_0000' + j));
+                    }
+                    temp = new Entities.Player(e.id, frames);
                 }
                 else if(e.type === "BlockCoin"){
                     temp = new Entities.BlockCoin(e.id, e.quantity);

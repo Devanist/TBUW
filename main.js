@@ -47,6 +47,7 @@ define([
 
     //Showing progress of loading assets.
     loader.setProgressCb(function(){
+        console.log(this);
         loader.incrementLoadedAssets();
         console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
     });

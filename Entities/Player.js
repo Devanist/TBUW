@@ -4,11 +4,13 @@ define([
 ], 
 function(Creature, Currencies){
     
-    var Player = function(id, sprite){
-        Creature.call(this, id, sprite);
+    var Player = function(id, frames){
+        Creature.call(this, id, frames[0]);
+        this._frames = frames;
         this._data.type = "player";
         this._data.state = {
-            inAir: false
+            inAir: false,
+            moving: false
         };
         this._data.offset.y = 3;
         this._data.offset.width = -3;

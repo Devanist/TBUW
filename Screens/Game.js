@@ -162,6 +162,7 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
+                SOUNDS: this._sounds,
                 ELEMENTS: [],
                 GUI_ELEMENTS: []
             };

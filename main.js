@@ -73,6 +73,6 @@ define([
             requestAnimationFrame(animate);
         }
         
-    });
+    }, speaker);
 
 });

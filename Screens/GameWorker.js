@@ -51,6 +51,7 @@ self.onmessage = function(e){
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
             PLAYER.velocity.y -= 15;
+            world.SOUNDS.push("jump");
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){

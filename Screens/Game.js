@@ -2,19 +2,29 @@ define([
     'Core/Screen',
     'Core/Stage',
     'Core/Utils',
-    'Core/Keyboard',
     'GUI/GUI',
     'Core/TouchController'
-    ], function(Screen, Stage, Utils, Keyboard, GUI, TouchController){
+    ], function(Screen, Stage, Utils, GUI, TouchController){
     
     var GameScreen = function(){
         Screen.call(this);
+        
+        this._background = new Stage();
         this._gameStage = new Stage();
         this._guiStage = new Stage();
+        this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
+        
+        this._sounds = [];
+        
+        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
+        
+        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
+        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190, y: 40}, 0));
+        
+        this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
-            this._touchController = new TouchController();
             this._stage.add(this._touchController.getStage());
         }
         this._GRAVITY = 0.7;
@@ -26,107 +36,159 @@ define([
         this._updateWorker.onmessage = function(respond){
             
             var anwser = JSON.parse(respond.data);
-            
+            var temp = null;
+            this._sounds = anwser.SOUNDS;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
-            for(var i = 0; i < anwser.ELEMENTS.length; i++){
-                var temp = this._gameStage._elements[i];
+            var l = anwser.ELEMENTS.length;
+            for(var i = 0; i < l; i++){
+                temp = this._gameStage._elements[i];
+                if(this._player === undefined && temp._data.type === "player"){
+                    this._player = temp;
+                }
                 temp._data = anwser.ELEMENTS[i];
+                temp._sprite.rotation = anwser.ELEMENTS[i].currentRotationAngle;
                 
                 if(temp.update){
                     temp.update();
                 }
                 
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
-                    var player = temp;
                     this._isPause = true;
-                    var Restart = new GUI.Button("RETRY", {x: 500, y: 500}, PIXI.loader.resources.GUI_Button.texture, function(){
+                    
+                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.loader.resources.GUI_Button.texture, "RETRY", {}, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
+                    
                     this._guiStage.add(Restart);
-                    console.log(this._guiStage.getStage());
-                    console.log(this._gameStage.getStage());
                 }
+            }
+            
+            this._player.nextFrame((this._player._data.state.moving / 10) >> 0);
+            
+            l = anwser.REMOVE_LIST.length;
+            var l2 = this._gameStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                for(j = 0; j < l2; j+=1){
+                    temp = this._gameStage._elements[j];
+                    if(anwser.REMOVE_LIST[i] === temp.getId()){
+                        
+                        if(temp.getType() === "BlockCoin"){
+                            this._player.collectCurrency(temp.collect());
+                            this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                        }
+                        
+                        break;
+                        
+                    }
+                }
+            }
+            
+            l = anwser.GUI_ELEMENTS.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                temp._data = anwser.GUI_ELEMENTS[i];
+                if(temp.getId() === "blockcoinValue"){
+                    temp.setText(this._player._currencies.getQuantity("BlockCoin"));
+                }
+                temp._sprite.rotation = temp._data.currentRotationAngle;
             }
             
         }.bind(this);
         
     };
     
-    GameScreen.prototype = {
+    GameScreen.prototype = Object.create(Screen.prototype, {
+        constructor: {
+            value: GameScreen,
+            enumerable: false,
+            configurable: true,
+            writable: true
+        }
+    });
+    
+    var _p = GameScreen.prototype;
         
-        /**
-         * Dodaje elementy GUI do Stage po poprzednim załadowaniu poziomu, aby GUI rysowało się nad wszystkim innym.
-         */
-        loadGUI : function(){
-            
-        },
+    _p.getMainStage = function(){
+        return this._gameStage;
+    };
+    
+    _p.getSoundsContainer = function(){
+        return this._sounds;
+    };
         
-        getGameStage : function(){
-            return this._gameStage;
-        },
+    /**
+     * Metoda przygotowująca dane i wysyłająca je do workera.
+     * @param {object} keysState Obecny stan klawiszy.
+     */
+    _p.update = function(keysState, clicks, touches, touchController){
         
-        getStage : function(){
-            return this._stage;
-        },
+        //Background scaling
+        this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
         
-        /**
-         * Metoda przygotowująca dane i wysyłająca je do workera.
-         * @param {object} keysState Obecny stan klawiszy.
-         */
-        update : function(keysState, clicks, touches, touchController){
-            
-            
-            //Obsługa kliknięć
-            var l = clicks.length;
-            var l2 = this._guiStage._elements.length;
-            for(var j = 0; j < l; j += 1){
-                for(var i = 0; i < l2; i += 1){
-                    if(this._guiStage._elements[i]._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
-                        this._guiStage._elements[i].triggerCallback();
-                    }
+        var temp = null;
+        
+        //Mouse clicks handling
+        var l = clicks.length;
+        var l2 = this._guiStage._elements.length;
+        for(var j = 0; j < l; j += 1){
+            for(var i = 0; i < l2; i += 1){
+                temp = this._guiStage._elements[i];
+                if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                    temp.triggerCallback();
                 }
             }
-            
-            //Obsługa dotyku
-            if(Utils.isTouchDevice()){
-                l = touches.length;
-                this._touchController.updateState(touches);
-                var l3 = this._touchController.getStage()._elements.length;                
-                for(var j = 0; j < l; j += 1){
-                    for(var i = 0; i < l2; i += 1){
-                        if(this._guiStage._elements[i]._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                            this._guiStage._elements[i].triggerCallback();
-                        }                     
-                    }                    
-                }
-            }
-            
-            if(!this._isPause){
-            
-                var data = {
-                    CONTAINER: this._gameStage.getStage().position,
-                    KEYS_STATE: keysState,
-                    VCONTROLLER: this._touchController.getState(),
-                    GRAVITY: this._GRAVITY,
-                    AIR_RES: this._AIR_RES,
-                    ELEMENTS: []
-                };
-                
-                for(var i = 0; i < this._gameStage._elements.length; i++){
-                    this._gameStage._elements[i]._data.size.w = this._gameStage._elements[i]._sprite.getLocalBounds().width;
-                    this._gameStage._elements[i]._data.size.h = this._gameStage._elements[i]._sprite.getLocalBounds().height;
-                    data.ELEMENTS.push(this._gameStage._elements[i]._data); 
-                }
-                
-                this._updateWorker.postMessage(JSON.stringify(data));
-            
-            }
-            
-            return {action: this._onUpdateAction, changeTo: this._nextScreen};
         }
         
+        //Touch handling
+        if(Utils.isTouchDevice()){
+            l = touches.length;
+            this._touchController.updateState(touches);
+            l2 = this._touchController.getStage()._elements.length;                
+            for(j = 0; j < l; j += 1){
+                for(i = 0; i < l2; i += 1){
+                    temp = this._guiStage._elements[i];
+                    if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                        temp.triggerCallback();
+                    }                     
+                }                    
+            }
+        }
+        
+        if(!this._isPause){
+        
+            //Preparing data and sending it to worker.
+            var data = {
+                CONTAINER: this._gameStage.getStage().position,
+                KEYS_STATE: keysState,
+                VCONTROLLER: this._touchController.getState(),
+                GRAVITY: this._GRAVITY,
+                AIR_RES: this._AIR_RES,
+                SOUNDS: [],
+                ELEMENTS: [],
+                GUI_ELEMENTS: []
+            };
+            
+            l = this._gameStage._elements.length;
+            for(i = 0; i < l; i++){
+                temp = this._gameStage._elements[i];
+                temp._data.size.w = temp._sprite.getLocalBounds().width;
+                temp._data.size.h = temp._sprite.getLocalBounds().height;
+                data.ELEMENTS.push(temp._data); 
+            }
+            
+            l = this._guiStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                data.GUI_ELEMENTS.push(temp._data);
+            }
+            
+            this._updateWorker.postMessage(JSON.stringify(data));
+        
+        }
+        
+        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
     };
     
     return GameScreen;

@@ -26,11 +26,11 @@
         },
         {
             "name": "player",
-            "path": "Assets/Gfx/ludzik.png"
+            "path": "Assets/Gfx/player.png"
         },
         {
             "name": "platform",
-            "path": "Assets/Gfx/platform.jpg"
+            "path": "Assets/Gfx/platforma.png"
         },
         {
             "name": "tlo_miasto",
@@ -43,9 +43,32 @@
         {
             "name": "GUI_Button",
             "path": "Assets/Gfx/GUI_Button.png"
+        },
+        {
+            "name": "portret",
+            "path": "Assets/Gfx/portret.png"
+        },
+        {
+            "name": "budynek_1",
+            "path": "Assets/Gfx/bud1.png"
+        },
+        {
+            "name": "budynek_2",
+            "path": "Assets/Gfx/bud2.png"
+        },
+        {
+            "name": "blockcoin",
+            "path": "Assets/Gfx/blockcoin.jpg"
+        },
+        {
+            "name": "walrus_atlas",
+            "path": "Assets/Gfx/walrus.json"
         }
     ],
     "sounds": [
-        
+        {
+            "name": "jump",
+            "path": "Assets/Sfx/jump.ogg"
+        }
     ]
 }

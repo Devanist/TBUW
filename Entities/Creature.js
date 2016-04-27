@@ -1,13 +1,12 @@
 define(['Entities/Entity'], function(Entity){
     
     var Creature = function(id, sprite){
-        Entity.call(this, sprite);
+        Entity.call(this,id, sprite);
         this._isStatic = false;
         this._data.velocity = {
             x: 0,
             y: 0
         };
-        this._id = id;
     };
     
     Creature.prototype = Object.create(Entity.prototype, {

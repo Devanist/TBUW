@@ -13,6 +13,38 @@ define([
         this._nextScreen = null;
     };
     
+    Screen.prototype = {
+        
+        /**
+         * Returns the background stage.
+         */
+        getBackgroundStage : function(){
+            return this._background;
+        },
+        
+        /**
+         * This function needs to be overloaded in your Screen. Here you should load assets.
+         */
+        getMainStage : function(){
+            
+        },
+        
+        /**
+         * Here you do all your logic updating. Should be overloaded, but return as here.
+         */
+        update : function(){
+            return {action: this._onUpdateAction, changeTo: this._nextScreen};
+        },
+        
+        /**
+         * Returns the parent stage for rendering.
+         */
+        getStage : function(){
+            return this._stage;
+        }
+        
+    };
+    
     return Screen;
     
 });

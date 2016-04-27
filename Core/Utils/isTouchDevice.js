@@ -1,9 +1,13 @@
 define([], function(){
     
+    /**
+     * Function returns true if current device can handle touch events.
+     * @returns {boolean}
+     */
     isTouchDevice = function isTouchDevice() {
-        var el = document.createElement('div');
-        el.setAttribute('ontouchstart', 'return;');
-        return typeof el.ontouchstart === "function";
+        return (('ontouchstart' in window) ||
+        (navigator.maxTouchPoints > 0) ||
+        (navigator.msMaxTouchPoints > 0));
     };
     
     return isTouchDevice;

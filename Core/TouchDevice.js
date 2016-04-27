@@ -4,7 +4,6 @@ define([
     
     var TouchDevice = function(){
         this._onGoingTouches = [];
-        
     };
     
     TouchDevice.prototype = {
@@ -31,7 +30,7 @@ define([
             var touches = evt.changedTouches;
   
             for (var i = 0; i < touches.length; i++) {
-                ongoingTouches.splice(i, 1);  // remove it; we're done
+                ongoingTouches.splice(i, 1);
             }
         },
         
@@ -58,7 +57,7 @@ define([
                     return i;
                 }
             }
-            return -1;    // not found
+            return -1;
         },
         
         getTouches : function(){

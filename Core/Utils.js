@@ -1,7 +1,11 @@
-define(['Core/Utils/isTouchDevice'], function(isTouchDevice){
+define([
+    'Core/Utils/isTouchDevice',
+    'Core/Utils/copy'
+], function(isTouchDevice, copy){
     
     var Utils = {
-        isTouchDevice: isTouchDevice
+        isTouchDevice: isTouchDevice,
+        copy: copy
     };
     
     return Utils;

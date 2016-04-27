@@ -1,11 +1,22 @@
-define(['Entities/Creature'], function(Creature){
+define([
+    'Entities/Creature',
+    'Currencies/Currencies'
+], 
+function(Creature, Currencies){
     
-    var Player = function(id, sprite){
-        Creature.call(this, id, sprite);
+    var Player = function(id, frames){
+        Creature.call(this, id, frames[0]);
+        this._frames = frames;
         this._data.type = "player";
         this._data.state = {
-            inAir: false
+            inAir: false,
+            moving: 0
         };
+        this._data.offset.y = 3;
+        this._data.offset.width = -3;
+        this._data.offset.height = -11;
+        this._data.position.endY = this._data.position.y + this._data.size.h;
+        this._currencies = new Currencies();
     };
     
     Player.prototype = Object.create(Creature.prototype, {
@@ -18,6 +29,14 @@ define(['Entities/Creature'], function(Creature){
     });
     
     var _p = Player.prototype;
+    
+    _p.collectCurrency = function(currency){
+        this._currencies.addQuantity(currency);
+    };
+    
+    _p.nextFrame = function(frame){
+        this._sprite.texture = this._frames[frame];
+    };
     
     return Player;
     

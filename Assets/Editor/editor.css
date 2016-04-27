@@ -1,0 +1,71 @@
+body {
+    font-family: "Helvetica";
+}
+#toolbox{
+    position: absolute;
+    top: 0;
+    left: 960px;
+    background-color: grey;
+    width: 640px;
+    height: 600px;
+}
+#toolbox_content{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#toolbox_content input{
+    margin-right:5px;
+}
+#add_entity_button{
+    display: block;
+}
+#library{
+    position: absolute;
+    top: 600px;
+    left: 0;
+    background-color: #AEAEAE;
+    width: 1600px;
+    height: 175px;
+}
+#library section{
+    margin-left: 5px;
+    float:left;
+}
+#entity_selection input{
+    margin-top:6px;
+    width: 205px;
+    display: block;
+}
+#asset_selection{
+    width: 205px;
+    border-right: 1px solid black;
+}
+#clear_selection_button{
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+#sprite_preview{
+    margin-left: 20px;
+    display: block;
+    max-width: 140px;
+    max-height: 140px;
+}
+#message_box{
+    font-size: small;
+}
+.error_message{
+    color: red;
+}
+#details_box{
+    display: none;
+}
+#elements_list li{
+    cursor: pointer;
+}
+#elements_list li:hover{
+    color: red;
+}
+#level_background{
+    display: block;
+}

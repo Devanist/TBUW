@@ -1,14 +1,16 @@
 define([
     'GUI/Button',
-    'GUI/Image'
-], function(Button, Image){
+    'GUI/Image',
+    'GUI/Label'
+], function(Button, Image, Label){
     
     /**
      * Kontener na elementy GUI.
      */
     var GUI = {
         Button: Button,
-        Image: Image
+        Image: Image,
+        Label: Label
     };
     
     return GUI;

@@ -10,7 +10,7 @@ function(Creature, Currencies){
         this._data.type = "player";
         this._data.state = {
             inAir: false,
-            moving: false
+            moving: 0
         };
         this._data.offset.y = 3;
         this._data.offset.width = -3;
@@ -32,6 +32,10 @@ function(Creature, Currencies){
     
     _p.collectCurrency = function(currency){
         this._currencies.addQuantity(currency);
+    };
+    
+    _p.nextFrame = function(frame){
+        this._sprite.texture = this._frames[frame];
     };
     
     return Player;

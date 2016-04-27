@@ -65,6 +65,8 @@ define([
                 }
             }
             
+            this._player.nextFrame((this._player._data.state.moving / 10) >> 0);
+            
             l = anwser.REMOVE_LIST.length;
             var l2 = this._gameStage._elements.length;
             for(i = 0; i < l; i+=1){

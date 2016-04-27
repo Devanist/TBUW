@@ -37,15 +37,16 @@ self.onmessage = function(e){
     //Obsłuż input usera
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
         PLAYER.velocity.x += 7;
+        PLAYER.state.moving += 1;
         if(PLAYER.direction == -1){
             PLAYER.direction = 1;
         }
     }
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
         PLAYER.velocity.x -= 7;
+        PLAYER.state.moving += 1;
         if(PLAYER.direction == 1){
             PLAYER.direction = -1;
-
         }
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
@@ -56,6 +57,13 @@ self.onmessage = function(e){
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
         //PLAYER.velocity.y += 7;
+    }
+    
+    if(PLAYER.velocity.x === 0){        
+        PLAYER.state.moving = 0;
+    }
+    if(PLAYER.state.moving == 50){
+        PLAYER.state.moving = 0;
     }
     
     //Uaktualnij pozycję playera
@@ -168,6 +176,10 @@ self.onmessage = function(e){
     //Uaktualnij prędkość playera
     PLAYER.velocity.x = -(PLAYER.velocity.x * world.AIR_RES);
     PLAYER.velocity.y +=  world.GRAVITY;
+    
+    if(PLAYER.velocity.x < 1 && PLAYER.velocity.x > -1){
+        PLAYER.velocity.x = 0;
+    }
     
     //GUI
     var l = world.GUI_ELEMENTS.length;

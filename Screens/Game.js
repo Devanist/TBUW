@@ -37,6 +37,7 @@ define([
             
             var anwser = JSON.parse(respond.data);
             var temp = null;
+            this._sounds = anwser.SOUNDS;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
             var l = anwser.ELEMENTS.length;
@@ -162,7 +163,7 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                SOUNDS: this._sounds,
+                SOUNDS: [],
                 ELEMENTS: [],
                 GUI_ELEMENTS: []
             };

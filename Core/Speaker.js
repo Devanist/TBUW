@@ -1,4 +1,4 @@
-define([], function(){
+define(['Core/Utils'], function(Utils){
     
     var Speaker = function(){
         this._context = null;
@@ -12,18 +12,15 @@ define([], function(){
             throw new Error("AudioContext not supported!");
         }
         this._soundsLibrary = {};
+        this._soundsPlaying = [];
     };
     
     Speaker.prototype = {
         
         addSoundToLibrary : function(audioData, name){
-            var temp = this._context.createBufferSource();
-            var soundBuffer = null;
             var that = this;
             this._context.decodeAudioData(audioData, function(soundBuffer){
-                temp.buffer = soundBuffer;
-                temp.connect(that._context.destination);
-                that._soundsLibrary[name] = temp;
+                that._soundsLibrary[name] = soundBuffer;
             });
         },
         
@@ -33,10 +30,39 @@ define([], function(){
             for(var i = 0; i < l; i+=1){
                 t = sounds[i];
                 if(this._soundsLibrary.hasOwnProperty(t)){
-                    this._soundsLibrary[t].start(0);
-                    console.log("playing sounds");
+                    if(!this.isSoundPlaying(t)){
+                        this.play(t);
+                    }
                 }
             }
+        },
+        
+        play : function(sound){
+            var that = this;
+            var node = this._context.createBufferSource();
+            node.name = sound;
+            node.buffer = this._soundsLibrary[sound];
+            node.connect(this._context.destination);
+            node.onended = function(){
+                var l = that._soundsPlaying.length;
+                for(var i = 0; i < l; i+=1){
+                    if(that._soundsPlaying[i] === sound){
+                        that._soundsPlaying.splice(i,1);
+                    }
+                }
+            };
+            this._soundsPlaying.push(sound);
+            node.start(0);
+        },
+        
+        isSoundPlaying : function(sound){
+            var l = this._soundsPlaying.length;
+            for(var i = 0; i < l; i+=1){
+                if(this._soundsPlaying[i] === sound){
+                    return true;
+                }
+            }
+            return false;
         }
         
     };

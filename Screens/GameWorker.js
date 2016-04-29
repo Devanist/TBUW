@@ -39,14 +39,14 @@ self.onmessage = function(e){
     
     //Obsłuż input usera
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
-        PLAYER.velocity.x += 7;
+        PLAYER.velocity.x += 9;
         PLAYER.state.moving += 1;
         if(PLAYER.direction == -1){
             PLAYER.direction = 1;
         }
     }
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
-        PLAYER.velocity.x -= 7;
+        PLAYER.velocity.x -= 9;
         PLAYER.state.moving += 1;
         if(PLAYER.direction == 1){
             PLAYER.direction = -1;

@@ -59,9 +59,8 @@ function(Stage, GUI){
         updateState: function(touches){
             var l = touches.length;
             var elem = null;
-            //var w = this._stage.getStage().parent.parent.parent.width;
+
             var w = 1280 * window.innerWidth / window.innerHeight *0.56;
-            console.log(w);
             
             this._button_a._data.position.x = w - 100;
             this._button_b._data.position.x = w ;

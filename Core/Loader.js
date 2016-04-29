@@ -154,7 +154,6 @@ define([
                 else if(e.type === "BlockCoin"){
                     temp = new Entities.BlockCoin(e.id, e.quantity);
                 }
-                console.log(e);
                 temp.setPosition(e.position);
                 stage.add(temp);
 

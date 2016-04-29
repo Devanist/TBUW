@@ -1,5 +1,5 @@
 define(['Entities/Entity'], function(Entity){
-    
+
     var Collectible = function(id, sprite){
         Entity.call(this, id, sprite);
         this._sprite.anchor.x = 0.5;
@@ -7,7 +7,7 @@ define(['Entities/Entity'], function(Entity){
         this._data.anchor = this._sprite.anchor;
         this._currency = null;
     };
-    
+
     Collectible.prototype = Object.create(Entity.prototype,{
         constructor: {
             value: Collectible,
@@ -18,7 +18,7 @@ define(['Entities/Entity'], function(Entity){
     });
     
     var _p = Collectible.prototype;
-    
+
     _p.collect = function(){
         var q = {
             quantity: this._currency.getQuantity(),
@@ -27,7 +27,7 @@ define(['Entities/Entity'], function(Entity){
         this._currency.setQuantity(0);
         return q;
     };
-    
+
     return Collectible;
     
 });

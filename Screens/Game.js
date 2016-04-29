@@ -75,8 +75,10 @@ define([
                     if(anwser.REMOVE_LIST[i] === temp.getId()){
                         
                         if(temp.getType() === "BlockCoin"){
+                            if(temp._data.toBeRemoved !== undefined){
+                                this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                            }
                             this._player.collectCurrency(temp.collect());
-                            this._gameStage.remove(anwser.REMOVE_LIST[i]);
                         }
                         
                         break;
@@ -145,7 +147,7 @@ define([
         if(Utils.isTouchDevice()){
             l = touches.length;
             this._touchController.updateState(touches);
-            l2 = this._touchController.getStage()._elements.length;                
+            l2 = this._guiStage._elements.length;                
             for(j = 0; j < l; j += 1){
                 for(i = 0; i < l2; i += 1){
                     temp = this._guiStage._elements[i];

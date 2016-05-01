@@ -1,36 +1,28 @@
 {
     "graphics": [
         {
-            "name": "core_button_a",
-            "path": "Assets/Gfx/Core/button_a.png"
+            "name": "controller",
+            "path": "Assets/Gfx/Core/controller.json"
         },
         {
-            "name": "core_button_b",
-            "path": "Assets/Gfx/Core/button_b.png"
+            "name": "controller_small",
+            "path": "Assets/Gfx/Core/controller_small.json"
         },
         {
-            "name": "core_button_x",
-            "path": "Assets/Gfx/Core/button_x.png"
+            "name": "sprites",
+            "path": "Assets/Gfx/sprites.json"
         },
         {
-            "name": "core_button_y",
-            "path": "Assets/Gfx/Core/button_y.png"
-        },
-        {
-            "name": "core_ring",
-            "path": "Assets/Gfx/Core/ring.png"
-        },
-        {
-            "name": "core_stick",
-            "path": "Assets/Gfx/Core/stick.png"
-        },
-        {
-            "name": "sprites_big",
-            "path": "Assets/Gfx/sprites_big.json"
+            "name": "sprites_small",
+            "path": "Assets/Gfx/sprites_small.json"
         },
         {
             "name": "walrus_atlas",
             "path": "Assets/Gfx/walrus.json"
+        },
+        {
+            "name": "walrus_atlas_small",
+            "path": "Assets/Gfx/walrus_small.json"
         }
     ],
     "sounds": [

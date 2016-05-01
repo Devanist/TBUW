@@ -13,10 +13,20 @@ define([
     var h = window.innerHeight;
     var w = window.innerWidth;
 
-    var scale = {
-        y : h / 800,
-        x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
-    };
+    var scale = null;
+
+    if(w <= 640){
+        scale = {
+            y : h / 360,
+            x : w / 640
+        };
+    }
+    else{
+        scale = {
+            y : h / 800,
+            x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
+        };
+    }
 
     //Initialize PIXI and devices.
     var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight);
@@ -35,8 +45,18 @@ define([
     window.onresize = function (event) {
         h = window.innerHeight;
         w = window.innerWidth;
-        scale.y = h / 800;
-        scale.x = h * 1.6 / 1280;
+        if(w <= 640){
+            scale = {
+                y : h / 360,
+                x : w / 640
+            };
+        }
+        else{
+            scale = {
+                y : h / 800,
+                x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
+            };
+        }
         renderer.view.style.width = w + "px";
         renderer.view.style.height = h + "px";
         rootStage.setScale({ x: scale.x, y: scale.y });
@@ -44,11 +64,9 @@ define([
     };
 
     document.body.appendChild(renderer.view);
-    console.log(renderer);
     
     //Showing progress of loading assets.
     loader.setProgressCb(function(){
-        console.log(this);
         loader.incrementLoadedAssets();
         console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
     });

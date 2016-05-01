@@ -14,7 +14,7 @@ define([
         this._progressCb = null;
         this._loadedAssets = 0;
         this._areSoundsLoaded = false;
-        this._graphicAssets = this._cfg.graphics.length;
+        this._graphicAssets = 0;
         this._audioAssets = this._cfg.sounds.length;
         this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
     };
@@ -29,9 +29,20 @@ define([
             var t = null;
             var that = this;
             
-            for(var i = 0; i < this._graphicAssets; i++){
+            for(var i = 0; i < this._cfg.graphics.length; i++){
                 t = this._cfg.graphics[i];
-                PIXI.loader.add(t.name, t.path);
+                if(window.innerWidth <= 640){
+                    if(t.name.substr(t.name.length - 5) === "small"){
+                        this._graphicAssets += 1;
+                        PIXI.loader.add(t.name, t.path);
+                    }
+                }
+                else{
+                    if(t.name.substr(t.name.length - 5) !== "small"){
+                        this._graphicAssets += 1;
+                        PIXI.loader.add(t.name, t.path);
+                    }
+                }
             }
 
             this.loadSounds(cfg.sounds, speaker);
@@ -150,8 +161,11 @@ define([
                 else if(e.type === "BlockCoin"){
                     temp = new Entities.BlockCoin(e.id, e.quantity);
                 }
-                console.log(e);
-                temp.setPosition(e.position);
+                var small = 1;
+                if(window.innerWidth <= 640){
+                    small = 2;
+                }
+                temp.setPosition({x: e.position.x / small, y: e.position.y / small});
                 stage.add(temp);
 
                 if (isDebug) {

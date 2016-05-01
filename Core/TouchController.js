@@ -12,12 +12,12 @@ function(Stage, GUI){
         this._stickInitialTouch = {x: null, y: null};
         this._stickPosition = {x: 140, y: 600};
         
-        this._button_a = new GUI.Image("BUTTON_A", {x: window.innerWidth - 100, y: 700}, PIXI.loader.resources.core_button_a.texture);
-        this._button_b = new GUI.Image("BUTTON_B", {x: window.innerWidth, y: 600}, PIXI.loader.resources.core_button_b.texture);
-        this._button_x = new GUI.Image("BUTTON_X", {x: window.innerWidth - 200, y: 600}, PIXI.loader.resources.core_button_x.texture);
-        this._button_y = new GUI.Image("BUTTON_Y", {x: window.innerWidth - 100, y: 500}, PIXI.loader.resources.core_button_y.texture);
+        this._button_a = new GUI.Image("BUTTON_A", {x: window.innerWidth - 100, y: 700}, PIXI.Texture.fromFrame("button_a"));
+        this._button_b = new GUI.Image("BUTTON_B", {x: window.innerWidth, y: 600}, PIXI.Texture.fromFrame("button_b"));
+        this._button_x = new GUI.Image("BUTTON_X", {x: window.innerWidth - 200, y: 600}, PIXI.Texture.fromFrame("button_x"));
+        this._button_y = new GUI.Image("BUTTON_Y", {x: window.innerWidth - 100, y: 500}, PIXI.Texture.fromFrame("button_y"));
         
-        this._analog_ring = new GUI.Image("ANALOG_RING", {x:70, y:530}, PIXI.loader.resources.core_ring.texture);
+        this._analog_ring = new GUI.Image("ANALOG_RING", {x:70, y:530}, PIXI.Texture.fromFrame("ring"));
         
         this._stage.add(this._button_a);
         this._stage.add(this._button_b);
@@ -25,7 +25,7 @@ function(Stage, GUI){
         this._stage.add(this._button_y);
         this._stage.add(this._analog_ring);
         
-        this._analog_stick = new GUI.Image("ANALOG_STICK", {x: this._stickPosition.x, y: this._stickPosition.y}, PIXI.loader.resources.core_stick.texture);
+        this._analog_stick = new GUI.Image("ANALOG_STICK", {x: this._stickPosition.x, y: this._stickPosition.y}, PIXI.Texture.fromFrame("stick"));
         this._stage.add(this._analog_stick);
         
         this._state = {

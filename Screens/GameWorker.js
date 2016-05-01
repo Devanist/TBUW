@@ -23,6 +23,9 @@ self.onmessage = function(e){
         if(temp.type === "player"){
             PLAYER = temp;
         }
+        if(temp.toBeRemoved){
+            world.REMOVE_LIST.push(temp.id);
+        }
         temp.position.endX = temp.position.x + temp.size.w;
         temp.position.endY = temp.position.y + temp.size.h;
     }

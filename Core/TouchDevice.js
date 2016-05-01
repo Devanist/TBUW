@@ -10,42 +10,72 @@ define([
         
         handleTouchStart : function(e){
             e.preventDefault();
-            var touches = e.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                this._onGoingTouches.push(this.copyTouch(touches[i]));
+            console.log(e);
+            if (e.changedTouches === undefined) {
+                this._onGoingTouches.push(this.copyTouch(e));
             }
+            else {
+                var touches = e.changedTouches;
+                for (var i = 0; i < touches.length; i++) {
+                    this._onGoingTouches.push(this.copyTouch(touches[i]));
+                }
+            }
+            
         },
         
         handleTouchEnd : function(e){
             e.preventDefault();
-            var touches = e.changedTouches;
-            for(var i = 0; i < touches.length; i++) {
-                var idx = this.ongoingTouchIndexById(touches[i].identifier);
+            if (e.changedTouches) {
+                var touches = e.changedTouches;
+                for (var i = 0; i < touches.length; i++) {
+                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
+                    this._onGoingTouches.splice(idx, 1);
+                }
+            }
+            else {
+                var idx = this.ongoingTouchIndexById(e.pointerId);
                 this._onGoingTouches.splice(idx, 1);
             }
         },
         
         handleTouchCancel : function(e){
             e.preventDefault();
-            var touches = evt.changedTouches;
-  
-            for (var i = 0; i < touches.length; i++) {
-                ongoingTouches.splice(i, 1);
+            if (e.changedTouches) {
+                var touches = e.changedTouches;
+                for (var i = 0; i < touches.length; i++) {
+                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
+                    this._onGoingTouches.splice(idx, 1);
+                }
+            }
+            else {
+                var idx = this.ongoingTouchIndexById(e.pointerId);
+                this._onGoingTouches.splice(idx, 1);
             }
         },
         
         handleTouchMove : function(e){
             e.preventDefault();
-            var touches = e.changedTouches;
-            for (var i = 0; i < touches.length; i++) {
-                var idx = this.ongoingTouchIndexById(touches[i].identifier);
+            if (e.changedTouches) {
+                var touches = e.changedTouches;
+                for (var i = 0; i < touches.length; i++) {
+                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
+                    if (idx >= 0) {
+                        this._onGoingTouches.splice(idx, 1, this.copyTouch(touches[i]));
+                    }
+                }
+            }
+            else {
+                var idx = this.ongoingTouchIndexById(e.pointerId);
                 if (idx >= 0) {
-                    this._onGoingTouches.splice(idx, 1, this.copyTouch(touches[i]));
+                    this._onGoingTouches.splice(idx, 1, this.copyTouch(e));
                 }
             }
         },
         
-        copyTouch: function(touch) {
+        copyTouch: function (touch) {
+            if (touch.pointerId) {
+                return { identifier: touch.pointerId, pageX: touch.pageX, pageY: touch.pageY };
+            }
             return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
         },
         

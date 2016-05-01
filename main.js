@@ -78,10 +78,18 @@ define([
         window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
         
         if (Utils.isTouchDevice()) {
-            window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
-            window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
-            window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
-            window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
+            if (window.PointerEvent) {
+                window.addEventListener("pointerdown", touch.handleTouchStart.bind(touch), false);
+                window.addEventListener("pointerout", touch.handleTouchEnd.bind(touch), false);
+                window.addEventListener("pointercancel", touch.handleTouchCancel.bind(touch), false);
+                window.addEventListener("pointermove", touch.handleTouchMove.bind(touch), false);
+            }
+            else {
+                window.addEventListener("touchstart", touch.handleTouchStart.bind(touch), false);
+                window.addEventListener("touchend", touch.handleTouchEnd.bind(touch), false);
+                window.addEventListener("touchcancel", touch.handleTouchCancel.bind(touch), false);
+                window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
+            }
         }
         
         window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);

@@ -17,7 +17,6 @@ define([
         this._graphicAssets = this._cfg.graphics.length;
         this._audioAssets = this._cfg.sounds.length;
         this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
-        //this._spritesheets = [];
     };
 
     Loader.prototype = {
@@ -32,9 +31,6 @@ define([
             
             for(var i = 0; i < this._graphicAssets; i++){
                 t = this._cfg.graphics[i];
-                // if(t.frames){
-                //     this._spritesheets.push({name: t.name, frames: t.frames});
-                // }
                 PIXI.loader.add(t.name, t.path);
             }
 
@@ -139,10 +135,10 @@ define([
             for(var i = 0; i < l; i++){
                 e = cfg[i];
                 if(e.type === "background"){
-                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
                 }
                 else if(e.type === "platform"){
-                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
                 }
                 else if(e.type === "player"){
                     var frames = [];

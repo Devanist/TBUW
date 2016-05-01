@@ -2,7 +2,7 @@ var world = null;
 var CAMERA_OFFSET = 250;
 var elementsQuantity = null;
 var PLAYER = null;
-var oldPlayerPos = {};
+var oldPlayerPos = null;
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
 var temp = null;
@@ -78,11 +78,10 @@ self.onmessage = function(e){
     y = PLAYER.position.y;
     ey = PLAYER.position.endY;
     collisionOccured = false;
+    var tx, tex, ty, tey;
     for(i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "background" && temp.type !== "player"){
-            
-            var tx, tex, ty, tey;
             
             if(temp.anchor !== undefined){
                 tx = temp.position.x - temp.anchor.x * temp.size.w;
@@ -144,6 +143,13 @@ self.onmessage = function(e){
                 PLAYER.position.endX = PLAYER.position.x + PLAYER.size.w;
             }
         }
+        //PARALLAX
+        else if(temp.type === "background"){
+            if(PLAYER.position.x > CAMERA_OFFSET){
+                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
+            }
+        }
+        
     }
     //Obsłuż, jeśli nie wystąpiła kolizja
     if(collisionOccured === false){
@@ -153,18 +159,6 @@ self.onmessage = function(e){
     //W razie potrzeby nanieś poprawkę na pozycję playera
     if(PLAYER.position.x < 0){
         PLAYER.position.x = 0;
-    }
-    
-    //PARALLAX
-    if(PLAYER.position.x > CAMERA_OFFSET){
-        
-        for(i = 0; i < elementsQuantity; i+=1){
-            temp = world.ELEMENTS[i];
-            if(temp.type === "background"){
-                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
-            }
-        }
-        
     }
     
     //Przemieść kamerę

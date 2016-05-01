@@ -44,7 +44,8 @@ define([
     };
 
     document.body.appendChild(renderer.view);
-
+    console.log(renderer);
+    
     //Showing progress of loading assets.
     loader.setProgressCb(function(){
         console.log(this);

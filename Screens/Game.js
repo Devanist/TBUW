@@ -18,9 +18,9 @@ define([
         
         this._sounds = [];
         
-        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
+        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.Texture.fromFrame("portret")));
         
-        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
+        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.Texture.fromFrame("blockcoin")));
         this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190, y: 40}, 0));
         
         this._touchController = new TouchController();

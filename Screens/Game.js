@@ -82,6 +82,7 @@ define([
                         if(temp.getType() === "BlockCoin"){
                             if(temp._data.toBeRemoved !== undefined){
                                 this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                                this._sounds.push("collect_coin");
                             }
                             this._player.collectCurrency(temp.collect());
                         }

@@ -29,6 +29,10 @@
         {
             "name": "jump",
             "path": "Assets/Sfx/jump.m4a"
+        },
+        {
+            "name": "collect_coin",
+            "path": "Assets/Sfx/coin01.m4a"
         }
     ]
 }

@@ -104,9 +104,8 @@ define([
             var sp = speaker;
             
             var soundOnLoad = function(){
-                console.log(this);
                 ls += 1;
-                sp.addSoundToLibrary(request.response, request.assetName);
+                sp.addSoundToLibrary(this.response, this.assetName);
                 that.incrementLoadedAssets();
                 if(ls === cfg.length){
                     console.log('Sounds are loaded');

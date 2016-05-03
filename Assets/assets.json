@@ -1,4 +1,8 @@
 {
+    "preload": {
+        "name": "loading_screen",
+        "path": "Assets/Gfx/loading_screen.json"
+    },
     "graphics": [
         {
             "name": "controller",

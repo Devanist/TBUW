@@ -39,7 +39,7 @@ define([
     rootStage.setScale({ x: scale.x, y: scale.y });
     var logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
     
-    renderer.backgroundColor = 0xFFFFFF;
+    renderer.backgroundColor = 0x000000;
     renderer.autoResize = true;
     
     window.onresize = function (event) {
@@ -64,7 +64,8 @@ define([
     };
 
     document.body.appendChild(renderer.view);
-    
+    animate();
+    loader.preload();
     //Showing progress of loading assets.
     loader.setProgressCb(function(){
         loader.incrementLoadedAssets();
@@ -94,13 +95,13 @@ define([
         
         window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
 
-        logic.run(animate);
+        logic.run();
         
-        function animate(){
-            renderer.render(rootStage.getStage());
-            requestAnimationFrame(animate);
-        }
-        
-    }, speaker);
+    }, speaker, rootStage);
+    
+    function animate(){
+        renderer.render(rootStage.getStage());
+        requestAnimationFrame(animate);
+    }
 
 });

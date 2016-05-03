@@ -3,14 +3,16 @@ define([
     'json!Assets/assets.json',
     'Entities/Entities',
     'Debug/BoundaryBox',
+    'Core/Stage',
     'GUI/GUI'
-    ], function(cfg, Entities, BoundaryBox, GUI){
+    ], function(cfg, Entities, BoundaryBox, Stage, GUI){
 
     /**
      * Wrapper for PIXI.loader
      */
     var Loader = function () {
         this._cfg = cfg;
+        this._preloaded = false;
         this._progressCb = null;
         this._loadedAssets = 0;
         this._areSoundsLoaded = false;
@@ -20,50 +22,81 @@ define([
     };
 
     Loader.prototype = {
+        
+        preload : function(){
+            var that = this;
+            PIXI.loader.add(this._cfg.preload.name, this._cfg.preload.path);
+            PIXI.loader.once('complete', function(){
+                that._preloaded = true;
+            });
+            PIXI.loader.load();
+        },
 
         /**
          * Method loading all assets given in config. When they all are loaded it triggers given callback function.
          * @param {function} callback Callback method
          */
-        loadAssets : function(callback, speaker){
-            var t = null;
+        loadAssets : function(callback, speaker, rootStage){
             var that = this;
             
-            for(var i = 0; i < this._cfg.graphics.length; i++){
-                t = this._cfg.graphics[i];
-                if(window.innerWidth <= 640){
-                    if(t.name.substr(t.name.length - 5) === "small"){
-                        this._graphicAssets += 1;
-                        PIXI.loader.add(t.name, t.path);
+            if(this._preloaded){
+                //Show loading screen
+                var con = new Stage();
+                var ls = new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off"));
+                con.add(ls);
+                var progressbar = new GUI.Image("progressbar", {x: ls._sprite.position.x + 44, y: ls._sprite.position.y + 108}, PIXI.Texture.fromFrame("loading_progressbar"));
+                con.add(progressbar);
+                var blurFilter = new PIXI.filters.BlurFilter();
+                progressbar._sprite.filters = [blurFilter];
+                blurFilter.blur = 20 * Math.sin(that._loadedAssets);
+                rootStage.add(con);
+                
+                //Load assets
+                var t = null;
+                for(var i = 0; i < this._cfg.graphics.length; i++){
+                    t = this._cfg.graphics[i];
+                    if(window.innerWidth <= 640){
+                        if(t.name.substr(t.name.length - 5) === "small"){
+                            this._graphicAssets += 1;
+                            PIXI.loader.add(t.name, t.path);
+                        }
+                    }
+                    else{
+                        if(t.name.substr(t.name.length - 5) !== "small"){
+                            this._graphicAssets += 1;
+                            PIXI.loader.add(t.name, t.path);
+                        }
                     }
                 }
-                else{
-                    if(t.name.substr(t.name.length - 5) !== "small"){
-                        this._graphicAssets += 1;
-                        PIXI.loader.add(t.name, t.path);
-                    }
-                }
-            }
 
-            this.loadSounds(cfg.sounds, speaker);
-            
-            PIXI.loader.once('complete', function cb(){
-                if(that._areSoundsLoaded){
-                    
-                    callback();
+                this.loadSounds(cfg.sounds, speaker);
+                
+                PIXI.loader.once('complete', function cb(){
+                    if(that._areSoundsLoaded){
+                        rootStage.remove("loadingScreen");
+                        callback();
+                    }
+                    else{
+                        setTimeout(function(){
+                            cb();
+                        }.bind(this), 100);
+                    }
+                });
+                
+                if(this._progressCb !== null){
+                    PIXI.loader.on('progress', function(){
+                        progressbar._sprite.width = 517 / that._allAssets * that._loadedAssets | 0;
+                        that._progressCb();
+                    });
                 }
-                else{
-                    setTimeout(function(){
-                        cb();
-                    }.bind(this), 100);
-                }
-            });
-            
-            if(this._progressCb !== null){
-                PIXI.loader.on('progress', this._progressCb);
+                
+                PIXI.loader.load();
             }
-            
-            PIXI.loader.load();
+            else{
+                setTimeout(function(){
+                    that.loadAssets(callback, speaker, rootStage);
+                }, 100);
+            }
         },
         
         /**

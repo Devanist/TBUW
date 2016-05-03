@@ -22,7 +22,6 @@ define(['Core/Utils'], function(Utils){
             this._context.decodeAudioData(audioData, function(soundBuffer){
                 that._soundsLibrary[name] = soundBuffer;
             });
-            console.log(this._soundsLibrary);
         },
         
         update: function(sounds){

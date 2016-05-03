@@ -30,9 +30,8 @@ define([
          * Init the start screen then run animation and logic updating functions.
          * @param {function} animate Function animating screen
          */
-        run : function(animate){
+        run : function(){
             this.initScreen("game");
-            animate();
             this.update();
         },
         

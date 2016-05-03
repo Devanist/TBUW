@@ -10,6 +10,8 @@ function(Creature, Currencies){
         this._data.type = "player";
         this._data.state = {
             inAir: false,
+            doubleJumped: false,
+            canDoubleJump: false,
             moving: 0
         };
         this._data.offset.y = 3;

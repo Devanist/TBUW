@@ -57,9 +57,22 @@ self.onmessage = function(e){
             PLAYER.velocity.y -= 15 / world.SMALL;
             world.SOUNDS.push("jump");
         }
+        else if(PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true){
+            PLAYER.state.doubleJumped = true;
+            PLAYER.velocity.y -= 8 / world.SMALL;
+            world.SOUNDS.push("jump");
+        }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
         //PLAYER.velocity.y += 7;
+    }
+    
+    if(PLAYER.state.inAir === true && world.KEYS_STATE.ARROW_UP === false){
+        PLAYER.state.canDoubleJump = true;
+        console.log(world.KEYS_STATE.ARROW_UP);
+    }
+    else{
+        PLAYER.state.canDoubleJump = false;
     }
     
     if(PLAYER.velocity.x === 0){        
@@ -112,8 +125,9 @@ self.onmessage = function(e){
                 if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
+                        PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = ty - PLAYER.size.h - 1;
+                        PLAYER.position.y = ty - PLAYER.size.h;
                     }
                 }
                 

@@ -64,7 +64,6 @@ self.onmessage = function(e){
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
-        //PLAYER.velocity.y += 7;
     }
     
     if(PLAYER.state.inAir === true && PLAYER.velocity.y > -4 / world.SMALL && world.KEYS_STATE.ARROW_UP === false){
@@ -134,7 +133,7 @@ self.onmessage = function(e){
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
                     if(temp.type === "platform"){
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = tey + 1;
+                        PLAYER.position.y = tey;
                     }
                 }
                 
@@ -142,7 +141,7 @@ self.onmessage = function(e){
                 else if(ex >= tx && x <= tx){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = tx - PLAYER.size.w;
+                        PLAYER.position.x = tx - PLAYER.size.w + 1;
                     }
                 }
                 
@@ -150,7 +149,7 @@ self.onmessage = function(e){
                 else if(x <= tex && tex <= ex){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.endX + 1;
+                        PLAYER.position.x = temp.position.endX;
                     }
                 }
                 
@@ -159,14 +158,9 @@ self.onmessage = function(e){
                 PLAYER.position.endX = PLAYER.position.x + PLAYER.size.w;
             }
         }
-        //PARALLAX
-        else if(temp.type === "background"){
-            if(PLAYER.position.x > CAMERA_OFFSET){
-                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
-            }
-        }
         
     }
+    
     //Obsłuż, jeśli nie wystąpiła kolizja
     if(collisionOccured === false){
         PLAYER.state.inAir = true;
@@ -175,6 +169,18 @@ self.onmessage = function(e){
     //W razie potrzeby nanieś poprawkę na pozycję playera
     if(PLAYER.position.x < 0){
         PLAYER.position.x = 0;
+    }
+    
+    //PARALLAX
+    if(PLAYER.position.x > CAMERA_OFFSET){
+        
+        for(i = 0; i < elementsQuantity; i+=1){
+            temp = world.ELEMENTS[i];
+            if(temp.type === "background"){
+                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
+            }
+        }
+        
     }
     
     //Przemieść kamerę

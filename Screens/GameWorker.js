@@ -54,12 +54,12 @@ self.onmessage = function(e){
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
-            PLAYER.velocity.y -= 15 / world.SMALL;
+            PLAYER.velocity.y -= 16 / world.SMALL;
             world.SOUNDS.push("jump");
         }
         else if(PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true){
             PLAYER.state.doubleJumped = true;
-            PLAYER.velocity.y -= 8 / world.SMALL;
+            PLAYER.velocity.y -= 14 / world.SMALL;
             world.SOUNDS.push("jump");
         }
     }

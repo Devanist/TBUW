@@ -67,9 +67,9 @@ self.onmessage = function(e){
         //PLAYER.velocity.y += 7;
     }
     
-    if(PLAYER.state.inAir === true && world.KEYS_STATE.ARROW_UP === false){
+    if(PLAYER.state.inAir === true && PLAYER.velocity.y > -4 / world.SMALL && world.KEYS_STATE.ARROW_UP === false){
         PLAYER.state.canDoubleJump = true;
-        console.log(world.KEYS_STATE.ARROW_UP);
+        console.log(PLAYER.velocity.y);
     }
     else{
         PLAYER.state.canDoubleJump = false;

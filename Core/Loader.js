@@ -106,7 +106,7 @@ define([
             var soundOnLoad = function(){
                 ls += 1;
                 sp.addSoundToLibrary(this.response, this.assetName);
-                that.incrementLoadedAssets();
+                that._progressCb();
                 if(ls === cfg.length){
                     console.log('Sounds are loaded');
                     that._areSoundsLoaded = true;

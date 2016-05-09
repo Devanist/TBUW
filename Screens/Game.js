@@ -18,17 +18,22 @@ define([
         
         this._sounds = [];
         
-        this._guiStage.add(new GUI.Image("portret", {x: 20, y: 20}, PIXI.loader.resources.portret.texture));
+        this._small = 1;
+        if(window.innerWidth <= 640){
+            this._small = 2;
+        }
         
-        this._guiStage.add(new GUI.Image("blockcoin", {x: 140, y: 40}, PIXI.loader.resources.blockcoin.texture));
-        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190, y: 40}, 0));
+        this._guiStage.add(new GUI.Image("portret", {x: 20 / this._small, y: 20 / this._small}, PIXI.Texture.fromFrame("portret")));
+        
+        this._guiStage.add(new GUI.Image("blockcoin", {x: 140 / this._small, y: 40 / this._small}, PIXI.Texture.fromFrame("blockcoin")));
+        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190 / this._small, y: 40 / this._small}, 0));
         
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
             this._stage.add(this._touchController.getStage());
         }
-        this._GRAVITY = 0.7;
-        this._AIR_RES = 0.2;
+        this._GRAVITY = 0.7 / this._small;
+        this._AIR_RES = 0.2 / this._small;
         this._isPause = false;
         this._updateWorker = new Worker('Screens/GameWorker.js');
         
@@ -56,7 +61,7 @@ define([
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
                     this._isPause = true;
                     
-                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.loader.resources.GUI_Button.texture, "RETRY", {}, function(){
+                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.Texture.fromFrame("GUI_Button"), "RETRY", {}, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
@@ -77,6 +82,7 @@ define([
                         if(temp.getType() === "BlockCoin"){
                             if(temp._data.toBeRemoved !== undefined){
                                 this._gameStage.remove(anwser.REMOVE_LIST[i]);
+                                this._sounds.push("collect_coin");
                             }
                             this._player.collectCurrency(temp.collect());
                         }
@@ -162,6 +168,7 @@ define([
         
             //Preparing data and sending it to worker.
             var data = {
+                SMALL : this._small,
                 CONTAINER: this._gameStage.getStage().position,
                 KEYS_STATE: keysState,
                 VCONTROLLER: this._touchController.getState(),

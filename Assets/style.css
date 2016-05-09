@@ -3,4 +3,10 @@ body{
 	border: 0;
 	padding: 0;
 	background-color: white;
+    -ms-touch-action: none;
+	touch-action: none;
+}
+canvas{
+    -ms-touch-action: none;
+	touch-action: none;
 }

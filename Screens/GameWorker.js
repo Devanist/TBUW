@@ -2,7 +2,7 @@ var world = null;
 var CAMERA_OFFSET = 250;
 var elementsQuantity = null;
 var PLAYER = null;
-var oldPlayerPos = {};
+var oldPlayerPos = null;
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
 var temp = null;
@@ -39,14 +39,14 @@ self.onmessage = function(e){
     
     //Obsłuż input usera
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
-        PLAYER.velocity.x += 9;
+        PLAYER.velocity.x += 9 / world.SMALL;
         PLAYER.state.moving += 1;
         if(PLAYER.direction == -1){
             PLAYER.direction = 1;
         }
     }
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
-        PLAYER.velocity.x -= 9;
+        PLAYER.velocity.x -= 9 / world.SMALL;
         PLAYER.state.moving += 1;
         if(PLAYER.direction == 1){
             PLAYER.direction = -1;
@@ -54,12 +54,23 @@ self.onmessage = function(e){
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
-            PLAYER.velocity.y -= 15;
+            PLAYER.velocity.y -= 16 / world.SMALL;
+            world.SOUNDS.push("jump");
+        }
+        else if(PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true){
+            PLAYER.state.doubleJumped = true;
+            PLAYER.velocity.y -= 14 / world.SMALL;
             world.SOUNDS.push("jump");
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){
-        //PLAYER.velocity.y += 7;
+    }
+    
+    if(PLAYER.state.inAir === true && PLAYER.velocity.y > -4 / world.SMALL && world.KEYS_STATE.ARROW_UP === false){
+        PLAYER.state.canDoubleJump = true;
+    }
+    else{
+        PLAYER.state.canDoubleJump = false;
     }
     
     if(PLAYER.velocity.x === 0){        
@@ -81,11 +92,10 @@ self.onmessage = function(e){
     y = PLAYER.position.y;
     ey = PLAYER.position.endY;
     collisionOccured = false;
+    var tx, tex, ty, tey;
     for(i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "background" && temp.type !== "player"){
-            
-            var tx, tex, ty, tey;
             
             if(temp.anchor !== undefined){
                 tx = temp.position.x - temp.anchor.x * temp.size.w;
@@ -113,8 +123,9 @@ self.onmessage = function(e){
                 if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
                     if(temp.type === "platform"){
                         PLAYER.state.inAir = false;
+                        PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = ty - PLAYER.size.h - 1;
+                        PLAYER.position.y = ty - PLAYER.size.h;
                     }
                 }
                 
@@ -122,7 +133,7 @@ self.onmessage = function(e){
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
                     if(temp.type === "platform"){
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = tey + 1;
+                        PLAYER.position.y = tey;
                     }
                 }
                 
@@ -130,7 +141,7 @@ self.onmessage = function(e){
                 else if(ex >= tx && x <= tx){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = tx - PLAYER.size.w;
+                        PLAYER.position.x = tx - PLAYER.size.w + 1;
                     }
                 }
                 
@@ -138,7 +149,7 @@ self.onmessage = function(e){
                 else if(x <= tex && tex <= ex){
                     if(temp.type === "platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.endX + 1;
+                        PLAYER.position.x = temp.position.endX;
                     }
                 }
                 
@@ -147,7 +158,9 @@ self.onmessage = function(e){
                 PLAYER.position.endX = PLAYER.position.x + PLAYER.size.w;
             }
         }
+        
     }
+    
     //Obsłuż, jeśli nie wystąpiła kolizja
     if(collisionOccured === false){
         PLAYER.state.inAir = true;

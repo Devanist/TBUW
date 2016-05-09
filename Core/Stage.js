@@ -3,7 +3,8 @@ define(['Entities/Entities'], function(Entities){
     /**
      * Klasa reprezentująca scenę.
      */
-    var Stage = function(){
+    var Stage = function(id){
+        this._id = id;
         this._elements = [];
         this._stage = new PIXI.Container();
     };
@@ -80,6 +81,10 @@ define(['Entities/Entities'], function(Entities){
                     return this._elements[i];
                 }
             }
+        },
+        
+        getId : function(){
+            return this._id;
         }
         
     };

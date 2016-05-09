@@ -31,7 +31,7 @@ define([
          * @param {function} animate Function animating screen
          */
         run : function(){
-            this.initScreen("game");
+            this.initScreen("menu");
             this.update();
         },
         
@@ -47,6 +47,10 @@ define([
             if(updateResult.action === "RESTART"){
                 console.log('restarting screen');
                 this.initScreen(this._currentScreen.name);
+            }
+            else if(updateResult.action === "CHANGE"){
+                console.log('changing screen');
+                this.initScreen(updateResult.changeTo);
             }
             else{
                 this._speaker.update(updateResult.playSound);

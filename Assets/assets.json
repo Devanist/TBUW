@@ -27,6 +27,10 @@
         {
             "name": "walrus_atlas_small",
             "path": "Assets/Gfx/walrus_small.json"
+        },
+        {
+            "name": "menu",
+            "path": "Assets/Gfx/menu.jpg"
         }
     ],
     "sounds": [

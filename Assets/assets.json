@@ -31,6 +31,10 @@
         {
             "name": "menu",
             "path": "Assets/Gfx/menu.jpg"
+        },
+        {
+            "name": "cyberdyne",
+            "path": "Assets/Fonts/cyberdyne.fnt"
         }
     ],
     "sounds": [
@@ -41,6 +45,12 @@
         {
             "name": "collect_coin",
             "path": "Assets/Sfx/coin01.m4a"
+        }
+    ],
+    "fonts": [
+        {
+            "name": "cyberdyne",
+            "path": "Assets/Fonts/cyberdyne.fnt"
         }
     ]
 }

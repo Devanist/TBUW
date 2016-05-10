@@ -18,7 +18,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         this._stage.add(this._background);
         
-        var new_game = new GUI.Button("new_game", {x: 340, y: 500}, null, "NEW GAME", {font: "24px Arial", fill: 0xffffff, align: "center"}, 
+        var new_game = new GUI.Button("new_game", {x: 180, y: 500}, null, "NEW GAME", {bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 console.log(this);
                 this._onUpdateAction = this.EVENT.CHANGE;

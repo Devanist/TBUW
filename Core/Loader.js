@@ -17,6 +17,7 @@ define([
         this._loadedAssets = 0;
         this._areSoundsLoaded = false;
         this._graphicAssets = 0;
+        this._fonts = 0;
         this._audioAssets = this._cfg.sounds.length;
         this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
     };
@@ -159,6 +160,16 @@ define([
                 request.onload = soundOnLoad;
                 
                 request.send();
+            }
+        },
+        
+        loadFonts : function(){
+            if(this._cfg.fonts.length === 0){
+                console.log('Fonts loaded');
+                return;
+            }
+            else{
+                
             }
         },
         

@@ -6,9 +6,14 @@ define(['GUI/BaseElement'], function(Base){
 		this._callback = cb;
 		this._container = new PIXI.Container();
 		this._container.addChild(this._sprite);
-		this._text = new PIXI.Text(text, style);
-		this._text.anchor.x = 0.5;
-		this._text.anchor.y = 0.5;
+		if(style.bitmap){
+			this._text = new PIXI.extras.BitmapText(text, style);
+		}
+		else{
+			this._text = new PIXI.Text(text, style);
+			this._text.anchor.x = 0.5;
+			this._text.anchor.y = 0.5;
+		}
 		this._text.position = position;
 		this._container.addChild(this._text);
 		this._sprite.anchor.x = 0.5;

@@ -163,16 +163,6 @@ define([
             }
         },
         
-        loadFonts : function(){
-            if(this._cfg.fonts.length === 0){
-                console.log('Fonts loaded');
-                return;
-            }
-            else{
-                
-            }
-        },
-        
         /**
          * Method creates the elements from given config and injects them into given stage.
          * @param {object} stage Stage that you want inject elements into

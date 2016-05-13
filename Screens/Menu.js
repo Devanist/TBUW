@@ -12,6 +12,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         this._guiStage = new Stage();
         
         this._sounds = [];
+        this._buttonPressedDown = false;
         
         this._background = new Stage();
         this._background.add(new Entities.Background("background", PIXI.loader.resources.menu.texture, 1));
@@ -31,12 +32,27 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         var new_game = new GUI.Button("new_game", {x: 180, y: 500}, null, "NEW GAME", {active: true, bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
-                console.log(this);
                 this._onUpdateAction = this.EVENT.CHANGE;
                 this._nextScreen = "game";
             }.bind(this)
         );
         this._guiStage.add(new_game);
+        
+        var load_game = new GUI.Button("load_game", {x: 180, y: 550}, null, "LOAD GAME", {bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+            function(){
+                this._onUpdateAction = this.EVENT.CHANGE;
+                this._nextScreen = "load_game";
+            }.bind(this)
+        );
+        this._guiStage.add(load_game);
+        
+        var options = new GUI.Button("options", {x: 180, y: 600}, null, "OPTIONS", {bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+            function(){
+                this._onUpdateAction = this.EVENT.CHANGE;
+                this._nextScreen = "options";
+            }.bind(this)
+        );
+        this._guiStage.add(options);
         
         this._stage.add(this._guiStage);
     };
@@ -53,7 +69,65 @@ function(Screen, Stage, GUI, Entities, Utils){
     var _p = MenuScreen.prototype;
     
     _p.update = function(keysState, clicks, touches){
-        var i,j;
+        var i = 0,j = 0, temp;
+        
+        //Keyboard handling
+        if(keysState.ARROW_DOWN || keysState.S){
+            if(this._buttonPressedDown === false){
+                this._buttonPressedDown = true;
+                while(i != 2){
+                    if(j == this._guiStage._elements.length){
+                        j = 0;
+                    }
+                    temp = this._guiStage._elements[j];
+                    if(temp.isEnabled() && temp.isActive()){
+                        temp._data.active = false;
+                        temp._text.filters = null;
+                        i = 1;
+                        j+=1;
+                        continue;
+                    }
+                    if(i == 1 && temp.isEnabled()){
+                        temp._data.active = true;
+                        i = 2;
+                    }
+                    else{
+                        j+=1;
+                    }
+                }
+            }
+        }
+        
+        if(keysState.ARROW_UP || keysState.W){
+            if(this._buttonPressedDown === false){
+                this._buttonPressedDown = true;
+                while(i != 2){
+                    if(j == -1){
+                        j = this._guiStage._elements.length - 1;
+                    }
+                    temp = this._guiStage._elements[j];
+                    if(temp.isEnabled() && temp.isActive()){
+                        temp._data.active = false;
+                        temp._text.filters = null;
+                        i = 1;
+                        j-=1;
+                        continue;
+                    }
+                    if(i == 1 && temp.isEnabled()){
+                        temp._data.active = true;
+                        i = 2;
+                    }
+                    else{
+                        j-=1;
+                    }
+                }
+            }
+        }
+        
+        if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
+            this._buttonPressedDown = false;
+        }
+        
         //Mouse clicks handling
         var l = clicks.length;
         var l2 = this._guiStage._elements.length;

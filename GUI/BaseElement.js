@@ -13,6 +13,8 @@ define([], function () {
         this._sprite.position = position;
         this._id = id;
         this._data = {
+            enabled: false,
+            active: false,
             position : position,
             type : "",
             rotation: 0,
@@ -51,6 +53,14 @@ define([], function () {
         rotate : function(angle){
             this._data.currentRotationAngle = angle;
             this._sprite.rotation = angle;
+        },
+        
+        isEnabled : function(){
+            return this._data.enabled;
+        },
+        
+        isActive : function(){
+            return this._data.active;
         }
 		
 	};

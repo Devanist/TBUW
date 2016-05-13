@@ -3,6 +3,8 @@ define(['GUI/BaseElement'], function(Base){
 	var Button = function(id, position, sprite, text, style, cb){
 		Base.call(this, id, position, sprite);
         this._data.type = "button";
+		this._data.enabled = true;
+		this._data.active = style.active || false;
 		this._callback = cb;
 		this._container = new PIXI.Container();
 		this._container.addChild(this._sprite);

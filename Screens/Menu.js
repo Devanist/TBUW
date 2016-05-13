@@ -16,9 +16,20 @@ function(Screen, Stage, GUI, Entities, Utils){
         this._background = new Stage();
         this._background.add(new Entities.Background("background", PIXI.loader.resources.menu.texture, 1));
         
+        this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
+        this._displacementmap.r = 1;
+        this._displacementmap.g = 1;
+        this._displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
+        this._displacement.scale.x = 1.5;
+        this._displacement.scale.y = 2;
+        this._displacement.offset = {
+            x: 0,
+            y: 0
+        };
+        
         this._stage.add(this._background);
         
-        var new_game = new GUI.Button("new_game", {x: 180, y: 500}, null, "NEW GAME", {bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+        var new_game = new GUI.Button("new_game", {x: 180, y: 500}, null, "NEW GAME", {active: true, bitmap: true, font: "40px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 console.log(this);
                 this._onUpdateAction = this.EVENT.CHANGE;
@@ -42,12 +53,12 @@ function(Screen, Stage, GUI, Entities, Utils){
     var _p = MenuScreen.prototype;
     
     _p.update = function(keysState, clicks, touches){
-        
+        var i,j;
         //Mouse clicks handling
         var l = clicks.length;
         var l2 = this._guiStage._elements.length;
-        for(var j = 0; j < l; j += 1){
-            for(var i = 0; i < l2; i += 1){
+        for(j = 0; j < l; j += 1){
+            for(i = 0; i < l2; i += 1){
                 temp = this._guiStage._elements[i];
                 if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     temp.triggerCallback();
@@ -66,6 +77,19 @@ function(Screen, Stage, GUI, Entities, Utils){
                         temp.triggerCallback();
                     }                     
                 }                    
+            }
+        }
+        
+        for(i = 0; i < l2; i+=1){
+            temp = this._guiStage._elements[i];
+            if(temp.isEnabled() && temp.isActive()){
+                if(this._displacement.scale.y < 6){
+                    this._displacement.scale.y += 0.1;
+                }
+                else{
+                    this._displacement.scale.y = 1;
+                }
+                temp._text.filters = [this._displacement];
             }
         }
         

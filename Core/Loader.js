@@ -49,7 +49,6 @@ define([
                 con.add(progressbar);
                 var blurFilter = new PIXI.filters.BlurFilter();
                 progressbar._sprite.filters = [blurFilter];
-                blurFilter.blur = 20 * Math.sin(that._loadedAssets);
                 rootStage.add(con);
                 
                 //Load assets
@@ -86,6 +85,7 @@ define([
                 
                 if(this._progressCb !== null){
                     PIXI.loader.on('progress', function(){
+                        progressbar._sprite.filters[0].blur = 20 * Math.sin(that._loadedAssets);
                         progressbar._sprite.width = 517 / that._allAssets * that._loadedAssets | 0;
                         that._progressCb();
                     });

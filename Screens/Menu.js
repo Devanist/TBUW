@@ -14,7 +14,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         this._sounds = [];
         
         this._background = new Stage();
-        this._background.add(new Entities.Background("background", PIXI.loader.resources.menu.texture, 1));
+        this._background.add(new Entities.Background("background", PIXI.Texture.fromFrame('menu'), 1));
         
         this._stage.add(this._background);
         

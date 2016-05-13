@@ -29,10 +29,6 @@
             "path": "Assets/Gfx/walrus_small.json"
         },
         {
-            "name": "menu",
-            "path": "Assets/Gfx/menu.jpg"
-        },
-        {
             "name": "cyberdyne",
             "path": "Assets/Fonts/cyberdyne.fnt"
         }
@@ -45,12 +41,6 @@
         {
             "name": "collect_coin",
             "path": "Assets/Sfx/coin01.m4a"
-        }
-    ],
-    "fonts": [
-        {
-            "name": "cyberdyne",
-            "path": "Assets/Fonts/cyberdyne.fnt"
         }
     ]
 }

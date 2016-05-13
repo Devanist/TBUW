@@ -17,9 +17,7 @@ define([
         this._loadedAssets = 0;
         this._areSoundsLoaded = false;
         this._graphicAssets = 0;
-        this._fonts = 0;
         this._audioAssets = this._cfg.sounds.length;
-        this._allAssets = this._cfg.graphics.length + this._cfg.sounds.length;
     };
 
     Loader.prototype = {
@@ -68,6 +66,7 @@ define([
                             PIXI.loader.add(t.name, t.path);
                         }
                     }
+                    this._allAssets = this._graphicAssets*2 + this._cfg.sounds.length;
                 }
 
                 this.loadSounds(cfg.sounds, speaker);

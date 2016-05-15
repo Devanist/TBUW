@@ -124,6 +124,16 @@ function(Screen, Stage, GUI, Entities, Utils){
             }
         }
         
+        if(keysState.ENTER){
+            var l = this._guiStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                if(temp.isActive()){
+                    temp.triggerCallback();
+                }
+            }
+        }
+        
         if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
             this._buttonPressedDown = false;
         }

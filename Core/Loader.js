@@ -51,6 +51,7 @@ define([
                 
                 //Load assets
                 var t = null;
+                
                 for(var i = 0; i < this._cfg.graphics.length; i++){
                     t = this._cfg.graphics[i];
                     if(window.innerWidth <= 640){
@@ -66,6 +67,12 @@ define([
                         }
                     }
                     this._allAssets = this._graphicAssets*2 + this._cfg.sounds.length;
+                }
+                
+                for(i = 0; i < this._cfg.fonts.length; i+=1){
+                    t = this._cfg.fonts[i];
+                    this._graphicAssets += 1;
+                    PIXI.loader.add(t.name, t.path);
                 }
 
                 this.loadSounds(cfg.sounds, speaker);

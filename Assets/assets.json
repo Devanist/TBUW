@@ -3,6 +3,12 @@
         "name": "loading_screen",
         "path": "Assets/Gfx/loading_screen.json"
     },
+    "fonts": [
+        {
+            "name": "cyberdyne",
+            "path": "Assets/Fonts/cyberdyne.fnt"
+        }
+    ],
     "graphics": [
         {
             "name": "controller",
@@ -27,10 +33,6 @@
         {
             "name": "walrus_atlas_small",
             "path": "Assets/Gfx/walrus_small.json"
-        },
-        {
-            "name": "cyberdyne",
-            "path": "Assets/Fonts/cyberdyne.fnt"
         }
     ],
     "sounds": [

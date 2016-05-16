@@ -61,7 +61,7 @@ define([
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
                     this._isPause = true;
                     
-                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.Texture.fromFrame("GUI_Button"), "RETRY", {}, function(){
+                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.Texture.fromFrame("GUI_Button"), "RETRY", {active: true}, function(){
                         this._onUpdateAction = this.EVENT.RESTART;
                         this._nextScreen = "game";
                     }.bind(this));
@@ -195,6 +195,15 @@ define([
             
             this._updateWorker.postMessage(JSON.stringify(data));
         
+        }
+        else{
+            l = this._guiStage._elements.length;
+            for(i = 0; i < l; i+=1){
+                temp = this._guiStage._elements[i];
+                if(temp.isActive() && keysState.ENTER){
+                    temp.triggerCallback();
+                }
+            }
         }
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};

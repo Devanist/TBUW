@@ -169,6 +169,10 @@ define([
             }
         },
         
+        loadWinConditions : function(array, cfg){
+            array = cfg.winConditions;
+        },
+        
         /**
          * Method creates the elements from given config and injects them into given stage.
          * @param {object} stage Stage that you want inject elements into

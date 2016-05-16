@@ -78,6 +78,7 @@ define([
             if(screen === "game"){
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
+                this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels.one.winConditions);
             }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

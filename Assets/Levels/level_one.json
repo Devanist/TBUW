@@ -11,6 +11,11 @@
         "texture": "tlo_miasto",
         "factor": 0
     }],
+    "winConditions": [
+        {
+            "blockcoin": 1
+        }
+    ],
     "entities": [
         {
             "id": 0,

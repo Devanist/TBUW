@@ -15,7 +15,7 @@ define([
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
-        
+        this._winConditions = [];
         this._sounds = [];
         
         this._small = 1;
@@ -124,6 +124,10 @@ define([
     
     _p.getSoundsContainer = function(){
         return this._sounds;
+    };
+    
+    _p.getWinConditions = function(){
+        return this._winConditions;
     };
         
     /**

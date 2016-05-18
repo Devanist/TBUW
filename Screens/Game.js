@@ -193,8 +193,14 @@ define([
                 SOUNDS: [],
                 ELEMENTS: [],
                 GUI_ELEMENTS: [],
-                WIN_CONDITIONS: this._winConditions
+                WIN_CONDITIONS: this._winConditions,
+                PLAYER_CURRENCIES : {}
             };
+            if(this._player !== undefined){
+                data.PLAYER_CURRENCIES = {
+                    blockcoin: this._player._currencies.getQuantity("BlockCoin")
+                };
+            }
             
             l = this._gameStage._elements.length;
             for(i = 0; i < l; i++){

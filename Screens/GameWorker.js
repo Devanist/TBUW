@@ -6,6 +6,7 @@ var oldPlayerPos = null;
 var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
 var temp = null;
+var conditionsMet = 0;
 
 self.onmessage = function(e){
     
@@ -204,12 +205,16 @@ self.onmessage = function(e){
         temp.currentRotationAngle += temp.rotation;
     }
     
-    l = world.WIN_CONDITIONS.lenght;
+    l = world.WIN_CONDITIONS.length;
+    conditionsMet = 0;
     for(i = 0; i < l; i+=1){
         temp = world.WIN_CONDITIONS[i];
-        if(temp.name === "blockcoin"){
-            
+        if(temp.name === "blockcoin" && world.PLAYER_CURRENCIES.blockcoin >= temp.value){
+            conditionsMet++;
         }
+    }
+    if(conditionsMet === l){
+        world.WON = true;
     }
     
     postMessage(JSON.stringify(world));

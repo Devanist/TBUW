@@ -170,7 +170,9 @@ define([
         },
         
         loadWinConditions : function(array, cfg){
-            array = cfg.winConditions;
+            for(var i = 0; i < cfg.length; i++){
+                array.push(cfg[i]);
+            }
         },
         
         /**

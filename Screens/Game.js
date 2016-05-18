@@ -41,6 +41,18 @@ define([
         this._updateWorker.onmessage = function(respond){
             
             var anwser = JSON.parse(respond.data);
+            if(anwser.WON){
+                this._isPause = true;
+                var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL");
+                this._guiStage.add(wonLabel);
+                this._guiStage.add(new GUI.Button("wonButton", {x: wonLabel._data.position.x, y: wonLabel._data.position.y + 40 },
+                    PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", {active: true}, 
+                    function(){
+                        this._onUpdateAction = this.EVENT.CHANGE;
+                        this._nextScreen = "menu";
+                    }.bind(this)
+                ));
+            }
             var temp = null;
             this._sounds = anwser.SOUNDS;
             this._gameStage.getStage().position = anwser.CONTAINER;
@@ -180,7 +192,8 @@ define([
                 AIR_RES: this._AIR_RES,
                 SOUNDS: [],
                 ELEMENTS: [],
-                GUI_ELEMENTS: []
+                GUI_ELEMENTS: [],
+                WIN_CONDITIONS: this._winConditions
             };
             
             l = this._gameStage._elements.length;

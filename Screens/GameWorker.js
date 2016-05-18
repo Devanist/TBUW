@@ -204,6 +204,14 @@ self.onmessage = function(e){
         temp.currentRotationAngle += temp.rotation;
     }
     
+    l = world.WIN_CONDITIONS.lenght;
+    for(i = 0; i < l; i+=1){
+        temp = world.WIN_CONDITIONS[i];
+        if(temp.name === "blockcoin"){
+            
+        }
+    }
+    
     postMessage(JSON.stringify(world));
     
 };

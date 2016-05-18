@@ -13,7 +13,8 @@
     }],
     "winConditions": [
         {
-            "blockcoin": 1
+            "name" :"blockcoin",
+            "value": 1
         }
     ],
     "entities": [

@@ -4,6 +4,7 @@ define([
     
     var Screen = function(){
         this._stage = new Stage();
+        this._sounds = [];
         this.EVENT = {
             RESTART : 'RESTART',
             CHANGE : 'CHANGE',
@@ -33,7 +34,7 @@ define([
          * Here you do all your logic updating. Should be overloaded, but return as here.
          */
         update : function(){
-            return {action: this._onUpdateAction, changeTo: this._nextScreen};
+            return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
         },
         
         /**

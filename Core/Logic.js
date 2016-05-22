@@ -1,8 +1,9 @@
 define([
     'Core/Stage',
     'Core/Levels',
-    'Screens/Screens'
-    ], function(Stage, Levels, Screens){
+    'Screens/Screens',
+    'Assets/Cinematics/Cinematics'
+    ], function(Stage, Levels, Screens, Cinematics){
     
     /**
      * Class handling all not-game involved logic like changing screens, updating gfx
@@ -31,7 +32,7 @@ define([
          * @param {function} animate Function animating screen
          */
         run : function(){
-            this.initScreen("menu");
+            this.initScreen("cinematic");
             this.update();
         },
         
@@ -79,6 +80,9 @@ define([
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels.one.winConditions);
+            }
+            if(screen === "cinematic"){
+                this._loader.loadCinematicConfig(Cinematics.intro, this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen.hasLoaded);
             }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

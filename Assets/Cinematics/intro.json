@@ -1,0 +1,28 @@
+{
+    "frames": [
+        "somewhere_in_cali",
+        "super_duper_drinkyard",
+        "walluce_at_bar",
+        "walluce_eye"
+    ],
+    "animations": [
+        {
+            "id": "somewhere_in_cali",
+            "moveTo": {
+                "x": 302,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "somewhere_in_cali",
+            "moveTo": {
+                "x": 302,
+                "y": 52,
+                "time": 1000,
+                "wait": 1000
+            }
+        }
+    ]
+}

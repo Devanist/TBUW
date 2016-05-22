@@ -80,6 +80,9 @@ define([
                 PIXI.loader.once('complete', function cb(){
                     if(that._areSoundsLoaded){
                         rootStage.remove("loadingScreen");
+                        rootStage.remove("progressbar");
+                        rootStage.getStage().removeChild(con.getStage());
+                        con.getStage().destroy();
                         callback();
                     }
                     else{
@@ -135,6 +138,20 @@ define([
          */
         incrementLoadedAssets : function(){
             this._loadedAssets += 1;
+        },
+        
+        loadCinematicConfig : function(cfg, cinCfg, stage, hasLoaded){
+            var i;
+            for(i = 0; i < cfg.frames.length; i+=1){
+                stage.add(new GUI.Image(cfg.frames[i], {x: 0, y: 2000}));
+            }
+            
+            for(i = 0; i < cfg.animations.length; i+=1){
+                cinCfg.push(cfg.animations[i]);
+            }
+            
+            hasLoaded();
+            
         },
         
         loadSounds : function(cfg, speaker){

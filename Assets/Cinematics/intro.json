@@ -19,9 +19,63 @@
             "id": "somewhere_in_cali",
             "moveTo": {
                 "x": 302,
-                "y": 52,
+                "y": 42,
                 "time": 1000,
                 "wait": 1000
+            }
+        },
+        {
+            "id": "super_duper_drinkyard",
+            "moveTo": {
+                "x": 858,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "super_duper_drinkyard",
+            "moveTo": {
+                "x": 858,
+                "y": 42,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "walluce_at_bar",
+            "moveTo": {
+                "x": 302,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "walluce_at_bar",
+            "moveTo": {
+                "x": 302,
+                "y": 400,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "walluce_eye",
+            "moveTo": {
+                "x": 858,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "walluce_eye",
+            "moveTo": {
+                "x": 858,
+                "y": 550,
+                "time": 1000,
+                "wait": 5000
             }
         }
     ]

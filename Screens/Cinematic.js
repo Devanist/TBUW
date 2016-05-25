@@ -10,9 +10,12 @@ function(Screen){
         this._beginTime = 0;
         this._currentTime = 0;
         this._currentAnimation = 0;
+        this._stepCounter = 0;
         this._animatedObject = null;
+        this._animationComplete = false;
         this._cinematicConfig = [];
         this._sounds = [];
+        this._date = new Date();
     };
     
     Cinematic.prototype = Object.create(Screen.prototype, {
@@ -35,16 +38,54 @@ function(Screen){
     };
     
     _p.update = function(){
-        
+        var diff = 0;
         if(this._loaded){
             if(this._currentAnimation < this._cinematicConfig.length){
+                
                 this._animatedObject = this._stage.getElement(this._cinematicConfig[this._currentAnimation].id);
-                if(this._cinematicConfig[this._currentAnimation].moveTo.time === 0){
-                    this._animatedObject.setPosition({x: this._cinematicConfig[this._currentAnimation].moveTo.x, y: this._cinematicConfig[this._currentAnimation].moveTo.y});
+                
+                if(this._animationComplete === false){
+                    if(this._cinematicConfig[this._currentAnimation].moveTo.time === 0){
+                        this._animatedObject.setPosition({x: this._cinematicConfig[this._currentAnimation].moveTo.x, y: this._cinematicConfig[this._currentAnimation].moveTo.y});
+                        this._animationComplete = true;
+                    }
+                    else{
+                        if(this._stepCounter === 0){
+                            this._step = {
+                                x: -(this._animatedObject.getPosition().x - this._cinematicConfig[this._currentAnimation].moveTo.x) / this._cinematicConfig[this._currentAnimation].moveTo.time,
+                                y: -(this._animatedObject.getPosition().y - this._cinematicConfig[this._currentAnimation].moveTo.y) / (this._cinematicConfig[this._currentAnimation].moveTo.time / 16.666)
+                            };
+                        }
+                        this._animatedObject.move(this._step);
+                        console.log('x:' + this._animatedObject._sprite.position.x + ' y:' + this._animatedObject._sprite.position.y);
+                        this._stepCounter++;
+                        if(this._stepCounter >= this._cinematicConfig[this._currentAnimation].moveTo.time / 16.666){
+                            this._animatedObject.setPosition({x: this._cinematicConfig[this._currentAnimation].moveTo.x, y: this._cinematicConfig[this._currentAnimation].moveTo.y});
+                            this._animationComplete = true;
+                            this._beginTime = 0;
+                            this._stepCounter = 0;
+                        }
+                    }
                 }
-                if(this._cinematicConfig[this._currentAnimation].moveTo.wait === 0){
-                    this._currentAnimation++;
+                
+                if(this._animationComplete === true){
+                    if(this._cinematicConfig[this._currentAnimation].moveTo.wait === 0){
+                        this._currentAnimation++;
+                        this._animationComplete = false;
+                    }
+                    else{
+                        if(this._beginTime === 0){
+                            this._beginTime = Date.now();
+                        }
+                        this._currentTime = Date.now();
+                        diff = this._currentTime - this._beginTime;
+                        if(diff >= this._cinematicConfig[this._currentAnimation].moveTo.wait){
+                            this._currentAnimation++;
+                            this._animationComplete = false;
+                        }
+                    }
                 }
+                
             }
             else{
                 this._finished = true;

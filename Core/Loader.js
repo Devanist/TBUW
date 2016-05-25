@@ -140,17 +140,19 @@ define([
             this._loadedAssets += 1;
         },
         
-        loadCinematicConfig : function(cfg, cinCfg, stage, hasLoaded){
+        loadCinematicConfig : function(cfg, cinCfg, stage, cinematic){
             var i;
+            var temp;
             for(i = 0; i < cfg.frames.length; i+=1){
-                stage.add(new GUI.Image(cfg.frames[i], {x: 0, y: 2000}));
+                temp = new GUI.Image(cfg.frames[i], {x: 0, y: 2000}, PIXI.Texture.fromFrame(cfg.frames[i]));
+                stage.add(temp);
             }
             
             for(i = 0; i < cfg.animations.length; i+=1){
                 cinCfg.push(cfg.animations[i]);
             }
             
-            hasLoaded();
+            cinematic.hasLoaded();
             
         },
         

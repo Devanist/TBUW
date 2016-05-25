@@ -44,6 +44,8 @@ define([], function () {
         setPosition: function(pos){
             this._sprite.position.x = pos.x;
             this._sprite.position.y = pos.y;
+            this._data.position.x = pos.x;
+            this._data.position.y = pos.y;
         },
         
         setRotationAngle : function(val){
@@ -61,6 +63,10 @@ define([], function () {
         
         isActive : function(){
             return this._data.active;
+        },
+        
+        getPosition : function(){
+            return this._data.position;
         }
 		
 	};

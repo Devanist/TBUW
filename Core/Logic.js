@@ -66,6 +66,7 @@ define([
          * @param {string} name Name of the screen to show
          */
         setCurrentScreen : function(name){
+            this._keyboard.reset();
             this._currentScreen.name = name;
             this._currentScreen.screen = new this._screens[name]();
         },
@@ -82,7 +83,7 @@ define([
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels.one.winConditions);
             }
             if(screen === "cinematic"){
-                this._loader.loadCinematicConfig(Cinematics.intro, this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen.hasLoaded);
+                this._loader.loadCinematicConfig(Cinematics.intro, this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);
             }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

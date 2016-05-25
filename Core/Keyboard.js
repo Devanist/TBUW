@@ -78,6 +78,14 @@ define([
          */
         handleKeyUp : function(event){
             this.setKeyState(event.keyCode, false);
+        },
+        
+        reset : function(){
+            for(var k in this._state){
+                if(this._state.hasOwnProperty(k)){
+                    this._state[k] = false;
+                }
+            }
         }
         
     };

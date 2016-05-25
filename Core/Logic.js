@@ -78,9 +78,9 @@ define([
         initScreen : function(screen){
             this.setCurrentScreen(screen);
             if(screen === "game"){
-                this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels.one.background);
-                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels.one.entities);
-                this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels.one.winConditions);
+                this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[1].data.background);
+                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[1].data.entities);
+                this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[1].data.winConditions);
             }
             if(screen === "cinematic"){
                 this._loader.loadCinematicConfig(Cinematics.intro, this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);

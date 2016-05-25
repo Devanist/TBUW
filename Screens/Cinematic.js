@@ -99,7 +99,6 @@ function(Screen){
         else{
             if(this._stage._stage.alpha > -1){
                 this._stage._stage.alpha -= 0.01;
-                console.log(this._stage._stage.alpha);
             }
             else{
                 this._onUpdateAction = "CHANGE";

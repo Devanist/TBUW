@@ -2,14 +2,16 @@ define([
     'Screens/Game',
     'Screens/LevelEditor',
     'Screens/Menu',
-    'Screens/Cinematic'
-], function(Game, LevelEditor, Menu, Cinematic){
+    'Screens/Cinematic',
+    'Screens/ChapterChoose'
+], function(Game, LevelEditor, Menu, Cinematic, ChapterChoose){
     
     var Screens = {
         game: Game,
         editor: LevelEditor,
         menu: Menu,
-        cinematic: Cinematic
+        cinematic: Cinematic,
+        chapter_choose: ChapterChoose
     };
     
     return Screens;

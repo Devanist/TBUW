@@ -4,8 +4,16 @@ define([
 function(Base){
     
     var Label = function(id, position, text, style){
+        style = style || {};
         Base.call(this, id, position, null);
-        this._sprite = new PIXI.Text(text, style);
+        if(style.bitmap){
+			this._sprite = new PIXI.extras.BitmapText(text, style);
+		}
+		else{
+			this._sprite = new PIXI.Text(text, style);
+			this._sprite.anchor.x = 0.5;
+			this._sprite.anchor.y = 0.5;
+		}
         this._sprite.position = position;
     };
     

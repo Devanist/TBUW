@@ -17,6 +17,7 @@ define([
         this._stage.add(this._guiStage);
         this._winConditions = [];
         this._sounds = [];
+        this._lose = false;
         
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -46,7 +47,14 @@ define([
                 var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL");
                 this._guiStage.add(wonLabel);
                 this._guiStage.add(new GUI.Button("wonButton", {x: wonLabel._data.position.x, y: wonLabel._data.position.y + 40 },
-                    PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", {active: true}, 
+                    PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", 
+                    {
+                        active: true,
+                        bitmap: true, 
+                        font: 30 / this._small + "px Cyberdyne Expanded", 
+                        fill: 0xffffff, 
+                        align: "center"
+                    }, 
                     function(){
                         this._onUpdateAction = this.EVENT.CHANGE;
                         this._nextScreen = "menu";
@@ -71,14 +79,37 @@ define([
                 }
                 
                 if(temp._data.type === "player" && temp.getPosition().y > 1000){
+                    this._lose = true;
+                }
+
+                if(this._lose === true){
                     this._isPause = true;
+                    this._updateWorker.terminate();
+                    var YouLose = new GUI.Label("LOSE", "center", "YOU LOSE", 
+                        {
+                            bitmap: true, 
+                            font: 40 / this._small + "px Cyberdyne Expanded", 
+                            fill: 0xffffff, 
+                            align: "center"
+                        }
+                    );
+                    YouLose.move({x: 0, y: -60});
+                    this._guiStage.add(YouLose);
                     
-                    var Restart = new GUI.Button("RETRY", {x: window.innerWidth / 2, y: window.innerHeight/2}, PIXI.Texture.fromFrame("GUI_Button"), "RETRY", {active: true}, function(){
-                        this._onUpdateAction = this.EVENT.RESTART;
-                        this._nextScreen = "game";
-                    }.bind(this));
-                    
-                    this._guiStage.add(Restart);
+                    this._guiStage.add(new GUI.Button("RETRY", "center",
+                        PIXI.Texture.fromFrame("GUI_Button"), "RETRY", 
+                        {
+                            active: true,
+                            bitmap: true, 
+                            font: 30 / this._small + "px Cyberdyne Expanded", 
+                            fill: 0xffffff, 
+                            align: "center"
+                        }, 
+                        function(){
+                            this._onUpdateAction = this.EVENT.RESTART;
+                            this._nextScreen = "game";
+                        }.bind(this)
+                    ));
                 }
             }
             

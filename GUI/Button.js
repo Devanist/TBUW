@@ -10,14 +10,17 @@ define(['GUI/BaseElement'], function(Base){
 		this._container.addChild(this._sprite);
 		if(style.bitmap){
 			this._text = new PIXI.extras.BitmapText(text, style);
+			this._text.position.x = this._sprite.position.x - this._text.width / 2;
+			this._text.position.y = this._sprite.position.y - this._text.height / 2;
 		}
 		else{
 			this._text = new PIXI.Text(text, style);
 			this._text.anchor.x = 0.5;
 			this._text.anchor.y = 0.5;
+			this._text.position = position;
 		}
-		this._text.position = position;
 		this._container.addChild(this._text);
+		console.log(this._container);
 		this._sprite.anchor.x = 0.5;
 		this._sprite.anchor.y = 0.5;
 		this._sprite.width = this._text.width + 20;
@@ -49,6 +52,15 @@ define(['GUI/BaseElement'], function(Base){
 	
 	_p.getSprite = function(){
 		return this._container;
+	};
+
+	_p.move = function(vec){
+		this._sprite.position.x += vec.x;
+		this._sprite.position.y += vec.y;
+		this._data.position.x = this._sprite.position.x;
+		this._data.position.y = this._sprite.position.y;
+		this._text.position.x += vec.x;
+		this._text.position.y += vec.y;
 	};
     
 	return Button;

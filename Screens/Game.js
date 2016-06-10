@@ -44,9 +44,15 @@ define([
             var anwser = JSON.parse(respond.data);
             if(anwser.WON){
                 this._isPause = true;
-                var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL");
+                var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL", {
+                    bitmap: true, 
+                    font: 40 / this._small + "px Cyberdyne Expanded", 
+                    fill: 0xffffff, 
+                    align: "center"
+                });
                 this._guiStage.add(wonLabel);
-                this._guiStage.add(new GUI.Button("wonButton", {x: wonLabel._data.position.x, y: wonLabel._data.position.y + 40 },
+                wonLabel.move({x:150, y: -100});
+                var wonButton = new GUI.Button("wonButton", "center",
                     PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", 
                     {
                         active: true,
@@ -59,7 +65,9 @@ define([
                         this._onUpdateAction = this.EVENT.CHANGE;
                         this._nextScreen = "menu";
                     }.bind(this)
-                ));
+                );
+                this._guiStage.add(wonButton);
+                wonButton.move({x:150, y: 0});
             }
             var temp = null;
             this._sounds = anwser.SOUNDS;
@@ -93,10 +101,10 @@ define([
                             align: "center"
                         }
                     );
-                    YouLose.move({x: 0, y: -60});
+                    YouLose.move({x: 150, y: -100});
                     this._guiStage.add(YouLose);
-                    
-                    this._guiStage.add(new GUI.Button("RETRY", "center",
+                    console.log(YouLose);
+                    var loseButton = new GUI.Button("RETRY", "center",
                         PIXI.Texture.fromFrame("GUI_Button"), "RETRY", 
                         {
                             active: true,
@@ -109,7 +117,9 @@ define([
                             this._onUpdateAction = this.EVENT.RESTART;
                             this._nextScreen = "game";
                         }.bind(this)
-                    ));
+                    );
+                    loseButton.move({x: 190, y: 0});
+                    this._guiStage.add(loseButton);
                 }
             }
             

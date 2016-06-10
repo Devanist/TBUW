@@ -32,7 +32,7 @@ define([
          * @param {function} animate Function animating screen
          */
         run : function(){
-            this.initScreen("cinematic");
+            this.initScreen("game");
             this.update();
         },
         

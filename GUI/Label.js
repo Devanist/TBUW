@@ -14,7 +14,16 @@ function(Base){
 			this._sprite.anchor.x = 0.5;
 			this._sprite.anchor.y = 0.5;
 		}
+        if(typeof(position) === "string"){
+            if(position === "center"){
+                position = {
+                    x: window.innerWidth / 2 - this._sprite.width / 2,
+                    y: window.innerHeight / 2 - this._sprite.height / 2
+                };
+            }
+        }
         this._sprite.position = position;
+        this._data.position = position;
     };
     
     Label.prototype = Object.create(Base.prototype, {

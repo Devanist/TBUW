@@ -17,7 +17,7 @@ function(Base){
         if(typeof(position) === "string"){
             if(position === "center"){
                 position = {
-                    x: window.innerWidth / 2 - this._sprite.width / 2,
+                    x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
                     y: window.innerHeight / 2 - this._sprite.height / 2
                 };
             }

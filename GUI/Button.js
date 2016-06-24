@@ -20,7 +20,6 @@ define(['GUI/BaseElement'], function(Base){
 			this._text.position = position;
 		}
 		this._container.addChild(this._text);
-		console.log(this._container);
 		this._sprite.anchor.x = 0.5;
 		this._sprite.anchor.y = 0.5;
 		this._sprite.width = this._text.width + 20;

@@ -47,18 +47,18 @@ define([
                 var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL", {
                     bitmap: true, 
                     font: 40 / this._small + "px Cyberdyne Expanded", 
-                    fill: 0xffffff, 
+                    fill: 0xff4fff, 
                     align: "center"
                 });
                 this._guiStage.add(wonLabel);
-                wonLabel.move({x:150, y: -100});
+                wonLabel.move({x:0, y: -100});
                 var wonButton = new GUI.Button("wonButton", "center",
                     PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", 
                     {
                         active: true,
                         bitmap: true, 
                         font: 30 / this._small + "px Cyberdyne Expanded", 
-                        fill: 0xffffff, 
+                        fill: 0xff4fff, 
                         align: "center"
                     }, 
                     function(){
@@ -67,7 +67,7 @@ define([
                     }.bind(this)
                 );
                 this._guiStage.add(wonButton);
-                wonButton.move({x:150, y: 0});
+                wonButton.move({x:0, y: 0});
             }
             var temp = null;
             this._sounds = anwser.SOUNDS;
@@ -97,11 +97,11 @@ define([
                         {
                             bitmap: true, 
                             font: 40 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xffffff, 
+                            fill: 0xff4fff, 
                             align: "center"
                         }
                     );
-                    YouLose.move({x: 150, y: -100});
+                    YouLose.move({x: 0, y: -100});
                     this._guiStage.add(YouLose);
                     console.log(YouLose);
                     var loseButton = new GUI.Button("RETRY", "center",
@@ -110,7 +110,7 @@ define([
                             active: true,
                             bitmap: true, 
                             font: 30 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xffffff, 
+                            fill: 0xff4fff, 
                             align: "center"
                         }, 
                         function(){
@@ -118,7 +118,7 @@ define([
                             this._nextScreen = "game";
                         }.bind(this)
                     );
-                    loseButton.move({x: 190, y: 0});
+                    loseButton.move({x: 0, y: 0});
                     this._guiStage.add(loseButton);
                 }
             }

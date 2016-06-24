@@ -32,7 +32,7 @@ define([
          * @param {function} animate Function animating screen
          */
         run : function(){
-            this.initScreen("game");
+            this.initScreen("menu");
             this.update();
         },
         
@@ -47,10 +47,12 @@ define([
             );
             if(updateResult.action === "RESTART"){
                 console.log('restarting screen');
+                this._rootStage.removeAll();
                 this.initScreen(this._currentScreen.name);
             }
             else if(updateResult.action === "CHANGE"){
                 console.log('changing screen');
+                this._rootStage.removeAll();
                 this.initScreen(updateResult.changeTo);
             }
             else{

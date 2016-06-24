@@ -20,7 +20,11 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         this._background = new Stage();
         this._background.add(new Entities.Background("background", PIXI.Texture.fromFrame('menu'), 1));
-        
+
+        var walluce = new GUI.Image("walluce", "bottom-right", PIXI.Texture.fromFrame('walrus_menu'));
+        this._background.add(walluce);
+        console.log(walluce);
+
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
         this._displacementmap.g = 1;
@@ -37,7 +41,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         var new_game = new GUI.Button("new_game", {x: 390 / this._small, y: 500 / this._small}, null, "NEW GAME", {active: true, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 this._onUpdateAction = this.EVENT.CHANGE;
-                this._nextScreen = "game";
+                this._nextScreen = "cinematic";
             }.bind(this)
         );
         this._guiStage.add(new_game);

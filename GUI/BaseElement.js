@@ -3,18 +3,20 @@ define([], function () {
 	var BaseElement = function (id, position, sprite) {
         this._sprite = new PIXI.Sprite(sprite);
         if(typeof(position) === "string"){
-            console.log(PIXI);
             if(position === "center"){
                 position = {
-                    x: window.innerWidth / 2 - this._sprite.width / 2,
+                    x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
                     y: window.innerHeight / 2 - this._sprite.height / 2
                 };
             }
             else if(position === "bottom-right"){
                 position = {
-                    x: window.innerWidth,
-                    y: window.innerHeight
+                    x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4,
+                    y: 806,//window.innerHeight / this._sprite.scale.y
                 };
+                console.log(position.x);
+                this._sprite.anchor.x = 1;
+                this._sprite.anchor.y = 1;
             }
         }
         this._sprite.position = position;

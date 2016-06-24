@@ -19,7 +19,9 @@ function(Screen, Stage, GUI, Entities, Utils){
         this._buttonPressedDown = false;
         
         this._background = new Stage();
-        this._background.add(new Entities.Background("background", PIXI.Texture.fromFrame('menu'), 1));
+        var bg = new Entities.Background("background", PIXI.Texture.fromFrame('menu'), 1);
+        this._background.add(bg);
+        console.log(bg._sprite);
 
         var walluce = new GUI.Image("walluce", "bottom-right", PIXI.Texture.fromFrame('walrus_menu'));
         this._background.add(walluce);
@@ -78,6 +80,8 @@ function(Screen, Stage, GUI, Entities, Utils){
     
     _p.update = function(keysState, clicks, touches){
         var i = 0,j = 0, temp;
+        this._background._elements[0]._sprite.width = window.innerWidth / (window.innerHeight * 1.6 / 1280);
+        console.log(this._background._elements[0]._sprite.width);
         
         //Keyboard handling
         if(keysState.ARROW_DOWN || keysState.S){
@@ -146,11 +150,9 @@ function(Screen, Stage, GUI, Entities, Utils){
             this._buttonPressedDown = false;
         }
         
-        //Mouse clicks handling
-        var l = clicks.length;
-        var l2 = this._guiStage._elements.length;
-        for(j = 0; j < l; j += 1){
-            for(i = 0; i < l2; i += 1){
+        //Mouse clicks handling`
+        for(j = 0; j < clicks.length; j += 1){
+            for(i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
                 if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     temp.triggerCallback();

@@ -1,7 +1,7 @@
 define([
     'Core/Screen',
     'json!Assets/Chapters.json',
-    'Core/GUI'
+    'GUI/GUI'
 ],
 function(Screen, cfg, GUI){
     
@@ -18,7 +18,7 @@ function(Screen, cfg, GUI){
         for(var i = 0; i < this._chapters.length; i++){
             this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], this._chapters[i].sprite, "", {}, 
                 function(){
-                    
+
                 }
             ));
         }

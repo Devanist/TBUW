@@ -43,7 +43,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         var new_game = new GUI.Button("new_game", {x: 390 / this._small, y: 500 / this._small}, null, "NEW GAME", {active: true, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 this._onUpdateAction = this.EVENT.CHANGE;
-                this._nextScreen = "cinematic";
+                this._nextScreen = "chapter_choose";
             }.bind(this)
         );
         this._guiStage.add(new_game);

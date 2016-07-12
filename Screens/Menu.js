@@ -161,11 +161,9 @@ function(Screen, Stage, GUI, Entities, Utils){
         }
         
         //Touch handling
-        if(Utils.isTouchDevice()){
-            l = touches.length;
-            l2 = this._guiStage._elements.length;                
-            for(j = 0; j < l; j += 1){
-                for(i = 0; i < l2; i += 1){
+        if(Utils.isTouchDevice()){           
+            for(j = 0; j < touches.length; j += 1){
+                for(i = 0; i < this._guiStage._elements.length; i += 1){
                     temp = this._guiStage._elements[i];
                     if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
@@ -174,7 +172,7 @@ function(Screen, Stage, GUI, Entities, Utils){
             }
         }
         
-        for(i = 0; i < l2; i+=1){
+        for(i = 0; i < this._guiStage._elements.length; i+=1){
             temp = this._guiStage._elements[i];
             if(temp.isEnabled() && temp.isActive()){
                 if(this._displacement.scale.y < 6){

@@ -8,6 +8,16 @@ function(Base){
         Base.call(this, id, position, null);
         if(style.bitmap){
 			this._sprite = new PIXI.extras.BitmapText(text, style);
+            this._sprite.containsPoint = function(pos){
+                if( pos.x >= this.position.x &&
+                    pos.x <= this.position.x + this._sprite.textWidth &&
+                    pos.y >= this.position.y &&
+                    pos.y <= this.position.y + this._sprite.textHeight){
+                        return true;
+                }
+                return false;
+
+            };
 		}
 		else{
 			this._sprite = new PIXI.Text(text, style);

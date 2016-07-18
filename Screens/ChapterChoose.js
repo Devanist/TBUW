@@ -66,7 +66,7 @@ function(Screen, cfg, GUI, Utils){
         for(j = 0; j < clicks.length; j += 1){
             for(i = 0; i < this._stage._elements.length; i += 1){
                 temp = this._stage._elements[i];
-                if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     temp.triggerCallback();
                 }
             }

@@ -10,9 +10,9 @@ function(Base){
 			this._sprite = new PIXI.extras.BitmapText(text, style);
             this._sprite.containsPoint = function(pos){
                 if( pos.x >= this.position.x &&
-                    pos.x <= this.position.x + this._sprite.textWidth &&
+                    pos.x <= this.position.x + this.textWidth &&
                     pos.y >= this.position.y &&
-                    pos.y <= this.position.y + this._sprite.textHeight){
+                    pos.y <= this.position.y + this.textHeight){
                         return true;
                 }
                 return false;

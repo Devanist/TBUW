@@ -22,9 +22,11 @@ function(Screen, cfg, GUI, Utils){
             }
         }
 
+        this._stage.add(new GUI.Label("RETURN_MENU_TEXT", {x: 20, y: 10}, "RETURN TO MENU",
+            {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}));
+
         this._stage.add(new GUI.Button("RETURN", {x: 80, y: 80}, PIXI.Texture.fromFrame("backarrow"), "", {},
             function(){
-                console.log('returning to menu');
                 this._onUpdateAction = "CHANGE";
                 this._nextScreen = "menu";
             }.bind(this)
@@ -33,7 +35,7 @@ function(Screen, cfg, GUI, Utils){
         for(var i = 0; i < this._chapters.length; i++){
             this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", {}, 
                 function(){
-
+                    //TODO - change to level select / show levels for this chapter
                 }
             ));
             this._stage.add(new GUI.Label(this._chapters[i].name + "_label", 

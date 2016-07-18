@@ -46,14 +46,12 @@ define([
                 this._touchDevice.getTouches()
             );
             if(updateResult.action === "RESTART"){
-                console.log('restarting screen');
                 this._rootStage.removeAll();
                 this.initScreen(this._currentScreen.name);
             }
             else if(updateResult.action === "CHANGE"){
-                console.log('changing screen');
                 this._rootStage.removeAll();
-                this.initScreen(updateResult.changeTo);
+                this.initScreen(updateResult.changeTo, updateResult.params);
             }
             else{
                 this._speaker.update(updateResult.playSound);
@@ -67,18 +65,19 @@ define([
          * Method sets the current screen that should be showed.
          * @param {string} name Name of the screen to show
          */
-        setCurrentScreen : function(name){
+        setCurrentScreen : function(name, params){
             this._keyboard.reset();
             this._currentScreen.name = name;
-            this._currentScreen.screen = new this._screens[name]();
+            this._currentScreen.screen = new this._screens[name](params);
         },
         
         /**
          * Method initializates the given screen.
          * @param {string} screen Name of a screen to initialize
          */
-        initScreen : function(screen){
-            this.setCurrentScreen(screen);
+        initScreen : function(screen, params){
+            params = params || {};
+            this.setCurrentScreen(screen, params);
             if(screen === "game"){
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[1].data.background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[1].data.entities);

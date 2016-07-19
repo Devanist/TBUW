@@ -1,6 +1,6 @@
 define([
     'Core/Stage',
-    'Core/Levels',
+    'Assets/Levels/Levels',
     'Screens/Screens',
     'Assets/Cinematics/Cinematics'
     ], function(Stage, Levels, Screens, Cinematics){
@@ -79,12 +79,12 @@ define([
             params = params || {};
             this.setCurrentScreen(screen, params);
             if(screen === "game"){
-                this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[1].data.background);
-                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[1].data.entities);
-                this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[1].data.winConditions);
+                this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);
+                this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities);
+                this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);
             }
             if(screen === "cinematic"){
-                this._loader.loadCinematicConfig(Cinematics.intro, this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);
+                this._loader.loadCinematicConfig(Cinematics[params.cfg], this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);
             }
             this._rootStage.add(this._currentScreen.screen.getStage());
         }

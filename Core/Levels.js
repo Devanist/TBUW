@@ -1,7 +1,7 @@
 define([
-    'json!Assets/Levels/level_one.json',
+    'Assets/Levels/Levels',
     'Assets/Cinematics/Cinematics'
-], function(one, Cinematics){
+], function(LevelsCfg, Cinematics){
     
     /**
      * Collection of all levels.
@@ -15,7 +15,7 @@ define([
         {
             type: "level",
             name: "one",
-            data: one
+            data: LevelsCfg.C1_L1
         }
     ];
     

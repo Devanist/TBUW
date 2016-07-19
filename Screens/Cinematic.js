@@ -3,7 +3,7 @@ define([
 ],
 function(Screen){
     
-    var Cinematic = function(){
+    var Cinematic = function(params){
         Screen.call(this);
         this._loaded = false;
         this._finished = false;
@@ -16,6 +16,7 @@ function(Screen){
         this._cinematicConfig = [];
         this._sounds = [];
         this._date = new Date();
+        this._back = params.back;
     };
     
     Cinematic.prototype = Object.create(Screen.prototype, {
@@ -102,10 +103,13 @@ function(Screen){
             }
             else{
                 this._onUpdateAction = "CHANGE";
-                this._nextScreen = "game";
+                this._nextScreen = "level_choose";
+                this._nextScreenParams = {
+                    cfg: this._back
+                };
             }
         }
-        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
+        return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};
     };
     
     return Cinematic;

@@ -6,7 +6,7 @@ define([
     'Core/TouchController'
     ], function(Screen, Stage, Utils, GUI, TouchController){
     
-    var GameScreen = function(){
+    var GameScreen = function(params){
         Screen.call(this);
         
         this._background = new Stage();
@@ -18,6 +18,7 @@ define([
         this._winConditions = [];
         this._sounds = [];
         this._lose = false;
+        this._back = params.back;
         
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -63,7 +64,10 @@ define([
                     }, 
                     function(){
                         this._onUpdateAction = this.EVENT.CHANGE;
-                        this._nextScreen = "menu";
+                        this._nextScreen = "level_choose";
+                        this._nextScreenParams = {
+                            cfg: this._back
+                        };
                     }.bind(this)
                 );
                 this._guiStage.add(wonButton);
@@ -270,7 +274,7 @@ define([
             }
         }
         
-        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
+        return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};
     };
     
     return GameScreen;

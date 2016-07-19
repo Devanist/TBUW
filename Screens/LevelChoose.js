@@ -6,7 +6,7 @@ define([
 function(Screen, GUI, Utils){
 
     var LevelChoose = function(params){
-        Screen. call(this);
+        Screen.call(this);
         this._levels = params.cfg;
 
         this._small = 1;
@@ -26,20 +26,41 @@ function(Screen, GUI, Utils){
 
         var temp;
         var num;
+        var that = this;
         for(var i = 0; i < this._levels.length; i++){
             num = i.toString();
             if(i < 10){
                 num = '0' + num;
             }
             if(this._levels[i].type === "cinematic"){
-                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), num, 
+                temp = new GUI.Button("cinem_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), num, 
                 {size_override: true, bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"},cinematicCallback);
             }
             else{
-                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), num, 
+                temp = new GUI.Button("level_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), num, 
                 {bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
             }
             this._stage.add(temp);
+        }
+
+        function cinematicCallback(){
+            console.log('run cinematic ' + this._id.substr(6));
+            that._onUpdateAction = "CHANGE";
+            that._nextScreen = "cinematic";
+            that._nextScreenParams = {
+                cfg: this._id.substr(6),
+                back: that._levels
+            };
+        }
+
+        function levelCallback(){
+            console.log('run level ' + this._id.substr(6));
+            that._onUpdateAction = "CHANGE";
+            that._nextScreen = "game";
+            that._nextScreenParams = {
+                cfg: this._id.substr(6),
+                back: that._levels
+            };
         }
 
     };
@@ -82,18 +103,10 @@ function(Screen, GUI, Utils){
         return  {
             action: this._onUpdateAction,
             changeTo: this._nextScreen,
+            params: this._nextScreenParams,
             playSound: this._sounds
         };
     };
-
-    function cinematicCallback(){
-        console.log('run cinematic ' + this._id.substr(6));
-    }
-
-    function levelCallback(){
-        console.log(this);
-        console.log('run level ' + this._id.substr(6));
-    }
 
     return LevelChoose;
 

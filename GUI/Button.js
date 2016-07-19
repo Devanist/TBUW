@@ -22,7 +22,7 @@ define(['GUI/BaseElement'], function(Base){
 		this._container.addChild(this._text);
 		this._sprite.anchor.x = 0.5;
 		this._sprite.anchor.y = 0.5;
-		if(text !== ""){
+		if(text !== "" && style.size_override === false){
 			this._sprite.width = this._text.width + 20;
 			this._sprite.height = this._text.height + 20;
 		}

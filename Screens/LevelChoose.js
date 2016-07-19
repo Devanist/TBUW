@@ -25,18 +25,22 @@ function(Screen, GUI, Utils){
         ));
 
         var temp;
+        var num;
         for(var i = 0; i < this._levels.length; i++){
+            num = i.toString();
+            if(i < 10){
+                num = '0' + num;
+            }
             if(this._levels[i].type === "cinematic"){
-                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), i.toString(), 
-                {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, cinematicCallback);
+                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), num, 
+                {size_override: true, bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"},cinematicCallback);
             }
             else{
-                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), i.toString(), 
-                {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
+                temp = new GUI.Button("level_"+i, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), num, 
+                {bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
             }
             this._stage.add(temp);
         }
-        console.log(this._stage);
 
     };
 
@@ -83,11 +87,12 @@ function(Screen, GUI, Utils){
     };
 
     function cinematicCallback(){
-
+        console.log('run cinematic ' + this._id.substr(6));
     }
 
     function levelCallback(){
-
+        console.log(this);
+        console.log('run level ' + this._id.substr(6));
     }
 
     return LevelChoose;

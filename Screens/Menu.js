@@ -40,7 +40,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         this._stage.add(this._background);
         
-        var new_game = new GUI.Button("new_game", {x: 390 / this._small, y: 500 / this._small}, null, "NEW GAME", {active: true, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+        var new_game = new GUI.Button("new_game", {x: 390 / this._small, y: 500 / this._small}, null, "NEW GAME", {size_override: false, active: true, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 this._onUpdateAction = this.EVENT.CHANGE;
                 this._nextScreen = "chapter_choose";
@@ -48,7 +48,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         );
         this._guiStage.add(new_game);
         
-        var load_game = new GUI.Button("load_game", {x: 390 / this._small, y: 550 / this._small}, null, "LOAD GAME", {bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+        var load_game = new GUI.Button("load_game", {x: 390 / this._small, y: 550 / this._small}, null, "LOAD GAME", {size_override: false, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 this._onUpdateAction = this.EVENT.CHANGE;
                 this._nextScreen = "load_game";
@@ -56,7 +56,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         );
         this._guiStage.add(load_game);
         
-        var options = new GUI.Button("options", {x: 390 / this._small, y: 600 / this._small}, null, "OPTIONS", {bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
+        var options = new GUI.Button("options", {x: 390 / this._small, y: 600 / this._small}, null, "OPTIONS", {size_override: false, bitmap: true, font: 40 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, 
             function(){
                 this._onUpdateAction = this.EVENT.CHANGE;
                 this._nextScreen = "options";

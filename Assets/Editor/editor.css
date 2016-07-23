@@ -51,6 +51,10 @@ body {
     max-width: 140px;
     max-height: 140px;
 }
+#used_elements{
+    overflow-y: auto;
+    height: 458px;
+}
 #message_box{
     font-size: small;
 }

@@ -2,9 +2,10 @@ define([
     'Core/Screen',
     'Core/Stage',
     'Entities/Entities',
+    'json!Assets/Gfx/sprites.json',
     'jquery'
 ], 
-function(Screen, Stage, Entities, $){
+function(Screen, Stage, Entities, Spritesheet, $){
     
     var LevelEditor = function(){
         Screen.call(this);
@@ -52,6 +53,15 @@ function(Screen, Stage, Entities, $){
     _p.getMainStage = function(){
         return this._gameStage;
     };
+
+    _p.getElement = function(id){
+        for(var i = 0; i < this._level.entities.length; i++){
+            if(this._level.entities[i].id === id){
+                return this._level.entities[i];
+            }
+        }
+        return null;
+    };
     
     _p.appendToolBox = function(){
         
@@ -82,6 +92,7 @@ function(Screen, Stage, Entities, $){
                     y: 0
                 }
             };
+            $("#message_box").text("").removeClass();
             $("#details_box").hide();
             $("#position-x").val(0);
             $("#position-y").val(0);
@@ -142,6 +153,7 @@ function(Screen, Stage, Entities, $){
             console.log(e);
             that._curId = e.target.id.substring(3);
             that._selectedElement = that._level.entities[that._curId];
+            $("#message_box").text("").removeClass();
             $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
             $("#position-x").val(that._selectedElement.position.x);
             $("#position-y").val(that._selectedElement.position.y);
@@ -194,8 +206,8 @@ function(Screen, Stage, Entities, $){
             }
         }
         
-        for(var asset in PIXI.loader.resources){
-            if(PIXI.loader.resources.hasOwnProperty(asset)){
+        for(var asset in Spritesheet.frames){
+            if(Spritesheet.frames.hasOwnProperty(asset)){
                 $("#assets").append('<option value="' + asset + '">');
             }
         }
@@ -221,18 +233,22 @@ function(Screen, Stage, Entities, $){
                 $("#message_box").text("You must select an element first!");
                 $("#message_box").addClass("error_message");
             }
+            else if(this.getElement(this._selectedElement.id) !== null){
+                $("#message_box").text("You can't add the same object twice!");
+                $("#message_box").addClass("error_message");
+            }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
                 if(this._selectedElement.type === "Background"){
                     this._level.entities.splice(0, 0, this._selectedElement);
                     if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").prepend('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                        $("#elements_list").prepend('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
                     }
                 }
                 else{
                     this._level.entities[this._curId] = this._selectedElement;
                     if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + ' src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                        $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
                     }
                 }
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
@@ -256,13 +272,13 @@ function(Screen, Stage, Entities, $){
         }.bind(this));
         
         $("#assets_list").on("input", function(e){
-            if(PIXI.loader.resources.hasOwnProperty($("#assets_list").val())){
-                $("#sprite_preview").attr("src", PIXI.loader.resources[$("#assets_list").val()].url);
+            if(Spritesheet.frames.hasOwnProperty($("#assets_list").val())){
+                //$("#sprite_preview").attr("src", PIXI.loader.resources[$("#assets_list").val()].url);
                 this._selectedElement.texture = $("#assets_list").val();
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){
-                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#assets_list").val()].texture);
-                        $("#el_"+this._curId).text(this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture.fromFrame($("#assets_list").val());
+                        $("#el_"+this._curId).text('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                         break;
                     }
                 }
@@ -277,11 +293,10 @@ function(Screen, Stage, Entities, $){
             for(var i = 0; i < this._gameStage._elements.length; i+=1){
                 if(this._selectedElement.id === this._gameStage._elements[i]._id){
                     this._gameStage._elements[i]._sprite.position.x = $("#position-x").val();
-                    $("#el_"+this._selectedElement.id).text(this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    $("#el_"+this._selectedElement.id).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }
-            console.log(this._gameStage._elements[i]._sprite);
         }.bind(this));
         
         $("#position-y").on("change", function(){
@@ -289,7 +304,7 @@ function(Screen, Stage, Entities, $){
             for(var i = 0; i < this._gameStage._elements.length; i+=1){
                 if(this._selectedElement.id === this._gameStage._elements[i]._id){
                     this._gameStage._elements[i]._sprite.position.y = $("#position-y").val();
-                    $("#el_"+this._selectedElement.id).text(this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    $("#el_"+this._selectedElement.id).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }
@@ -332,13 +347,13 @@ function(Screen, Stage, Entities, $){
                 e = this._level.entities[i];
                 console.log(e);
                 if(e.type === "Background"){
-                    temp = new Entities.Background(e.id, PIXI.loader.resources[e.texture].texture, e.factor);
+                    temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
                 }
                 else if(e.type === "Platform"){
-                    temp = new Entities.Platform(e.id, PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
                 }
                 else if(e.type === "Player"){
-                    temp = new Entities.Player(e.id, PIXI.loader.resources[e.texture].texture);
+                    temp = new Entities.Player(e.id, PIXI.Texture.fromFrame(e.texture));
                 }
                 temp.setPosition(e.position);
                 this._gameStage.add(temp);

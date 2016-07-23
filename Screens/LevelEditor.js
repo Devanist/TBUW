@@ -269,7 +269,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
         
         $("#assets_list").on("input", function(e){
             if(Spritesheet.frames.hasOwnProperty($("#assets_list").val())){
-                //$("#sprite_preview").attr("src", PIXI.loader.resources[$("#assets_list").val()].url);
+                $("#sprite_preview").attr("src", "http://foka.servebeer.com/static/UTCWB/" + $("#assets_list").val() + ".png");
                 this._selectedElement.texture = $("#assets_list").val();
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){

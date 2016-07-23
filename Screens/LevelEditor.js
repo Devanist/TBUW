@@ -274,7 +274,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){
                         this._gameStage._elements[i]._sprite.texture = new PIXI.Texture.fromFrame($("#assets_list").val());
-                        $("#el_"+this._curId).text('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                        $("#el_"+this._curId).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                         break;
                     }
                 }

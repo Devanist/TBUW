@@ -103,8 +103,8 @@ function(Screen, Stage, Entities, Spritesheet, $){
         }.bind(this));
         
         $("#level_background").on("input", function(){
-            if(PIXI.loader.resources.hasOwnProperty($("#level_background").val())){
-                that._background._elements[0]._sprite.texture = new PIXI.Texture(PIXI.loader.resources[$("#level_background").val()].texture);
+            if(Spritesheet.frames.hasOwnProperty($("#level_background").val())){
+                that._background._elements[0]._sprite.texture = new PIXI.Texture.fromFrame($("#level_background").val());
                 that._level.background[0] = {
                     id: 0,
                     type: "background",
@@ -159,6 +159,8 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#position-y").val(that._selectedElement.position.y);
             $("#entities_list").val(that._selectedElement.type);
             $("#assets_list").val(that._selectedElement.texture);
+            $("#factor").show();
+            $("#factor_label").show();
             if(that._selectedElement.type !== "Background"){
                 $("#factor").hide();
                 $("#factor_label").hide();
@@ -239,18 +241,12 @@ function(Screen, Stage, Entities, Spritesheet, $){
             }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
-                if(this._selectedElement.type === "Background"){
-                    this._level.entities.splice(0, 0, this._selectedElement);
-                    if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").prepend('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
-                    }
+                    
+                this._level.entities[this._curId] = this._selectedElement;
+                if($("li #el_" + this._curId).length === 0){
+                    $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
                 }
-                else{
-                    this._level.entities[this._curId] = this._selectedElement;
-                    if($("li #el_" + this._curId).length === 0){
-                        $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
-                    }
-                }
+
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
                 $("#position-x").val(this._selectedElement.position.x);
                 $("#position-y").val(this._selectedElement.position.y);

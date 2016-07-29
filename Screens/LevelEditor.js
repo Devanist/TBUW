@@ -133,7 +133,8 @@ function(Screen, Stage, Entities, Spritesheet, $){
             reader.onload = function(e){
                 var contents = e.target.result;
                 that._level = JSON.parse(contents);
-                console.log(that._level);
+                $("#level_background").val(that._level.background[0].texture);
+                that.updateStage("background");
                 that.updateStage("game");
                 $("#level_name").val(that._level.name);
                 var temp = null;
@@ -150,7 +151,6 @@ function(Screen, Stage, Entities, Spritesheet, $){
         });
         
         $("body").on("click", "ul#elements_list li", function(e){
-            console.log(e);
             that._curId = e.target.id.substring(3);
             that._selectedElement = that._level.entities[that._curId];
             $("#message_box").text("").removeClass();
@@ -159,11 +159,26 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#position-y").val(that._selectedElement.position.y);
             $("#entities_list").val(that._selectedElement.type);
             $("#assets_list").val(that._selectedElement.texture);
-            $("#factor").show();
+            $("#factor").show().val("");
             $("#factor_label").show();
-            if(that._selectedElement.type !== "Background"){
+            $("#value").show().val("");
+            $("#value_label").hide();
+            if(that._selectedElement.type !== "Background" && that._selectedElement.type !== "BlockCoin"){
                 $("#factor").hide();
                 $("#factor_label").hide();
+                $("#value").hide();
+                $("#value_label").hide();
+            }
+            else if(that._selectedElement.type === "Background"){
+                $("#factor").val(that._selectedElement.factor);
+                $("#value").hide();
+                $("#value_label").hide();
+            }
+            else if(that._selectedElement.type === "BlockCoin"){
+                $("#factor").hide();
+                $("#factor_label").hide();
+                $("#value").val(that._selectedElement.quantity);
+                $("#value, #value_label").show();
             }
             $("#details_box").show();
         });
@@ -194,6 +209,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 '<label>X:</label><input type="text" id="position-x">'+
                 '<label>Y:</label><input type="text" id="position-y">'+
                 '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
+                '<label id="value_label">Value:</label><input type="number" id="value">' +
             '</section>'
         );
         
@@ -219,13 +235,26 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 this._selectedElement.type = $("#entities_list").val();
                 if($("#entities_list").val() === "Background"){
                     this._selectedElement.factor = 1;
+                    delete this._selectedElement.quantity;
                     $("#factor").show().val(1);
                     $("#factor_label").show();
+                    $("#value").hide();
+                    $("#value_label").hide();
                 }
-                else{
-                    this._selectedElement.factor = undefined;
+                else if($("#entities_list").val() === "BlockCoin"){
+                    delete this._selectedElement.factor;
                     $("#factor").hide().val("");
                     $("#factor_label").hide();
+                    $("#value").val(1);
+                    $("#value, #value_label").show();
+                }
+                else{
+                    delete this._selectedElement.factor;
+                    delete this._selectedElement.quantity;
+                    $("#factor").hide().val("");
+                    $("#factor_label").hide();
+                    $("#value").hide();
+                    $("#value_label").hide();
                 }
             }
         }.bind(this));
@@ -304,7 +333,14 @@ function(Screen, Stage, Entities, Spritesheet, $){
                     break;
                 }
             }
-            console.log(this._gameStage._elements[i]._sprite);
+        }.bind(this));
+
+        $("#factor").on("change", function(){
+            this._selectedElement.factor = parseFloat( $("#factor").val() );
+        }.bind(this));
+
+        $("#value").on("change", function(){
+            this._selectedElement.quantity = parseInt( $("#value").val() );
         }.bind(this));
         
     };
@@ -330,9 +366,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
     _p.updateStage = function(stage){
         
         if(stage === "background"){
-            this._background._elements.splice(0);
-            this._background._stage.removeChild(0);
-            this._background.add(new Entities.Background(PIXI.loader.resources[this._level.background[0].texture]));
+            this._background._elements[0]._sprite.texture = new PIXI.Texture.fromFrame($("#level_background").val());
         }
         else if(stage === "game"){
             this._gameStage.removeAll();
@@ -341,7 +375,6 @@ function(Screen, Stage, Entities, Spritesheet, $){
             var temp = null;
             for(var i = 0; i < this._level.entities.length; i+=1){
                 e = this._level.entities[i];
-                console.log(e);
                 if(e.type === "Background"){
                     temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
                 }
@@ -349,7 +382,14 @@ function(Screen, Stage, Entities, Spritesheet, $){
                     temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
                 }
                 else if(e.type === "Player"){
-                    temp = new Entities.Player(e.id, PIXI.Texture.fromFrame(e.texture));
+                    var frames = [];
+                    for(var j = 0; j < 5; j+=1){
+                        frames.push(PIXI.Texture.fromFrame('walrus_0000' + j));
+                    }
+                    temp = new Entities.Player(e.id, frames);
+                }
+                else if(e.type === "BlockCoin"){
+                    temp = new Entities.BlockCoin(e.id, e.quantity);
                 }
                 temp.setPosition(e.position);
                 this._gameStage.add(temp);

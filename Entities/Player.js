@@ -7,7 +7,7 @@ function(Creature, Currencies){
     var Player = function(id, frames){
         Creature.call(this, id, frames[0]);
         this._frames = frames;
-        this._data.type = "player";
+        this._data.type = "Player";
         this._data.state = {
             inAir: false,
             doubleJumped: false,

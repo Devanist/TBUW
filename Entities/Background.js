@@ -2,7 +2,7 @@ define(['Entities/Item'], function(Item){
     
     var Background = function(id, sprite, factor){
         Item.call(this, id, sprite);
-        this._data.type = "background";
+        this._data.type = "Background";
         this._data.movingSpeedFactor = factor;
     };
     

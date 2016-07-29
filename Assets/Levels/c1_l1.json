@@ -94,7 +94,7 @@
             "texture": "platform"
         },
         {
-            "id": 10,
+            "id": 8,
             "type": "BlockCoin",
             "position": {
                 "x": 820,
@@ -103,7 +103,7 @@
             "quantity": 1
         },
         {
-            "id": 8,
+            "id": 9,
             "type": "Player",
             "position": {
                 "x": 180,
@@ -112,7 +112,7 @@
             "texture": "player"
         },
         {
-            "id": 9,
+            "id": 10,
             "type": "Background",
             "position": {
                 "x": 320,

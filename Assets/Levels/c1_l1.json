@@ -20,7 +20,7 @@
     "entities": [
         {
             "id": 0,
-            "type": "background",
+            "type": "Background",
             "position": {
                 "x": 100,
                 "y": 375
@@ -30,7 +30,7 @@
         },
         {
             "id": 1,
-            "type": "background",
+            "type": "Background",
             "position": {
                 "x": 500,
                 "y": 275
@@ -40,7 +40,7 @@
         },
         {
             "id": 2,
-            "type": "background",
+            "type": "Background",
             "position": {
                 "x": 750,
                 "y": 375
@@ -50,7 +50,7 @@
         },
         {
             "id": 3,
-            "type": "platform",
+            "type": "Platform",
             "position": {
                 "x": 370,
                 "y": 380
@@ -59,7 +59,7 @@
         },
         {
             "id": 4,
-            "type": "platform",
+            "type": "Platform",
             "position": {
                 "x": 120,
                 "y": 450
@@ -68,7 +68,7 @@
         },
         {
             "id": 5,
-            "type": "platform",
+            "type": "Platform",
             "position": {
                 "x": 20,
                 "y": 270
@@ -77,7 +77,7 @@
         },
         {
             "id": 6,
-            "type": "platform",
+            "type": "Platform",
             "position": {
                 "x": 770,
                 "y": 500
@@ -86,7 +86,7 @@
         },
         {
             "id": 7,
-            "type": "platform",
+            "type": "Platform",
             "position": {
                 "x": 1170,
                 "y": 480
@@ -104,7 +104,7 @@
         },
         {
             "id": 8,
-            "type": "player",
+            "type": "Player",
             "position": {
                 "x": 180,
                 "y": 360
@@ -113,7 +113,7 @@
         },
         {
             "id": 9,
-            "type": "background",
+            "type": "Background",
             "position": {
                 "x": 320,
                 "y": 0

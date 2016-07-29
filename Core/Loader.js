@@ -209,13 +209,13 @@ define([
             
             for(var i = 0; i < l; i++){
                 e = cfg[i];
-                if(e.type === "background"){
+                if(e.type === "Background"){
                     temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
                 }
-                else if(e.type === "platform"){
+                else if(e.type === "Platform"){
                     temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
                 }
-                else if(e.type === "player"){
+                else if(e.type === "Player"){
                     var frames = [];
                     for(var j = 0; j < 5; j+=1){
                         frames.push(PIXI.Texture.fromFrame('walrus_0000' + j));

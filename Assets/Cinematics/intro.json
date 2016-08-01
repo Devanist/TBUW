@@ -3,7 +3,10 @@
         "somewhere_in_cali",
         "super_duper_drinkyard",
         "walluce_at_bar",
-        "walluce_eye"
+        "walluce_eye",
+        "rodo",
+        "dial_1",
+        "dial_2"
     ],
     "animations": [
         {
@@ -74,6 +77,114 @@
             "moveTo": {
                 "x": 858,
                 "y": 550,
+                "time": 1000,
+                "wait": 2000
+            }
+        },
+        {
+            "id": "somewhere_in_cali",
+            "moveTo": {
+                "x": 302,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "super_duper_drinkyard",
+            "moveTo": {
+                "x": 858,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "walluce_at_bar",
+            "moveTo": {
+                "x": 302,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "walluce_eye",
+            "moveTo": {
+                "x": 858,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "rodo",
+            "moveTo": {
+                "x": 302,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "rodo",
+            "moveTo": {
+                "x": 302,
+                "y": 42,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "dial_1",
+            "moveTo": {
+                "x": 808,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "dial_1",
+            "moveTo": {
+                "x": 808,
+                "y": 42,
+                "time": 1000,
+                "wait": 2000
+            }
+        },
+        {
+            "id": "walluce_eye",
+            "moveTo": {
+                "x": 302,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "walluce_eye",
+            "moveTo": {
+                "x": 302,
+                "y": 350,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "dial_2",
+            "moveTo": {
+                "x": 858,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "dial_2",
+            "moveTo": {
+                "x": 858,
+                "y": 400,
                 "time": 1000,
                 "wait": 5000
             }

@@ -80,7 +80,7 @@ define([
             var l = anwser.ELEMENTS.length;
             for(var i = 0; i < l; i++){
                 temp = this._gameStage._elements[i];
-                if(this._player === undefined && temp._data.type === "player"){
+                if(this._player === undefined && temp._data.type === "Player"){
                     this._player = temp;
                 }
                 temp._data = anwser.ELEMENTS[i];
@@ -90,7 +90,7 @@ define([
                     temp.update();
                 }
                 
-                if(temp._data.type === "player" && temp.getPosition().y > 1000){
+                if(temp._data.type === "Player" && temp.getPosition().y > 1000){
                     this._lose = true;
                 }
 

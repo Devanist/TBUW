@@ -21,7 +21,7 @@ self.onmessage = function(e){
         temp.size.w += temp.offset.width;
         temp.size.h += temp.offset.height;
         temp.currentRotationAngle += temp.rotation;
-        if(temp.type === "player"){
+        if(temp.type === "Player"){
             PLAYER = temp;
         }
         if(temp.toBeRemoved){
@@ -96,7 +96,7 @@ self.onmessage = function(e){
     var tx, tex, ty, tey;
     for(i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
-        if(temp.type !== "background" && temp.type !== "player"){
+        if(temp.type !== "Background" && temp.type !== "Player"){
             
             if(temp.anchor !== undefined){
                 tx = temp.position.x - temp.anchor.x * temp.size.w;
@@ -122,7 +122,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
                 if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
-                    if(temp.type === "platform"){
+                    if(temp.type === "Platform"){
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
@@ -132,7 +132,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli player jest pod obiektem
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
-                    if(temp.type === "platform"){
+                    if(temp.type === "Platform"){
                         PLAYER.velocity.y = 0;
                         PLAYER.position.y = tey;
                     }
@@ -140,7 +140,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli player jest na lewo od obiektu
                 else if(ex >= tx && x <= tx){
-                    if(temp.type === "platform"){
+                    if(temp.type === "Platform"){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = tx - PLAYER.size.w + 1;
                     }
@@ -148,7 +148,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli gracz jest na prawo od obiektu
                 else if(x <= tex && tex <= ex){
-                    if(temp.type === "platform"){
+                    if(temp.type === "Platform"){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = temp.position.endX;
                     }
@@ -177,7 +177,7 @@ self.onmessage = function(e){
         
         for(i = 0; i < elementsQuantity; i+=1){
             temp = world.ELEMENTS[i];
-            if(temp.type === "background"){
+            if(temp.type === "Background"){
                 temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
             }
         }
@@ -209,7 +209,7 @@ self.onmessage = function(e){
     conditionsMet = 0;
     for(i = 0; i < l; i+=1){
         temp = world.WIN_CONDITIONS[i];
-        if(temp.name === "blockcoin" && world.PLAYER_CURRENCIES.blockcoin >= temp.value){
+        if(temp.name === "Blockcoin" && world.PLAYER_CURRENCIES.blockcoin >= temp.value){
             conditionsMet++;
         }
     }

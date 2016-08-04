@@ -200,8 +200,8 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 '<p id="message_box"></p>' +
             '</section>' +
             '<section id="asset_selection">' +
-                '<input list="assets" placeholder="Select a sprite" id="assets_list">' +
-                '<datalist id="assets"></datalist>' +
+                '<select name="assets_list" id="assets" size="1">' +
+                '</select>' +
                 '<img id="clear_selection_button" title="Clear selection" src="Assets/Editor/cross.png"/>' +  
                 '<img id="sprite_preview" src="Assets/Editor/No_image.png"/>' + 
             '</section>' +
@@ -226,7 +226,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
         
         for(var asset in Spritesheet.frames){
             if(Spritesheet.frames.hasOwnProperty(asset)){
-                $("#assets").append('<option value="' + asset + '">');
+                $("#assets").append('<option value="' + asset + '">' + asset + '</option>');
             }
         }
         
@@ -296,13 +296,13 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#details_box").hide();
         }.bind(this));
         
-        $("#assets_list").on("input", function(e){
-            if(Spritesheet.frames.hasOwnProperty($("#assets_list").val())){
-                $("#sprite_preview").attr("src", "http://foka.servebeer.com/static/UTCWB/" + $("#assets_list").val() + ".png");
-                this._selectedElement.texture = $("#assets_list").val();
+        $("#assets").on("change", function(e){
+            if(Spritesheet.frames.hasOwnProperty($("#assets option:selected").val())){
+                $("#sprite_preview").attr("src", "http://foka.servebeer.com/static/UTCWB/" + $("#assets option:selected").val() + ".png");
+                this._selectedElement.texture = $("#assets option:selected").val();
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){
-                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture.fromFrame($("#assets_list").val());
+                        this._gameStage._elements[i]._sprite.texture = new PIXI.Texture.fromFrame($("#assets option:selected").val());
                         $("#el_"+this._curId).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                         break;
                     }

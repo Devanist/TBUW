@@ -56,7 +56,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
 
     _p.getElement = function(id){
         for(var i = 0; i < this._level.entities.length; i++){
-            if(this._level.entities[i].id === id){
+            if(this._level.entities[i].id === parseInt(id)){
                 return this._level.entities[i];
             }
         }
@@ -82,7 +82,11 @@ function(Screen, Stage, Entities, Spritesheet, $){
         );
         
         $("#add_new_button").on("click", function(e){
-            this._curId = this._level.entities.length;
+            for(let i = 0; i < this._level.entities.length; i++){
+                if(this._curId < this._level.entities[i].id){
+                    this._curId = this._level.entities[i].id + 1;
+                }
+            }             
             this._selectedElement = {
                 id: this._curId,
                 type: null,
@@ -140,7 +144,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 var temp = null;
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];
-                    $("#elements_list").append('<li id="el_' + temp.id +'"><img title="Remove this element" id="remove_' + temp.id + '" src="Assets/Editor/cross.png"/>' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</li>');
+                    $("#elements_list").append('<li id="el_' + temp.id +'"><img title="Remove this element" id="remove_' + temp.id + '" src="Assets/Editor/cross.png"/><label id="ll_' + temp.id +'">' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</label></li>');
                 }
             };
             reader.readAsText(file);
@@ -149,10 +153,28 @@ function(Screen, Stage, Entities, Spritesheet, $){
         $("#level_name").on("change", function(){
             that._level.name = $("#level_name").val();
         });
+
+        $("body").on("click", "ul#elements_list li img", function(e){
+            var deletingId = e.target.id.substring(7);
+            var index;
+
+            for(let i = 0; i < that._level.entities.length; i++){
+                if(that._level.entities[i].id === parseInt(deletingId)){
+                    index = i;
+                }
+            }
+            console.log(that._level.entities);
+            that._level.entities.splice(index, 1);
+            $("#el_"+deletingId).remove();
+
+            that.updateStage("background");
+            that.updateStage("game");
+
+        });
         
-        $("body").on("click", "ul#elements_list li", function(e){
+        $("body").on("click", "ul#elements_list li label", function(e){
             that._curId = e.target.id.substring(3);
-            that._selectedElement = that._level.entities[that._curId];
+            that._selectedElement = that.getElement(that._curId);
             $("#message_box").text("").removeClass();
             $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
             $("#position-x").val(that._selectedElement.position.x);
@@ -265,7 +287,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 $("#message_box").addClass("error_message");
             }
             else if(this.getElement(this._selectedElement.id) !== null){
-                $("#message_box").text("You can't add the same object twice!");
+                $("#message_box").text("You can't add the same object twice! ID: " + this._selectedElement.id);
                 $("#message_box").addClass("error_message");
             }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
@@ -273,7 +295,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
                     
                 this._level.entities[this._curId] = this._selectedElement;
                 if($("li #el_" + this._curId).length === 0){
-                    $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</li>');
+                    $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/><label id="ll_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</label></li>');
                 }
 
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
@@ -388,24 +410,28 @@ function(Screen, Stage, Entities, Spritesheet, $){
             var temp = null;
             for(var i = 0; i < this._level.entities.length; i+=1){
                 e = this._level.entities[i];
-                if(e.type === "Background"){
-                    temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
-                }
-                else if(e.type === "Platform"){
-                    temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
-                }
-                else if(e.type === "Player"){
-                    var frames = [];
-                    for(var j = 0; j < 5; j+=1){
-                        frames.push(PIXI.Texture.fromFrame('walrus_0000' + j));
+                if(e !== undefined && e !== null){
+
+                    if(e.type === "Background"){
+                        temp = new Entities.Background(e.id, PIXI.Texture.fromFrame(e.texture), e.factor);
                     }
-                    temp = new Entities.Player(e.id, frames);
+                    else if(e.type === "Platform"){
+                        temp = new Entities.Platform(e.id, PIXI.Texture.fromFrame(e.texture));
+                    }
+                    else if(e.type === "Player"){
+                        var frames = [];
+                        for(var j = 0; j < 5; j+=1){
+                            frames.push(PIXI.Texture.fromFrame('walrus_0000' + j));
+                        }
+                        temp = new Entities.Player(e.id, frames);
+                    }
+                    else if(e.type === "BlockCoin"){
+                        temp = new Entities.BlockCoin(e.id, e.quantity);
+                    }
+                    temp.setPosition(e.position);
+                    this._gameStage.add(temp);
+                    
                 }
-                else if(e.type === "BlockCoin"){
-                    temp = new Entities.BlockCoin(e.id, e.quantity);
-                }
-                temp.setPosition(e.position);
-                this._gameStage.add(temp);
             }
         }
     };

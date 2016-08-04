@@ -212,11 +212,9 @@ define([
         
         //Touch handling
         if(Utils.isTouchDevice()){
-            l = touches.length;
-            this._touchController.updateState(touches);
-            l2 = this._guiStage._elements.length;                
-            for(j = 0; j < l; j += 1){
-                for(i = 0; i < l2; i += 1){
+            this._touchController.updateState(touches);                
+            for(j = 0; j < touches.length; j += 1){
+                for(let i = 0; i < this._guiStage._elements.length; i += 1){
                     temp = this._guiStage._elements[i];
                     if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
@@ -248,7 +246,7 @@ define([
             }
             
             l = this._gameStage._elements.length;
-            for(i = 0; i < l; i++){
+            for(let i = 0; i < l; i++){
                 temp = this._gameStage._elements[i];
                 temp._data.size.w = temp._sprite.getLocalBounds().width;
                 temp._data.size.h = temp._sprite.getLocalBounds().height;
@@ -256,7 +254,7 @@ define([
             }
             
             l = this._guiStage._elements.length;
-            for(i = 0; i < l; i+=1){
+            for(let i = 0; i < l; i+=1){
                 temp = this._guiStage._elements[i];
                 data.GUI_ELEMENTS.push(temp._data);
             }
@@ -266,7 +264,7 @@ define([
         }
         else{
             l = this._guiStage._elements.length;
-            for(i = 0; i < l; i+=1){
+            for(let i = 0; i < l; i+=1){
                 temp = this._guiStage._elements[i];
                 if(temp.isActive() && keysState.ENTER){
                     temp.triggerCallback();

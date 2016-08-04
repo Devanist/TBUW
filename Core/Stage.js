@@ -43,8 +43,8 @@ define(['Entities/Entities'], function(Entities){
         },       
         
         removeAll : function(){
-            for(var i = 0; i < this._elements.length; i++){
-                this._elements.splice(i);
+            for(let i = this._elements.length - 1; i >= 0 ; i--){
+                this._elements.splice(i,1);
                 this._stage.removeChild(this._stage.children[i]);
             }
             console.log(this._stage.children);

@@ -158,7 +158,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#position-x").val(that._selectedElement.position.x);
             $("#position-y").val(that._selectedElement.position.y);
             $("#entities_list").val(that._selectedElement.type);
-            $("#assets_list").val(that._selectedElement.texture);
+            $("#assets").val(that._selectedElement.texture);
             $("#factor").show().val("");
             $("#factor_label").show();
             $("#value").show().val("");

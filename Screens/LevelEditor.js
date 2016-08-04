@@ -349,14 +349,27 @@ function(Screen, Stage, Entities, Spritesheet, $){
         return this._gameStage;
     };
     
-    _p.update = function(){
+    _p.update = function(keysState){
+
+        if(keysState.ARROW_LEFT){
+            this._gameStage.getStage().position.x -= 100;
+        }
+        if(keysState.ARROW_RIGHT){
+            this._gameStage.getStage().position.x += 100;
+        }
+        if(keysState.ARROW_UP){
+            this._gameStage.getStage().position.y -= 50;
+        }
+        if(keysState.ARROW_DOWN){
+            this._gameStage.getStage().position.y += 50;
+        }
         
        window.innerHeight = 600;
        window.innerWidth = 960;
        // this._canvas.setAttribute("height", "600");
        // this._canvas.setAttribute("width", "960");
         
-        return {action: this._onUpdateAction, changeTo: this._nextScreen};
+        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: []};
     };
     
     /**

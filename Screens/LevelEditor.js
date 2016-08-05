@@ -56,8 +56,17 @@ function(Screen, Stage, Entities, Spritesheet, $){
 
     _p.getElement = function(id){
         for(var i = 0; i < this._level.entities.length; i++){
-            if(this._level.entities[i].id === parseInt(id)){
+            if(this._level.entities[i] && this._level.entities[i].id === parseInt(id)){
                 return this._level.entities[i];
+            }
+        }
+        return null;
+    };
+
+    _p.getElementIndex = function(id){
+        for(var i = 0; i < this._level.entities.length; i++){
+            if(this._level.entities[i] && this._level.entities[i].id === parseInt(id)){
+                return i;
             }
         }
         return null;
@@ -144,7 +153,12 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 var temp = null;
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];
-                    $("#elements_list").append('<li id="el_' + temp.id +'"><img title="Remove this element" id="remove_' + temp.id + '" src="Assets/Editor/cross.png"/><label id="ll_' + temp.id +'">' + temp.id + ": " + temp.type + '::' + temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</label></li>');
+                    $("#elements_list").append('<li id="el_' + temp.id +'">'+
+                    '<img class="elementUp" title="Move this element up" id="up_' + temp.id + '" src="Assets/Editor/up.png">' +
+                    '<img class="elementDown" title="Move this element down" id="down_' + temp.id + '" src="Assets/Editor/down.png">' +
+                    '<img class="removeElement" title="Remove this element" id="remove_' + temp.id + 
+                    '" src="Assets/Editor/cross.png"/><label id="ll_' + temp.id +'">' + temp.id + ": " + temp.type + '::' + 
+                    temp.texture + ' - X:' + temp.position.x + 'Y: ' + temp.position.y + '</label></li>');
                 }
             };
             reader.readAsText(file);
@@ -154,7 +168,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
             that._level.name = $("#level_name").val();
         });
 
-        $("body").on("click", "ul#elements_list li img", function(e){
+        $("body").on("click", "ul#elements_list li img.removeElement", function(e){
             var deletingId = e.target.id.substring(7);
             var index;
 
@@ -168,6 +182,35 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#el_"+deletingId).remove();
 
             that.updateStage("background");
+            that.updateStage("game");
+
+        });
+
+        $("body").on("click", "ul#elements_list li img.elementUp", function(e){
+
+            var movingId = parseInt(e.target.id.substring(3));
+            var movingIndex = that.getElementIndex(movingId);
+            
+            $("#el_"+movingId).insertBefore("#el_" + that._level.entities[movingIndex - 1].id);
+
+            var movingElement = that._level.entities.splice(movingIndex, 1)[0];
+            that._level.entities.splice(movingIndex - 1, 0, movingElement);
+
+            that.updateStage("game");
+
+        });
+
+        $("body").on("click", "ul#elements_list li img.elementDown", function(e){
+
+            var movingId = parseInt(e.target.id.substring(5));
+            var movingIndex = that.getElementIndex(movingId);
+            
+            console.log(that._level.entities[movingIndex]);
+            $("#el_"+movingId).insertAfter("#el_" + that._level.entities[movingIndex + 1].id);
+
+            var movingElement = that._level.entities.splice(movingIndex, 1)[0];
+            that._level.entities.splice(movingIndex + 1, 0, movingElement);
+
             that.updateStage("game");
 
         });

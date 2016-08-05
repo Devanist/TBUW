@@ -66,6 +66,7 @@ body {
 }
 #elements_list li{
     cursor: pointer;
+    list-style: none;
 }
 #elements_list li:hover{
     color: red;

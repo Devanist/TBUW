@@ -39,6 +39,7 @@ self.onmessage = function(e){
     };
     
     //Obsłuż input usera
+
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
         PLAYER.velocity.x += 9 / world.SMALL;
         PLAYER.state.moving += 1;
@@ -209,7 +210,7 @@ self.onmessage = function(e){
     conditionsMet = 0;
     for(i = 0; i < l; i+=1){
         temp = world.WIN_CONDITIONS[i];
-        if(temp.name === "Blockcoin" && world.PLAYER_CURRENCIES.blockcoin >= temp.value){
+        if(temp.name === "BlockCoin" && world.PLAYER_CURRENCIES.BlockCoin >= temp.value){
             conditionsMet++;
         }
     }

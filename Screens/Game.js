@@ -36,6 +36,7 @@ define([
         }
         this._GRAVITY = 0.7 / this._small;
         this._AIR_RES = 0.2 / this._small;
+        this.escapeDown = true;
         this._isPause = false;
         this._updateWorker = new Worker('Screens/GameWorker.js');
         
@@ -222,6 +223,31 @@ define([
                 }                    
             }
         }
+
+        //Handling escape key here, because if pause is on worker is not working.
+        if(keysState.ESCAPE){
+            if(this.escapeDown){
+                this._isPause = !this._isPause;
+                this.escapeDown = false;
+
+                if(this._isPause === true){
+                    this._guiStage.add(new GUI.Label("pauseLabel", "center", "PAUSE",
+                    {
+                            bitmap: true, 
+                            font: 40 / this._small + "px Cyberdyne Expanded", 
+                            fill: 0xff4fff, 
+                            align: "center"
+                    }));
+                }
+                else{
+                    this._guiStage.remove("pauseLabel");
+                }
+
+            }
+        }
+        else{
+            this.escapeDown = true;
+        }
         
         if(!this._isPause){
         
@@ -234,6 +260,7 @@ define([
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
                 SOUNDS: [],
+                PAUSE: this._isPause,
                 ELEMENTS: [],
                 GUI_ELEMENTS: [],
                 WIN_CONDITIONS: this._winConditions,
@@ -241,7 +268,7 @@ define([
             };
             if(this._player !== undefined){
                 data.PLAYER_CURRENCIES = {
-                    blockcoin: this._player._currencies.getQuantity("BlockCoin")
+                    BlockCoin: this._player._currencies.getQuantity("BlockCoin")
                 };
             }
             

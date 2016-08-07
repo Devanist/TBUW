@@ -72,7 +72,6 @@ define([
                     }.bind(this)
                 );
                 this._guiStage.add(wonButton);
-                wonButton.move({x:0, y: 0});
             }
             var temp = null;
             this._sounds = anwser.SOUNDS;
@@ -187,6 +186,70 @@ define([
     _p.getWinConditions = function(){
         return this._winConditions;
     };
+
+    _p.pauseHandler = function(){
+        if(this.escapeDown){
+                this._isPause = !this._isPause;
+                this.escapeDown = false;
+
+                if(this._isPause === true){
+
+                    let pauseBG = new GUI.Image("pauseBackground", "center", PIXI.Texture.fromFrame("pause"));
+                    pauseBG.move({x: 50, y: 0});
+                    this._guiStage.add(pauseBG);
+
+                    let pauseLabel = new GUI.Label("pauseLabel", "center", "PAUSE",
+                        {
+                                bitmap: true, 
+                                font: 40 / this._small + "px Cyberdyne Expanded", 
+                                fill: 0xff4fff, 
+                                align: "center"
+                        }
+                    );
+                    pauseLabel.move({x: 100, y: -100});
+                    this._guiStage.add(pauseLabel);
+
+                    let resumeButton = new GUI.Button("resumeButton", "center", null, "RESUME", {
+                            active: true,
+                            size_override: false,
+                            bitmap: true, 
+                            font: 40 / this._small + "px Cyberdyne Expanded", 
+                            fill: 0xff4fff, 
+                            align: "center"
+                        },
+                        function(){
+                            this.escapeDown = true;
+                            this.pauseHandler();
+                    }.bind(this));
+                    resumeButton.move({x:20, y: 50});
+                    this._guiStage.add(resumeButton);
+
+                    let returnButton = new GUI.Button("returnButton", "center", null, "ABANDON", {
+                            size_override: false,
+                            bitmap: true,
+                            font: 40 / this._small + "px Cyberdyne Expanded",
+                            fill: 0xff4fff,
+                            align: "center"
+                        },
+                        function(){
+                            this._onUpdateAction = this.EVENT.CHANGE;
+                            this._nextScreen = "level_choose";
+                            this._nextScreenParams = {
+                                cfg: this._back
+                            };
+                    }.bind(this));
+                    returnButton.move({x: 0, y: 100});
+                    this._guiStage.add(returnButton);
+                }
+                else{
+                    this._guiStage.remove("pauseBackground");
+                    this._guiStage.remove("pauseLabel");
+                    this._guiStage.remove("resumeButton");
+                    this._guiStage.remove("returnButton");
+                }
+
+            }
+    }
         
     /**
      * Metoda przygotowująca dane i wysyłająca je do workera.
@@ -200,12 +263,10 @@ define([
         var temp = null;
         
         //Mouse clicks handling
-        var l = clicks.length;
-        var l2 = this._guiStage._elements.length;
-        for(var j = 0; j < l; j += 1){
-            for(var i = 0; i < l2; i += 1){
+        for(let j = 0; j < clicks.length; j += 1){
+            for(let i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
-                if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     temp.triggerCallback();
                 }
             }
@@ -214,36 +275,19 @@ define([
         //Touch handling
         if(Utils.isTouchDevice()){
             this._touchController.updateState(touches);                
-            for(j = 0; j < touches.length; j += 1){
+            for(let j = 0; j < touches.length; j += 1){
                 for(let i = 0; i < this._guiStage._elements.length; i += 1){
                     temp = this._guiStage._elements[i];
-                    if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                    if(temp.triggerCallback && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
                     }                     
                 }                    
             }
         }
 
-        //Handling escape key here, because if pause is on worker is not working.
+        //Handling escape key here, because if pause is on, worker is not working.
         if(keysState.ESCAPE){
-            if(this.escapeDown){
-                this._isPause = !this._isPause;
-                this.escapeDown = false;
-
-                if(this._isPause === true){
-                    this._guiStage.add(new GUI.Label("pauseLabel", "center", "PAUSE",
-                    {
-                            bitmap: true, 
-                            font: 40 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xff4fff, 
-                            align: "center"
-                    }));
-                }
-                else{
-                    this._guiStage.remove("pauseLabel");
-                }
-
-            }
+            this.pauseHandler();
         }
         else{
             this.escapeDown = true;

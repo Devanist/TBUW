@@ -1,4 +1,4 @@
 {
-    "initScreen": "menu",
+    "initScreen": "editor",
     "showBorderLines": false
 }

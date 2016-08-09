@@ -74,3 +74,31 @@ body {
 #level_background{
     display: block;
 }
+#winConditionsPanel{
+    display: inline-block;
+    width:450px;
+    background-color: #696969;
+    margin-left: -10px;
+    height: 547px;
+    float: left;
+}
+.panelInactive{
+    width: 20px !important;
+}
+#winConditionsPanel h2{
+    margin-left:10px;
+}
+#winConditionsPanel span{
+    float: right;
+    margin-top: 350px;
+    margin-right: 2px;
+}
+#winConditionsPanelContent{
+    display:none;
+}
+#elementsListPanel{
+    display: inline-block;
+}
+#elementsListPanel *{
+    margin-left: 10px;
+}

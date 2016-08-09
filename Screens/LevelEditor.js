@@ -84,9 +84,17 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 '<input id="save_button" type="button" value="Save"/>' + 
                 '<input id="load_button" type="file" value="Load"/>' + 
                 '<input id="level_background" list="assets" placeholder="Select a sprite for a background">' +
-                '<h2>Elements list</h2>' +
-                '<input type="button" id="add_new_button" value="Add new element">' + 
-                '<section id="used_elements"><ul id="elements_list"></ul></section>' +
+                '<div id="winConditionsPanel" class="panelInactive">' +
+                    '<div id="winConditionsPanelContent">' +
+                        '<h2>Win conditions</h2>' +
+                    '</div>' +
+                    '<span><></span>' +
+                '</div>' +
+                '<div id="elementsListPanel">' +
+                    '<h2>Elements list</h2>' +
+                    '<input type="button" id="add_new_button" value="Add new element">' + 
+                    '<section id="used_elements"><ul id="elements_list"></ul></section>' +
+                '</div>' + 
             '</section>'
         );
         
@@ -129,6 +137,11 @@ function(Screen, Stage, Entities, Spritesheet, $){
                     factor: 0
                 };                
             }
+        });
+
+        $("#winConditionsPanel span").on("click", function(){
+            $("#winConditionsPanelContent").toggle();
+            $("#winConditionsPanel").toggleClass("panelInactive");
         });
         
         $("#save_button").on("click", function(){

@@ -1,5 +1,6 @@
 body {
     font-family: "Helvetica";
+    background-color: grey;
 }
 #toolbox{
     position: absolute;
@@ -92,9 +93,11 @@ body {
     float: right;
     margin-top: 350px;
     margin-right: 2px;
+    cursor: pointer;
 }
 #winConditionsPanelContent{
-    display:none;
+    display:inline-block;
+    width:420px;
 }
 #elementsListPanel{
     display: inline-block;

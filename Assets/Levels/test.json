@@ -15,6 +15,13 @@
         {
             "name" :"BlockCoin",
             "value": 1
+        },
+        {
+            "name": "position",
+            "value": {
+                "x": -1,
+                "y": -1
+            }
         }
     ],
     "entities": [

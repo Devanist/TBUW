@@ -26,6 +26,19 @@ function(Screen, Stage, Entities, Spritesheet, $){
         this._level = {
             name : "",
             background: [],
+            winConditions: [
+                {
+                    "name" :"BlockCoin",
+                    "value": 0
+                },
+                {
+                    "name": "position",
+                    "value": {
+                        "x": -1,
+                        "y": -1
+                    }
+                }
+            ],
             entities: []
         };
         this._selectedElement = null;
@@ -52,6 +65,22 @@ function(Screen, Stage, Entities, Spritesheet, $){
     
     _p.getMainStage = function(){
         return this._gameStage;
+    };
+
+    _p.setWinCondition = function(name, value){
+        for(let i = 0; i < this._level.winConditions.length; i++){
+            if(this._level.winConditions[i].name === name){
+                this._level.winConditions[i].value = value;
+            }
+        }
+    };
+
+    _p.getWinCondition = function(name){
+        for(let i = 0; i < this._level.winConditions.length; i++){
+            if(this._level.winConditions[i].name === name){
+                return this._level.winConditions[i].value;
+            }
+        }
     };
 
     _p.getElement = function(id){
@@ -87,8 +116,12 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 '<div id="winConditionsPanel" class="panelInactive">' +
                     '<div id="winConditionsPanelContent">' +
                         '<h2>Win conditions</h2>' +
+                        '<ul>' +
+                            '<li>Amount of BlockCoins: <input id="wcBlockCoin" value="0" type="number"></input></li>' +
+                            '<li>Position: X: <input type="number" id="wcPositionX" value="0"><br/>Y:<input type="number" id="wcPositionY" value="0"></li>' + 
+                        '</ul>' + 
                     '</div>' +
-                    '<span><></span>' +
+                    '<span title="Click to edit win conditions."><></span>' +
                 '</div>' +
                 '<div id="elementsListPanel">' +
                     '<h2>Elements list</h2>' +
@@ -97,6 +130,18 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 '</div>' + 
             '</section>'
         );
+
+        $("#winConditionsPanelContent").hide();
+
+        $("#wcBlockCoin").on("input", function(e){
+            this.setWinCondition("BlockCoin", parseInt(e.target.value));
+            console.log(this._level);
+        }.bind(this));
+
+        $("#wcPositionX, #wcPositionY").on("input", function(e){
+            this.setWinCondition("position", {x: parseInt($("#wcPositionX").val()), y: parseInt($("#wcPositionY").val())});
+            console.log(this._level);
+        }.bind(this));
         
         $("#add_new_button").on("click", function(e){
             for(let i = 0; i < this._level.entities.length; i++){
@@ -164,6 +209,9 @@ function(Screen, Stage, Entities, Spritesheet, $){
                 that.updateStage("game");
                 $("#level_name").val(that._level.name);
                 var temp = null;
+                $("#wcBlockCoin").val(that.getWinCondition("BlockCoin"));
+                $("#wcPositionX").val(that.getWinCondition("position").x);
+                $("#wcPositionY").val(that.getWinCondition("position").y);
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];
                     $("#elements_list").append('<li id="el_' + temp.id +'">'+

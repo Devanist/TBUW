@@ -79,6 +79,7 @@ define([
          */
         initScreen : function(screen, params){
             params = params || {};
+            params.music = Levels[params.cfg].music;
             this.setCurrentScreen(screen, params);
             if(screen === "game"){
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);

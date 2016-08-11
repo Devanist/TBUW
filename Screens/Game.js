@@ -18,6 +18,7 @@ define([
         this._winConditions = [];
         this._sounds = [];
         this._lose = false;
+        this._music = params.music;
         this._back = params.back;
         this._retry = params;
         
@@ -305,7 +306,7 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                SOUNDS: [],
+                SOUNDS: [this._music],
                 PAUSE: this._isPause,
                 ELEMENTS: [],
                 GUI_ELEMENTS: [],

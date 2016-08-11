@@ -43,6 +43,10 @@
         {
             "name": "collect_coin",
             "path": "Assets/Sfx/coin01.m4a"
+        },
+        {
+            "name": "home_sun",
+            "path": "Assets/Sfx/home_sun.m4a"
         }
     ]
 }

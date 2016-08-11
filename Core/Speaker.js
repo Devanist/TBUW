@@ -25,9 +25,8 @@ define(['Core/Utils'], function(Utils){
         },
         
         update: function(sounds){
-            var l = sounds.length;
             var t = null;
-            for(var i = 0; i < l; i+=1){
+            for(let i = 0; i < sounds.length; i+=1){
                 t = sounds[i];
                 if(this._soundsLibrary.hasOwnProperty(t)){
                     if(!this.isSoundPlaying(t)){

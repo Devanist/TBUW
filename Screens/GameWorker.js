@@ -213,6 +213,13 @@ self.onmessage = function(e){
         if(temp.name === "BlockCoin" && world.PLAYER_CURRENCIES.BlockCoin >= temp.value){
             conditionsMet++;
         }
+        else if(temp.name === "position" &&
+                world.PLAYER.position.x >= temp.value.lu.x && 
+                world.PLAYER.position.x <= temp.value.rd.x &&
+                world.PLAYER.position.y >= temp.value.lu.y &&
+                world.PLAYER.position.y <= temp.value.rd.y){
+            conditionsMet++;
+        }
     }
     if(conditionsMet === l){
         world.WON = true;

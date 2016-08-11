@@ -8,7 +8,7 @@ define([
     
     var GameScreen = function(params){
         Screen.call(this);
-        
+        console.log(params);
         this._background = new Stage();
         this._gameStage = new Stage();
         this._guiStage = new Stage();
@@ -19,6 +19,7 @@ define([
         this._sounds = [];
         this._lose = false;
         this._back = params.back;
+        this._retry = params;
         
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -120,6 +121,7 @@ define([
                         function(){
                             this._onUpdateAction = this.EVENT.RESTART;
                             this._nextScreen = "game";
+                            this._nextScreenParams = this._retry;
                         }.bind(this)
                     );
                     loseButton.move({x: 0, y: 0});

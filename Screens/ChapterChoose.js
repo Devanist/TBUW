@@ -84,7 +84,7 @@ function(Screen, cfg, GUI, Utils){
             for(j = 0; j < touches.length; j += 1){
                 for(i = 0; i < this._stage._elements.length; i += 1){
                     temp = this._stage._elements[i];
-                    if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
+                    if(typeof temp.triggerCallback === "function" && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
                     }                     
                 }                    

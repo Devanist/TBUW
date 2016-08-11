@@ -61,6 +61,18 @@ define([], function(){
          */
         getClicks : function(){
             return this._clicks.splice(0);
+        },
+
+        /**
+         * Method resets the in-application state of mouse device.
+         */
+        reset : function(){
+            this._clicks = [];
+            for(var btn in this._state){
+                if(this._state.hasOwnProperty(btn)){
+                    this._state[btn] = false;
+                }
+            }
         }
         
     };

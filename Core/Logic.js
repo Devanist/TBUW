@@ -48,7 +48,7 @@ define([
             );
             if(updateResult.action === "RESTART"){
                 this._rootStage.removeAll();
-                this.initScreen(this._currentScreen.name);
+                this.initScreen(this._currentScreen.name, updateResult.params);
             }
             else if(updateResult.action === "CHANGE"){
                 this._rootStage.removeAll();
@@ -68,6 +68,7 @@ define([
          */
         setCurrentScreen : function(name, params){
             this._keyboard.reset();
+            this._mouse.reset();
             this._currentScreen.name = name;
             this._currentScreen.screen = new this._screens[name](params);
         },

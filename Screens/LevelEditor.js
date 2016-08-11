@@ -27,17 +27,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
             name : "",
             background: [],
             winConditions: [
-                {
-                    "name" :"BlockCoin",
-                    "value": 0
-                },
-                {
-                    "name": "position",
-                    "value": {
-                        "x": -1,
-                        "y": -1
-                    }
-                }
+                
             ],
             entities: []
         };
@@ -117,8 +107,13 @@ function(Screen, Stage, Entities, Spritesheet, $){
                     '<div id="winConditionsPanelContent">' +
                         '<h2>Win conditions</h2>' +
                         '<ul>' +
-                            '<li>Amount of BlockCoins: <input id="wcBlockCoin" value="0" type="number"></input></li>' +
-                            '<li>Position: X: <input type="number" id="wcPositionX" value="0"><br/>Y:<input type="number" id="wcPositionY" value="0"></li>' + 
+                            '<li><input type="checkbox" id="enableBlockCoin">Amount of BlockCoins: <input disabled id="wcBlockCoin" value="0" type="number"></input></li>' +
+                            '<li><input type="checkbox" id="enablePosition">Position: <br/>'+
+                                'X of left upper corner: <input disabled type="number" id="wcPositionXL" value="0"><br/>' +
+                                'Y of left upper corner: <input disabled type="number" id="wcPositionYL" value="0">'+
+                                'X of right lower corner: <input disabled type="number" id="wcPositionXR" value="0">' +
+                                'Y of right lower corner: <input disabled type="number" id="wcPositionYR" value="0">' + 
+                            '</li>' + 
                         '</ul>' + 
                     '</div>' +
                     '<span title="Click to edit win conditions."><></span>' +
@@ -133,13 +128,69 @@ function(Screen, Stage, Entities, Spritesheet, $){
 
         $("#winConditionsPanelContent").hide();
 
+        $("#enableBlockCoin").on("change", function(){
+            if($("#enableBlockCoin").prop("checked")){
+                $("#wcBlockCoin").removeAttr("disabled");
+                this._level.winConditions.push({
+                    name: "BlockCoin",
+                    value: $("#wcBlockCoin").val()
+                });
+            }
+            else{
+                $("#wcBlockCoin").attr("disabled", "");
+                for(let i = 0; i < this._level.winConditions.length; i++){
+                    if(this._level.winConditions[i].name === "BlockCoin"){
+                        this._level.winConditions.splice(i, 1);
+                    }
+                }
+            }
+            console.log(this._level.winConditions);
+        }.bind(this));
+
+        $("#enablePosition").on("change", function(){
+            if($("#enablePosition").prop("checked")){
+                $("#wcPositionXL, #wcPositionXR, #wcPositionYL, #wcPositionYR").removeAttr("disabled");
+                this._level.winConditions.push({
+                    name: "position",
+                    value: {
+                        lu: {
+                            x: parseInt($("#wcPositionXL").val()),
+                            y: parseInt($("#wcPositionYL").val())
+                        },
+                        rd: {
+                            x: parseInt($("#wcPositionXR").val()),
+                            y: parseInt($("#wcPositionYR").val())
+                        }
+                    }
+                });
+            }
+            else{
+                $("#wcPositionXL, #wcPositionXR, #wcPositionYL, #wcPositionYR").attr("disabled", "");
+                for(let i = 0; i < this._level.winConditions.length; i++){
+                    if(this._level.winConditions[i].name === "position"){
+                        this._level.winConditions.splice(i, 1);
+                    }
+                }
+            }
+            console.log(this._level.winConditions);
+        }.bind(this));
+
         $("#wcBlockCoin").on("input", function(e){
             this.setWinCondition("BlockCoin", parseInt(e.target.value));
             console.log(this._level);
         }.bind(this));
 
-        $("#wcPositionX, #wcPositionY").on("input", function(e){
-            this.setWinCondition("position", {x: parseInt($("#wcPositionX").val()), y: parseInt($("#wcPositionY").val())});
+        $("#wcPositionXL, #wcPositionYL, #wcPositionXR, #wcPositionYR").on("input", function(e){
+            this.setWinCondition("position", {
+                        lu: {
+                            x: parseInt($("#wcPositionXL").val()),
+                            y: parseInt($("#wcPositionYL").val())
+                        },
+                        rd: {
+                            x: parseInt($("#wcPositionXR").val()),
+                            y: parseInt($("#wcPositionYR").val())
+                        }
+                    });
             console.log(this._level);
         }.bind(this));
         

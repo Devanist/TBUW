@@ -95,7 +95,8 @@ function(Screen, cfg, GUI, Utils){
             action: this._onUpdateAction,
             changeTo: this._nextScreen,
             params: this._nextScreenParams,
-            playSound: this._sounds
+            playSound: this._sounds,
+            sameMusic: true
         };
     };
     

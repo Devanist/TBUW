@@ -13,6 +13,8 @@ function(Screen, GUI, Utils){
         if(window.innerWidth <= 640){
             this._small = 2;
         }
+        this._sounds = ["home_beforethenight"];
+        this._sameMusic = false;
 
         this._stage.add(new GUI.Label("RETURN_CHAPTER_CHOOSE_TEXT", {x: 20, y: 10}, "RETURN TO CHOOSING CHAPTER",
             {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}));
@@ -21,6 +23,7 @@ function(Screen, GUI, Utils){
             function(){
                 this._onUpdateAction = "CHANGE";
                 this._nextScreen = "chapter_choose";
+                this._sameMusic = true;
             }.bind(this)
         ));
 
@@ -104,7 +107,8 @@ function(Screen, GUI, Utils){
             action: this._onUpdateAction,
             changeTo: this._nextScreen,
             params: this._nextScreenParams,
-            playSound: this._sounds
+            playSound: this._sounds,
+            sameMusic: this._sameMusic
         };
     };
 

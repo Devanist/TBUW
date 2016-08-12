@@ -15,7 +15,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         if(window.innerWidth <= 640){
             this._small = 2;
         }
-        this._sounds = [];
+        this._sounds = ["home_beforethenight"];
         this._buttonPressedDown = false;
         
         this._background = new Stage();
@@ -185,7 +185,7 @@ function(Screen, Stage, GUI, Entities, Utils){
             }
         }
         
-        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds};
+        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds, sameMusic: true};
         
     };
     

@@ -47,6 +47,14 @@
         {
             "name": "home_sun",
             "path": "Assets/Sfx/Home_Sun.m4a"
+        },
+        {
+            "name": "home_ifimwrong",
+            "path": "Assets/Sfx/Home_IfImWrong.m4a"
+        },
+        {
+            "name": "home_beforethenight",
+            "path": "Assets/Sfx/Home_BeforeTheNight.m4a"
         }
     ]
 }

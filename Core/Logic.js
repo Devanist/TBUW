@@ -51,6 +51,9 @@ define([
                 this.initScreen(this._currentScreen.name, updateResult.params);
             }
             else if(updateResult.action === "CHANGE"){
+                if(updateResult.sameMusic !== true){
+                    this._speaker.stop("all");
+                }
                 this._rootStage.removeAll();
                 this.initScreen(updateResult.changeTo, updateResult.params);
             }
@@ -79,9 +82,9 @@ define([
          */
         initScreen : function(screen, params){
             params = params || {};
-            params.music = Levels[params.cfg].music;
             this.setCurrentScreen(screen, params);
             if(screen === "game"){
+                this._currentScreen.screen.setMusic(Levels[params.cfg].music);
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities, cfg.showBorderLines);
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);

@@ -45,23 +45,42 @@ define(['Core/Utils'], function(Utils){
             node.onended = function(){
                 var l = that._soundsPlaying.length;
                 for(var i = 0; i < l; i+=1){
-                    if(that._soundsPlaying[i] === sound){
+                    if(that._soundsPlaying[i].name === sound){
                         that._soundsPlaying.splice(i,1);
                     }
                 }
             };
-            this._soundsPlaying.push(sound);
+            this._soundsPlaying.push({name: sound, node: node});
             node.start(0);
         },
         
         isSoundPlaying : function(sound){
             var l = this._soundsPlaying.length;
             for(var i = 0; i < l; i+=1){
-                if(this._soundsPlaying[i] === sound){
+                if(this._soundsPlaying[i].name === sound){
                     return true;
                 }
             }
             return false;
+        },
+
+        stop : function(sound){
+            if(sound === "all"){
+                for(let i = 0; i < this._soundsPlaying.length; i++){
+                    this._soundsPlaying[i].node.stop();
+                    delete this._soundsPlaying[i].node;
+                }
+                this._soundsPlaying = [];
+            }
+            else{
+                for(let i = 0; i < this._soundsPlaying.length; i++){
+                    if(this._soundsPlaying[i].name === sound){
+                        this._soundsPlaying[i].node.stop();
+                        delete this._soundsPlaying[i].node;
+                        this._soundsPlaying.splice(i,1);
+                    }
+                }
+            }
         }
         
     };

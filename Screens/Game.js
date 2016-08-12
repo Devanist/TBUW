@@ -8,7 +8,6 @@ define([
     
     var GameScreen = function(params){
         Screen.call(this);
-        console.log(params);
         this._background = new Stage();
         this._gameStage = new Stage();
         this._guiStage = new Stage();
@@ -18,7 +17,7 @@ define([
         this._winConditions = [];
         this._sounds = [];
         this._lose = false;
-        this._music = params.music;
+        this._music = null;
         this._back = params.back;
         this._retry = params;
         
@@ -184,6 +183,12 @@ define([
     
     _p.getSoundsContainer = function(){
         return this._sounds;
+    };
+
+    _p.setMusic = function(music){
+        console.log(music);
+        this._music = music;
+        console.log(this._music);
     };
     
     _p.getWinConditions = function(){

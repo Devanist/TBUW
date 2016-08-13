@@ -8,6 +8,8 @@
         "dial_1",
         "dial_2"
     ],
+    "music": "bitburner_huntkill",
+    "music_offset": 31,
     "animations": [
         {
             "id": "somewhere_in_cali",

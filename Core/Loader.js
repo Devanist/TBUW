@@ -152,6 +152,17 @@ define([
                 cinCfg.push(cfg.animations[i]);
             }
             
+            var music = null;
+            if(cfg.music_offset !== undefined){
+                music = {
+                    name: cfg.music, 
+                    offset: cfg.music_offset
+                };
+            }
+            else{
+                music = cfg.music;
+            }
+            cinematic.setMusic(music);
             cinematic.hasLoaded();
             
         },

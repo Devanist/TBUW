@@ -38,6 +38,11 @@ function(Screen){
         return this._cinematicConfig;
     };
     
+    _p.setMusic = function(sound){
+        sound.effect = "fadeIn";
+        this._sounds.push(sound);
+    };
+
     _p.update = function(){
         
         if(!this._finished){
@@ -61,7 +66,6 @@ function(Screen){
                                 };
                             }
                             this._animatedObject.move(this._step);
-                            console.log('x:' + this._animatedObject._sprite.position.x + ' y:' + this._animatedObject._sprite.position.y);
                             this._stepCounter++;
                             if(this._stepCounter >= this._cinematicConfig[this._currentAnimation].moveTo.time / 16.666){
                                 this._animatedObject.setPosition({x: this._cinematicConfig[this._currentAnimation].moveTo.x, y: this._cinematicConfig[this._currentAnimation].moveTo.y});

@@ -11,6 +11,8 @@ define(['Core/Utils'], function(Utils){
         else{
             throw new Error("AudioContext not supported!");
         }
+        this._gainNode = this._context.createGain();
+        this._gainNode.connect(this._context.destination);
         this._soundsLibrary = {};
         this._soundsPlaying = [];
     };
@@ -26,10 +28,16 @@ define(['Core/Utils'], function(Utils){
         
         update: function(sounds){
             var t = null;
+            if(this._gainNode.gain.value < 1){
+                this._gainNode.gain.value += 0.005;
+                if(this._gainNode.gain.value > 1){
+                    this._gainNode.gain.value = 1;
+                }
+            }
             for(let i = 0; i < sounds.length; i+=1){
                 t = sounds[i];
-                if(this._soundsLibrary.hasOwnProperty(t)){
-                    if(!this.isSoundPlaying(t)){
+                if(this._soundsLibrary.hasOwnProperty(t) || this._soundsLibrary.hasOwnProperty(t.name)){
+                    if(!this.isSoundPlaying(t) && !this.isSoundPlaying(t.name)){
                         this.play(t);
                     }
                 }
@@ -39,19 +47,41 @@ define(['Core/Utils'], function(Utils){
         play : function(sound){
             var that = this;
             var node = this._context.createBufferSource();
-            node.name = sound;
-            node.buffer = this._soundsLibrary[sound];
-            node.connect(this._context.destination);
+            var offset = 0;
+            console.log(typeof sound);
+            if(typeof sound === "string"){
+                node.name = sound;
+            }
+            else if(typeof sound === "object"){
+                node.name = sound.name;
+                offset = sound.offset;
+            }
+            node.buffer = this._soundsLibrary[node.name];
+            if(sound.effect !== undefined){
+                    switch(sound.effect){
+                        case "fadeIn":
+                            this._gainNode.gain.value = 0;
+                            node.connect(this._gainNode);
+                            break;
+                        default:
+                            console.log('There is no effect like ' + sound.effect);
+                            break;
+                    }
+            }
+            else{
+                node.connect(this._context.destination);
+            }
             node.onended = function(){
                 var l = that._soundsPlaying.length;
                 for(var i = 0; i < l; i+=1){
-                    if(that._soundsPlaying[i].name === sound){
+                    if(that._soundsPlaying[i].name === node.name){
                         that._soundsPlaying.splice(i,1);
                     }
                 }
             };
             this._soundsPlaying.push({name: sound, node: node});
-            node.start(0);
+            console.log(sound);
+            node.start(0, offset);
         },
         
         isSoundPlaying : function(sound){

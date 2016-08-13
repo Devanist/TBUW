@@ -55,6 +55,10 @@
         {
             "name": "home_beforethenight",
             "path": "Assets/Sfx/Home_BeforeTheNight.m4a"
+        },
+        {
+            "name": "bitburner_huntkill",
+            "path": "Assets/Sfx/BitBurner_HuntAndKill.m4a"
         }
     ]
 }

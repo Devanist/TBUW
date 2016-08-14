@@ -17,6 +17,12 @@ body {
 #toolbox_content input{
     margin-right:5px;
 }
+#toolbox_content div select{
+    display: block;
+}
+#toolbox_content div.toolbox_div{
+    display: table-cell;
+}
 #add_entity_button{
     display: block;
 }
@@ -71,9 +77,6 @@ body {
 }
 #elements_list li:hover{
     color: red;
-}
-#level_background{
-    display: block;
 }
 #winConditionsPanel{
     display: inline-block;

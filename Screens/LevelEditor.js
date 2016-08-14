@@ -3,9 +3,10 @@ define([
     'Core/Stage',
     'Entities/Entities',
     'json!Assets/Gfx/sprites.json',
+    'json!Assets/assets.json',
     'jquery'
 ], 
-function(Screen, Stage, Entities, Spritesheet, $){
+function(Screen, Stage, Entities, Spritesheet, Assets, $){
     
     var LevelEditor = function(){
         Screen.call(this);
@@ -25,6 +26,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
         
         this._level = {
             name : "",
+            music: "",
             background: [],
             winConditions: [
                 
@@ -101,9 +103,11 @@ function(Screen, Stage, Entities, Spritesheet, $){
             '<section id="toolbox_content">' +
                 '<input id="level_name" type="text" placeholder="Level name"/>' + 
                 '<input id="save_button" type="button" value="Save"/>' + 
-                '<input id="load_button" type="file" value="Load"/>' + 
-                '<input id="level_background" list="assets" placeholder="Select a sprite for a background">' +
+                '<input id="load_button" type="file" value="Load"/><br/>' + 
+                '<div class="toolbox_div">Level background: <select id="level_background" size="1"></select></div>' +
+                '<div class="toolbox_div">Level music: <select id="level_music" size="1"></select></div>' +
                 '<div id="winConditionsPanel" class="panelInactive">' +
+                    '<span title="Click to edit win conditions."><></span>' +
                     '<div id="winConditionsPanelContent">' +
                         '<h2>Win conditions</h2>' +
                         '<ul>' +
@@ -116,7 +120,6 @@ function(Screen, Stage, Entities, Spritesheet, $){
                             '</li>' + 
                         '</ul>' + 
                     '</div>' +
-                    '<span title="Click to edit win conditions."><></span>' +
                 '</div>' +
                 '<div id="elementsListPanel">' +
                     '<h2>Elements list</h2>' +
@@ -126,7 +129,22 @@ function(Screen, Stage, Entities, Spritesheet, $){
             '</section>'
         );
 
+        
+        for(let asset in Spritesheet.frames){
+            if(Spritesheet.frames.hasOwnProperty(asset)){
+                $("#level_background").append('<option value="' + asset + '">' + asset + '</option>');
+            }
+        }
+
+        for(let i = 0; i < Assets.sounds.length; i++){
+            $("#level_music").append('<option value="' + Assets.sounds[i].name + '">' + Assets.sounds[i].name + '</option>');
+        }
+
         $("#winConditionsPanelContent").hide();
+
+        $("#level_music").on("change", function(){
+            this._level.music = $("#level_music").val();
+        });
 
         $("#enableBlockCoin").on("change", function(){
             if($("#enableBlockCoin").prop("checked")){
@@ -219,7 +237,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
             $("#infotext").text(this.MESSAGES.ADDING_ELEMENT);
         }.bind(this));
         
-        $("#level_background").on("input", function(){
+        $("#level_background").on("change", function(){
             if(Spritesheet.frames.hasOwnProperty($("#level_background").val())){
                 that._background._elements[0]._sprite.texture = new PIXI.Texture.fromFrame($("#level_background").val());
                 that._level.background[0] = {
@@ -403,6 +421,7 @@ function(Screen, Stage, Entities, Spritesheet, $){
         
         for(var asset in Spritesheet.frames){
             if(Spritesheet.frames.hasOwnProperty(asset)){
+                $("#level_background").append('<option value="' + asset + '">' + asset + '</option>');
                 $("#assets").append('<option value="' + asset + '">' + asset + '</option>');
             }
         }

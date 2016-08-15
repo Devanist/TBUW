@@ -61,7 +61,7 @@ define([
                 this._guiStage.add(wonLabel);
                 wonLabel.move({x:0, y: -100});
                 var wonButton = new GUI.Button("wonButton", "center",
-                    PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", 
+                    null, "SUPERB!", 
                     {
                         active: true,
                         bitmap: true, 
@@ -104,9 +104,9 @@ define([
                     this._isPause = true;
                     this._updateWorker.terminate();
 
-                    let background = new GUI.Image("loseBackground", "center", PIXI.Texture.fromFrame("pause"));
-                    background.move({x:-20, y: 0});
-                    this._guiStage.add(background);
+                    let loseBackground = new GUI.Image("loseBackground", "center", PIXI.Texture.fromFrame("pause"));
+                    loseBackground.move({x:-50, y: 0});
+                    this._guiStage.add(loseBackground);
 
                     var YouLose = new GUI.Label("LOSE", "center", "YOU LOSE", 
                         {
@@ -120,7 +120,7 @@ define([
                     this._guiStage.add(YouLose);
                     console.log(YouLose);
                     var loseButton = new GUI.Button("RETRY", "center",
-                        PIXI.Texture.fromFrame("GUI_Button"), "RETRY", 
+                        null, "RETRY", 
                         {
                             active: true,
                             bitmap: true, 

@@ -47,6 +47,11 @@ define([
             var anwser = JSON.parse(respond.data);
             if(anwser.WON){
                 this._isPause = true;
+
+                let background = new GUI.Image("wonBackground", "center", PIXI.Texture.fromFrame("pause"));
+                background.move({x: -20, y: 0});
+                this._guiStage.add(background);
+
                 var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL", {
                     bitmap: true, 
                     font: 40 / this._small + "px Cyberdyne Expanded", 
@@ -98,6 +103,11 @@ define([
                 if(this._lose === true){
                     this._isPause = true;
                     this._updateWorker.terminate();
+
+                    let background = new GUI.Image("loseBackground", "center", PIXI.Texture.fromFrame("pause"));
+                    background.move({x:-20, y: 0});
+                    this._guiStage.add(background);
+
                     var YouLose = new GUI.Label("LOSE", "center", "YOU LOSE", 
                         {
                             bitmap: true, 

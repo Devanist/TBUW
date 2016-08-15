@@ -14,6 +14,19 @@ function(Screen, cfg, GUI, Utils){
             this._small = 2;
         }
 
+        this._buttonPressedDown = false;
+
+        this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
+        this._displacementmap.r = 1;
+        this._displacementmap.g = 1;
+        this._displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
+        this._displacement.scale.x = 1.5;
+        this._displacement.scale.y = 2;
+        this._displacement.offset = {
+            x: 0,
+            y: 0
+        };
+
         this._chapters = cfg;
         this._chaptersPositions = [];
         for(var i = 0; i < 2; i++){
@@ -36,7 +49,8 @@ function(Screen, cfg, GUI, Utils){
         var levels;
         for(var i = 0; i < this._chapters.length; i++){
             levels = this._chapters[i].levels;
-            this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", {}, 
+            this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", 
+            (() => {if(i === 0){ return {active: true};} else { return {};}})(), 
                 function(){
                     that._onUpdateAction = "CHANGE";
                     that._nextScreen = "level_choose";
@@ -66,8 +80,74 @@ function(Screen, cfg, GUI, Utils){
     });
     
     var _p = ChapterChoose.prototype;
-    
+
     _p.update = function(keysState, clicks, touches){
+
+        //Keyboard handling
+        if(keysState.ARROW_DOWN || keysState.S){
+            if(this._buttonPressedDown === false){
+                this._buttonPressedDown = true;
+                while(i != 2){
+                    if(j == this._stage._elements.length){
+                        j = 0;
+                    }
+                    temp = this._stage._elements[j];
+                    if(temp.isEnabled() && temp.isActive()){
+                        temp._data.active = false;
+                        temp._sprite.filters = null;
+                        i = 1;
+                        j+=1;
+                        continue;
+                    }
+                    if(i == 1 && temp.isEnabled()){
+                        temp._data.active = true;
+                        i = 2;
+                    }
+                    else{
+                        j+=1;
+                    }
+                }
+            }
+        }
+        
+        if(keysState.ARROW_UP || keysState.W){
+            if(this._buttonPressedDown === false){
+                this._buttonPressedDown = true;
+                while(i != 2){
+                    if(j == -1){
+                        j = this._stage._elements.length - 1;
+                    }
+                    temp = this._stage._elements[j];
+                    if(temp.isEnabled() && temp.isActive()){
+                        temp._data.active = false;
+                        temp._sprite.filters = null;
+                        i = 1;
+                        j-=1;
+                        continue;
+                    }
+                    if(i == 1 && temp.isEnabled()){
+                        temp._data.active = true;
+                        i = 2;
+                    }
+                    else{
+                        j-=1;
+                    }
+                }
+            }
+        }
+        
+        if(keysState.ENTER){
+            for(i = 0; i < this._stage._elements.length; i+=1){
+                temp = this._stage._elements[i];
+                if(temp.isActive()){
+                    temp.triggerCallback();
+                }
+            }
+        }
+        
+        if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
+            this._buttonPressedDown = false;
+        }
         
         //Mouse clicks handling
         for(j = 0; j < clicks.length; j += 1){
@@ -88,6 +168,19 @@ function(Screen, cfg, GUI, Utils){
                         temp.triggerCallback();
                     }                     
                 }                    
+            }
+        }
+
+        for(i = 0; i < this._stage._elements.length; i+=1){
+            temp = this._stage._elements[i];
+            if(temp.isEnabled() && temp.isActive()){
+                if(this._displacement.scale.y < 6){
+                    this._displacement.scale.y += 0.1;
+                }
+                else{
+                    this._displacement.scale.y = 1;
+                }
+                temp._sprite.filters = [this._displacement];
             }
         }
         

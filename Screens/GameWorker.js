@@ -83,10 +83,10 @@ self.onmessage = function(e){
     }
     
     //Uaktualnij pozycję playera
-    PLAYER.position.x += PLAYER.velocity.x;
-    PLAYER.position.y += PLAYER.velocity.y;
-    PLAYER.position.endX += PLAYER.velocity.x;
-    PLAYER.position.endY += PLAYER.velocity.y;
+    PLAYER.position.x += PLAYER.velocity.x | 0;
+    PLAYER.position.y += PLAYER.velocity.y | 0;
+    PLAYER.position.endX += PLAYER.velocity.x | 0;
+    PLAYER.position.endY += PLAYER.velocity.y | 0;
     
     //Wykryj kolizje
     x = PLAYER.position.x;
@@ -179,7 +179,7 @@ self.onmessage = function(e){
         for(i = 0; i < elementsQuantity; i+=1){
             temp = world.ELEMENTS[i];
             if(temp.type === "Background"){
-                temp.position.x += (PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor;
+                temp.position.x += ((PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor) | 0;
             }
         }
         

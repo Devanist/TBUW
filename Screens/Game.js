@@ -78,8 +78,7 @@ define([
             this._sounds = anwser.SOUNDS;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
-            var l = anwser.ELEMENTS.length;
-            for(var i = 0; i < l; i++){
+            for(let i = 0; i < anwser.ELEMENTS.length; i++){
                 temp = this._gameStage._elements[i];
                 if(this._player === undefined && temp._data.type === "Player"){
                     this._player = temp;
@@ -131,10 +130,8 @@ define([
             
             this._player.nextFrame((this._player._data.state.moving / 10) >> 0);
             
-            l = anwser.REMOVE_LIST.length;
-            var l2 = this._gameStage._elements.length;
-            for(i = 0; i < l; i+=1){
-                for(j = 0; j < l2; j+=1){
+            for(let i = 0; i < anwser.REMOVE_LIST.length; i+=1){
+                for(let j = 0; j < this._gameStage._elements.length; j+=1){
                     temp = this._gameStage._elements[j];
                     if(anwser.REMOVE_LIST[i] === temp.getId()){
                         
@@ -152,8 +149,7 @@ define([
                 }
             }
             
-            l = anwser.GUI_ELEMENTS.length;
-            for(i = 0; i < l; i+=1){
+            for(let i = 0; i < anwser.GUI_ELEMENTS.length; i+=1){
                 temp = this._guiStage._elements[i];
                 temp._data = anwser.GUI_ELEMENTS[i];
                 if(temp.getId() === "blockcoinValue"){

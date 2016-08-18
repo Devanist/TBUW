@@ -20,6 +20,20 @@ define([
         this._music = null;
         this._back = params.back;
         this._retry = params;
+
+        this._buttonPressedDown = false;
+
+        this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
+        this._displacementmap.r = 1;
+        this._displacementmap.g = 1;
+        this._displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
+        this._displacement.scale.x = 1.5;
+        this._displacement.scale.y = 2;
+        this._displacement.offset = {
+            x: 0,
+            y: 0
+        };
+
         
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -47,6 +61,11 @@ define([
             var anwser = JSON.parse(respond.data);
             if(anwser.WON){
                 this._isPause = true;
+
+                let background = new GUI.Image("wonBackground", "center", PIXI.Texture.fromFrame("pause"));
+                background.move({x: -20, y: 0});
+                this._guiStage.add(background);
+
                 var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL", {
                     bitmap: true, 
                     font: 40 / this._small + "px Cyberdyne Expanded", 
@@ -56,7 +75,7 @@ define([
                 this._guiStage.add(wonLabel);
                 wonLabel.move({x:0, y: -100});
                 var wonButton = new GUI.Button("wonButton", "center",
-                    PIXI.Texture.fromFrame("GUI_Button"), "SUPERB!", 
+                    null, "SUPERB!", 
                     {
                         active: true,
                         bitmap: true, 
@@ -97,6 +116,11 @@ define([
                 if(this._lose === true){
                     this._isPause = true;
                     this._updateWorker.terminate();
+
+                    let loseBackground = new GUI.Image("loseBackground", "center", PIXI.Texture.fromFrame("pause"));
+                    loseBackground.move({x:-50, y: 0});
+                    this._guiStage.add(loseBackground);
+
                     var YouLose = new GUI.Label("LOSE", "center", "YOU LOSE", 
                         {
                             bitmap: true, 
@@ -109,7 +133,7 @@ define([
                     this._guiStage.add(YouLose);
                     console.log(YouLose);
                     var loseButton = new GUI.Button("RETRY", "center",
-                        PIXI.Texture.fromFrame("GUI_Button"), "RETRY", 
+                        null, "RETRY", 
                         {
                             active: true,
                             bitmap: true, 
@@ -253,7 +277,7 @@ define([
                 }
 
             }
-    }
+    };
         
     /**
      * Metoda przygotowująca dane i wysyłająca je do workera.
@@ -338,13 +362,91 @@ define([
         
         }
         else{
-            l = this._guiStage._elements.length;
-            for(let i = 0; i < l; i+=1){
+
+            if(keysState.ARROW_DOWN || keysState.S){
+                if(this._buttonPressedDown === false){
+                    this._buttonPressedDown = true;
+                    while(i != 2){
+                        if(j == this._guiStage._elements.length){
+                            j = 0;
+                        }
+                        temp = this._guiStage._elements[j];
+                        if(temp.isEnabled() && temp.isActive()){
+                            temp._data.active = false;
+                            temp._text.filters = null;
+                            i = 1;
+                            j+=1;
+                            continue;
+                        }
+                        if(i == 1 && temp.isEnabled()){
+                            temp._data.active = true;
+                            i = 2;
+                        }
+                        else{
+                            j+=1;
+                        }
+                    }
+                }
+            }
+            
+            if(keysState.ARROW_UP || keysState.W){
+                if(this._buttonPressedDown === false){
+                    this._buttonPressedDown = true;
+                    while(i != 2){
+                        if(j == -1){
+                            j = this._guiStage._elements.length - 1;
+                        }
+                        temp = this._guiStage._elements[j];
+                        if(temp.isEnabled() && temp.isActive()){
+                            temp._data.active = false;
+                            temp._text.filters = null;
+                            i = 1;
+                            j-=1;
+                            continue;
+                        }
+                        if(i == 1 && temp.isEnabled()){
+                            temp._data.active = true;
+                            i = 2;
+                        }
+                        else{
+                            j-=1;
+                        }
+                    }
+                }
+            }
+            
+            if(keysState.ENTER){
+                for(let i = 0; i < this._guiStage._elements.length; i+=1){
+                    temp = this._guiStage._elements[i];
+                    if(temp && temp.isActive()){
+                        temp.triggerCallback();
+                    }
+                }
+            }
+            
+            if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
+                this._buttonPressedDown = false;
+            }
+
+            for(let i = 0; i < this._guiStage._elements.length; i+=1){
                 temp = this._guiStage._elements[i];
                 if(temp.isActive() && keysState.ENTER){
                     temp.triggerCallback();
                 }
             }
+
+            for(i = 0; i < this._guiStage._elements.length; i+=1){
+            temp = this._guiStage._elements[i];
+            if(temp.isEnabled() && temp.isActive()){
+                if(this._displacement.scale.y < 6){
+                    this._displacement.scale.y += 0.1;
+                }
+                else{
+                    this._displacement.scale.y = 1;
+                }
+                temp._text.filters = [this._displacement];
+            }
+        }
         }
         
         return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};

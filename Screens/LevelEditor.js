@@ -213,8 +213,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         }.bind(this));
         
         $("#add_new_button").on("click", function(e){
+            this._curId = 0;
             for(let i = 0; i < this._level.entities.length; i++){
-                if(this._curId < this._level.entities[i].id){
+                if(this._curId <= this._level.entities[i].id){
                     this._curId = this._level.entities[i].id + 1;
                 }
             }             
@@ -278,9 +279,16 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 that.updateStage("game");
                 $("#level_name").val(that._level.name);
                 var temp = null;
-                $("#wcBlockCoin").val(that.getWinCondition("BlockCoin"));
-                $("#wcPositionX").val(that.getWinCondition("position").x);
-                $("#wcPositionY").val(that.getWinCondition("position").y);
+                $("#level_music").val(that._level.music);
+                if(that.getWinCondition("BlockCoin")){
+                    $("#enableBlockCoin").prop("checked", true);
+                    $("#wcBlockCoin").val(that.getWinCondition("BlockCoin"));
+                }
+                if(that.getWinCondition("position")){
+                    $("#enablePosition").prop("checked", true);
+                    $("#wcPositionX").val(that.getWinCondition("position").x);
+                    $("#wcPositionY").val(that.getWinCondition("position").y);
+                }
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];
                     $("#elements_list").append('<li id="el_' + temp.id +'">'+
@@ -432,7 +440,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 if($("#entities_list").val() === "Background"){
                     this._selectedElement.factor = 1;
                     delete this._selectedElement.quantity;
-                    $("#factor").show().val(1);
+                    $("#factor").show().val(0);
                     $("#factor_label").show();
                     $("#value").hide();
                     $("#value_label").hide();
@@ -460,16 +468,19 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 $("#message_box").text("You must select an element first!");
                 $("#message_box").addClass("error_message");
             }
-            else if(this.getElement(this._selectedElement.id) !== null){
+            else if(this.getElement(this._selectedElement.id) !== null && this.getElement(this._selectedElement.id) !== undefined){
                 $("#message_box").text("You can't add the same object twice! ID: " + this._selectedElement.id);
                 $("#message_box").addClass("error_message");
             }
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
                     
-                this._level.entities[this._curId] = this._selectedElement;
+                this._level.entities.push(this._selectedElement);
                 if($("li #el_" + this._curId).length === 0){
-                    $("#elements_list").append('<li id="el_' + this._curId +'"><img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/><label id="ll_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</label></li>');
+                    $("#elements_list").append('<li id="el_' + this._curId +'">' +
+                    '<img class="elementUp" title="Move this element up" id="up_' + this._curId + '" src="Assets/Editor/up.png">' +
+                    '<img class="elementDown" title="Move this element down" id="down_' + this._curId + '" src="Assets/Editor/down.png">' + 
+                    '<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/><label id="ll_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</label></li>');
                 }
 
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
@@ -514,7 +525,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             for(var i = 0; i < this._gameStage._elements.length; i+=1){
                 if(this._selectedElement.id === this._gameStage._elements[i]._id){
                     this._gameStage._elements[i]._sprite.position.x = $("#position-x").val();
-                    $("#el_"+this._selectedElement.id).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    $("#el_"+this._selectedElement.id).html('<img class="elementUp" title="Move this element up" id="up_' + this._selectedElement.id + '" src="Assets/Editor/up.png">' +
+                    '<img class="elementDown" title="Move this element down" id="down_' + this._selectedElement.id + '" src="Assets/Editor/down.png">' + 
+                    '<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }
@@ -525,7 +538,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             for(var i = 0; i < this._gameStage._elements.length; i+=1){
                 if(this._selectedElement.id === this._gameStage._elements[i]._id){
                     this._gameStage._elements[i]._sprite.position.y = $("#position-y").val();
-                    $("#el_"+this._selectedElement.id).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    $("#el_"+this._selectedElement.id).html('<img class="elementUp" title="Move this element up" id="up_' + this._selectedElement.id + '" src="Assets/Editor/up.png">' +
+                    '<img class="elementDown" title="Move this element down" id="down_' + this._selectedElement.id + '" src="Assets/Editor/down.png">' + 
+                    '<img title="Remove this element" id="remove_' + this._selectedElement.id + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }

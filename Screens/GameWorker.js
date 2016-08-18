@@ -1,5 +1,6 @@
 var world = null;
 var CAMERA_OFFSET = 250;
+var CAMERA_OFFSET_Y = 518;
 var elementsQuantity = null;
 var PLAYER = null;
 var oldPlayerPos = null;
@@ -189,6 +190,9 @@ self.onmessage = function(e){
     world.CONTAINER.x = -PLAYER.position.x + CAMERA_OFFSET;
     if(world.CONTAINER.x >= 0){
         world.CONTAINER.x = 0;
+    }
+    if(PLAYER.position.y < 1100){
+        world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y;
     }
     
     //Uaktualnij prędkość playera

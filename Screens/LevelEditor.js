@@ -438,7 +438,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             if(Entities.hasOwnProperty($("#entities_list").val())){
                 this._selectedElement.type = $("#entities_list").val();
                 if($("#entities_list").val() === "Background"){
-                    this._selectedElement.factor = 1;
+                    this._selectedElement.factor = 0;
                     delete this._selectedElement.quantity;
                     $("#factor").show().val(0);
                     $("#factor_label").show();
@@ -475,6 +475,13 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             else if(this._selectedElement.type !== null && this._selectedElement.type !== undefined &&
                 this._selectedElement.texture !== null && this._selectedElement.texture !== undefined){
                     
+                if(this._selectedElement.type === "Background"){
+                    this._selectedElement.factor = 0;
+                }
+                else if(this._selectedElement.type === "BlockCoin"){
+                    this._selectedElement.quantity = 1;
+                }
+                
                 this._level.entities.push(this._selectedElement);
                 if($("li #el_" + this._curId).length === 0){
                     $("#elements_list").append('<li id="el_' + this._curId +'">' +

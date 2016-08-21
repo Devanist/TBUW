@@ -57,6 +57,7 @@ self.onmessage = function(e){
     }
     if(world.KEYS_STATE.ARROW_UP || world.KEYS_STATE.W || world.VCONTROLLER.BUTTON_A){
         if(PLAYER.state.inAir === false){
+            PLAYER.state.inAir = true;
             PLAYER.velocity.y -= 16 / world.SMALL;
             world.SOUNDS.push("jump");
         }
@@ -145,6 +146,7 @@ self.onmessage = function(e){
                 //Jeżeli player jest na lewo od obiektu
                 else if(ex >= tx && x <= tx){
                     if(temp.type === "Platform"){
+                        console.log('collision from left');
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = tx - (PLAYER.size.w + 1);
                     }

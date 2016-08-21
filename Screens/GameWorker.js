@@ -96,7 +96,7 @@ self.onmessage = function(e){
     ey = PLAYER.position.endY;
     collisionOccured = false;
     var tx, tex, ty, tey;
-    for(i = 0; i < elementsQuantity; i += 1){
+    for(let i = 0; i < elementsQuantity; i += 1){
         temp = world.ELEMENTS[i];
         if(temp.type !== "Background" && temp.type !== "Player"){
             
@@ -113,7 +113,7 @@ self.onmessage = function(e){
                 tey = temp.position.endY;
             }
             
-            if( !(x > tex || ex < tx || y > tey || ey < ty)){
+            if( !(x > tex || ex < tx || y > tey || ey < ty) ){
                 
                 if(temp.type === "BlockCoin"){
                     world.REMOVE_LIST.push(temp.id);
@@ -123,8 +123,10 @@ self.onmessage = function(e){
                 collisionOccured = true;
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if(y < ty && tey >= ey && oldPlayerPos.ey <= ty){
+                if( y < ty && tey >= ey && oldPlayerPos.ey <= ty &&
+                    (ex - 10 > tx || x + 10 < tex)){
                     if(temp.type === "Platform"){
+                        console.log('collision from above');
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
@@ -135,8 +137,8 @@ self.onmessage = function(e){
                 //Jeżeli player jest pod obiektem
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
                     if(temp.type === "Platform"){
-                        PLAYER.velocity.y = 0;
-                        PLAYER.position.y = tey;
+                        PLAYER.velocity.y = 1;
+                        PLAYER.position.y = tey + 1;
                     }
                 }
                 
@@ -144,7 +146,7 @@ self.onmessage = function(e){
                 else if(ex >= tx && x <= tx){
                     if(temp.type === "Platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = tx - PLAYER.size.w + 1;
+                        PLAYER.position.x = tx - (PLAYER.size.w + 1);
                     }
                 }
                 
@@ -152,7 +154,7 @@ self.onmessage = function(e){
                 else if(x <= tex && tex <= ex){
                     if(temp.type === "Platform"){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.endX;
+                        PLAYER.position.x = temp.position.endX + 1;
                     }
                 }
                 

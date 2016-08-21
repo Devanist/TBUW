@@ -195,7 +195,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         $("#wcBlockCoin").on("input", function(e){
             this.setWinCondition("BlockCoin", parseInt(e.target.value));
-            console.log(this._level);
         }.bind(this));
 
         $("#wcPositionXL, #wcPositionYL, #wcPositionXR, #wcPositionYR").on("input", function(e){
@@ -283,11 +282,18 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 if(that.getWinCondition("BlockCoin")){
                     $("#enableBlockCoin").prop("checked", true);
                     $("#wcBlockCoin").val(that.getWinCondition("BlockCoin"));
+                    $("#wcBlockCoin").prop("enabled", "");
                 }
                 if(that.getWinCondition("position")){
                     $("#enablePosition").prop("checked", true);
-                    $("#wcPositionX").val(that.getWinCondition("position").x);
-                    $("#wcPositionY").val(that.getWinCondition("position").y);
+                    $("#wcPositionXL").prop("enabled", "");
+                    $("#wcPositionXR").prop("enabled", "");
+                    $("#wcPositionYL").prop("enabled", "");
+                    $("#wcPositionYR").prop("enabled", "");
+                    $("#wcPositionXL").val(that.getWinCondition("position").lu.x);
+                    $("#wcPositionYL").val(that.getWinCondition("position").lu.y);
+                    $("#wcPositionXR").val(that.getWinCondition("position").rd.x);
+                    $("#wcPositionYR").val(that.getWinCondition("position").rd.y);
                 }
                 for(var i = 0; i < that._level.entities.length; i += 1){
                     temp = that._level.entities[i];

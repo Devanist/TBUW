@@ -630,6 +630,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     else if(e.type === "BlockCoin"){
                         temp = new Entities.BlockCoin(e.id, e.quantity);
                     }
+                    else if(e.type === "PositionField"){
+                        temp = new Entities.PositionField(e.id);
+                    }
                     temp.setPosition(e.position);
                     this._gameStage.add(temp);
                     

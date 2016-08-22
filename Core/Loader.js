@@ -236,6 +236,9 @@ define([
                 else if(e.type === "BlockCoin"){
                     temp = new Entities.BlockCoin(e.id, e.quantity);
                 }
+                else if(e.type === "PositionField"){
+                    temp = new Entities.PositionField(e.id);
+                }
                 var small = 1;
                 if(window.innerWidth <= 640){
                     small = 2;

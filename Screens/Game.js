@@ -16,6 +16,7 @@ define([
         this._stage.add(this._guiStage);
         this._winConditions = [];
         this._sounds = [];
+        this._levelEndX = null;
         this._lose = false;
         this._music = null;
         this._back = params.back;
@@ -206,9 +207,11 @@ define([
     };
 
     _p.setMusic = function(music){
-        console.log(music);
         this._music = music;
-        console.log(this._music);
+    };
+
+    _p.setEndX = function(x){
+        this._levelEndX = x;
     };
     
     _p.getWinConditions = function(){
@@ -328,6 +331,8 @@ define([
                 SMALL : this._small,
                 CONTAINER: this._gameStage.getStage().position,
                 KEYS_STATE: keysState,
+                LEVEL_END_X: this._levelEndX,
+                WINDOW_WIDTH: window.innerWidth,
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,

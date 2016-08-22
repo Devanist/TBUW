@@ -85,6 +85,7 @@ define([
             this.setCurrentScreen(screen, params);
             if(screen === "game"){
                 this._currentScreen.screen.setMusic(Levels[params.cfg].music);
+                this._currentScreen.screen.setEndX(Levels[params.cfg].level_end_x);
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities, cfg.showBorderLines);
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);

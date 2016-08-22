@@ -8,6 +8,7 @@ var x = 0, y = 0, ex = 0, ey = 0, temp = null;
 var collisionOccured = false;
 var temp = null;
 var conditionsMet = 0;
+var playerInFinalPosition = false;
 
 self.onmessage = function(e){
     
@@ -127,7 +128,6 @@ self.onmessage = function(e){
                 if( y < ty && tey >= ey && oldPlayerPos.ey <= ty &&
                     (ex - 10 > tx || x + 10 < tex)){
                     if(temp.type === "Platform"){
-                        console.log('collision from above');
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
@@ -196,7 +196,6 @@ self.onmessage = function(e){
         world.CONTAINER.x = 0;
     }
     else if(world.CONTAINER.x - world.WINDOW_WIDTH <= -world.LEVEL_END_X){
-        console.log(world.CONTAINER.x + " - " + world.WINDOW_WIDTH + " <= " + (-world.LEVEL_END_X));
         world.CONTAINER.x = -(world.LEVEL_END_X - world.WINDOW_WIDTH);
     }
     if(PLAYER.position.y < 1100){
@@ -225,12 +224,22 @@ self.onmessage = function(e){
         if(temp.name === "BlockCoin" && world.PLAYER_CURRENCIES.BlockCoin >= temp.value){
             conditionsMet++;
         }
-        else if(temp.name === "position" &&
-                world.PLAYER.position.x >= temp.value.lu.x && 
-                world.PLAYER.position.x <= temp.value.rd.x &&
-                world.PLAYER.position.y >= temp.value.lu.y &&
-                world.PLAYER.position.y <= temp.value.rd.y){
-            conditionsMet++;
+        else if(temp.name === "position"){
+            if(PLAYER.position.x >= temp.value.lu.x && 
+                PLAYER.position.x <= temp.value.rd.x &&
+                PLAYER.position.y >= temp.value.lu.y &&
+                PLAYER.position.y <= temp.value.rd.y){
+                    if(playerInFinalPosition === false){
+                        playerInFinalPosition = true;
+                        conditionsMet++;
+                    }
+                }   
+            else{
+                if(playerInFinalPosition === true){
+                    playerInFinalPosition = false;
+                    conditionsMet--;
+                }
+            }
         }
     }
     if(conditionsMet === l){

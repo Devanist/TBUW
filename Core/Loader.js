@@ -243,6 +243,12 @@ define([
                 if(window.innerWidth <= 640){
                     small = 2;
                 }
+                if(e.rotation !== undefined && e.rotation !== null){
+                    temp.setRotationAngle(e.rotation);
+                }
+                if(e.anchor !== undefined && e.anchor !== null){
+                    temp.setAnchor(e.anchor);
+                }
                 temp.setPosition({x: e.position.x / small, y: e.position.y / small});
                 stage.add(temp);
 

@@ -53,6 +53,11 @@ Entity.prototype = {
         this._data.position.endX = pos.x + this._data.size.w;
         this._data.position.endY = pos.y + this._data.size.h;
     },
+
+    setAnchor : function(anchor){
+        this._sprite.anchor.x = anchor.x;
+        this._sprite.anchor.y = anchor.y;
+    },
     
     getPosition : function(){
         return this._sprite.position;

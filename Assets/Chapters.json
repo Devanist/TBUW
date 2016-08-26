@@ -10,6 +10,10 @@
             {
                 "type": "level",
                 "name": "C1_L1"
+            },
+            {
+                "type": "level",
+                "name": "C1_L2"
             }
         ]
     }

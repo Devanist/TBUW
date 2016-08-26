@@ -113,9 +113,6 @@ define([
                 if(temp._data.type === "Player" && temp.getPosition().y > 1000){
                     this._lose = true;
                 }
-                else if(temp._data.type === "PositionField"){
-                    temp.update();
-                }
 
                 if(this._lose === true){
                     this._isPause = true;

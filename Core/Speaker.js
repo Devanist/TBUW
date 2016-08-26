@@ -48,7 +48,6 @@ define(['Core/Utils'], function(Utils){
             var that = this;
             var node = this._context.createBufferSource();
             var offset = 0;
-            console.log(typeof sound);
             if(typeof sound === "string"){
                 node.name = sound;
             }
@@ -80,7 +79,6 @@ define(['Core/Utils'], function(Utils){
                 }
             };
             this._soundsPlaying.push({name: sound, node: node});
-            console.log(sound);
             node.start(0, offset);
         },
         

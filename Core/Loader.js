@@ -239,6 +239,9 @@ define([
                 else if(e.type === "PositionField"){
                     temp = new Entities.PositionField(e.id);
                 }
+                else if(e.type === "MovingPlatform"){
+                    temp = new Entities.MovingPlatform(e.id, PIXI.Texture.fromFrame(e.texture), e.startPos, e.endPos, e.time);
+                }
                 var small = 1;
                 if(window.innerWidth <= 640){
                     small = 2;

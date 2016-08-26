@@ -127,17 +127,21 @@ self.onmessage = function(e){
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
                 if( y < ty && tey >= ey && oldPlayerPos.ey <= ty &&
                     (ex - 10 > tx || x + 10 < tex)){
-                    if(temp.type === "Platform"){
+                    if(isCollisionType(temp.type)){
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
                         PLAYER.position.y = ty - PLAYER.size.h;
+                        if(temp.type === "MovingPlatform"){
+                            PLAYER.position.x += temp.moveBy.x;
+                            PLAYER.position.y += temp.moveBy.y;
+                        }
                     }
                 }
                 
                 //Jeżeli player jest pod obiektem
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
-                    if(temp.type === "Platform"){
+                    if(isCollisionType(temp.type)){
                         PLAYER.velocity.y = 1;
                         PLAYER.position.y = tey + 1;
                     }
@@ -145,7 +149,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli player jest na lewo od obiektu
                 else if(ex >= tx && x <= tx){
-                    if(temp.type === "Platform"){
+                    if(isCollisionType(temp.type)){
                         console.log('collision from left');
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = tx - (PLAYER.size.w + 1);
@@ -154,7 +158,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli gracz jest na prawo od obiektu
                 else if(x <= tex && tex <= ex){
-                    if(temp.type === "Platform"){
+                    if(isCollisionType(temp.type)){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = temp.position.endX + 1;
                     }
@@ -249,3 +253,11 @@ self.onmessage = function(e){
     postMessage(JSON.stringify(world));
     
 };
+
+function isCollisionType(type){
+
+    var collisionTypes = ["Platform", "MovingPlatform"];
+
+    return collisionTypes.lastIndexOf(type) >= 0;
+
+}

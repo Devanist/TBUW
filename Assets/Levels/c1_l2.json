@@ -288,6 +288,24 @@
             }
         },
         {
+            "id": 25,
+            "type": "MovingPlatform",
+            "texture": "ad",
+            "position": {
+                "x": 2400,
+                "y": 200
+            },
+            "startPos": {
+                "x": 2400,
+                "y": 200
+            },
+            "endPos": {
+                "x": 2800,
+                "y": 200
+            },
+            "time": 5000
+        },
+        {
             "id": 8,
             "type": "Player",
             "texture": "walrus_for_scale",

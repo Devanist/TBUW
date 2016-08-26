@@ -3,14 +3,16 @@ define([
     'Entities/Platform',
     'Entities/Player',
     'Entities/BlockCoin',
-    'Entities/PositionField'
+    'Entities/PositionField',
+    'Entities/MovingPlatform'
 ], 
 function(
     Background,
     Platform,
     Player,
     BlockCoin,
-    PositionField
+    PositionField,
+    MovingPlatform
 ){
     
     var Entities = {
@@ -18,7 +20,8 @@ function(
         Platform : Platform,
         Player : Player,
         BlockCoin : BlockCoin,
-        PositionField : PositionField
+        PositionField : PositionField,
+        MovingPlatform : MovingPlatform
     };
     
     return Entities;

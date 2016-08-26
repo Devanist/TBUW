@@ -12,14 +12,14 @@ define(['Entities/Platform'], function(Platform){
 
         this._timeToMove = time;
 
-        this._moveBy = {
+        this._data.moveBy = {
             x: Math.abs(endPosition.x - startPosition.x) / (this._timeToMove / 1000 * 60),
             y: Math.abs(endPosition.y - startPosition.y) / (this._timeToMove / 1000 * 60)
         };
 
     };
 
-    MovingPlatform = Object.create(Platform.prototype, {
+    MovingPlatform.prototype = Object.create(Platform.prototype, {
         constructor: {
             value: MovingPlatform,
             writable: true,
@@ -33,11 +33,45 @@ define(['Entities/Platform'], function(Platform){
     _p.update = function(){
 
         //Platforms moves horizontally
-        if(this._moveBy.x !== 0){
-            
+        if(this._data.moveBy.x !== 0){
+            this._sprite.position.x += this._data.moveBy.x;
+            this._data.position.x += this._data.moveBy.x;
+
+            if(this._startPosition.x < this._endPosition.x){
+
+                if(this._data.position.x < this._startPosition.x || this._data.position.x > this._endPosition.x){
+                    this._data.moveBy.x = - this._data.moveBy.x;
+                }
+
+            }
+            else{
+
+                if(this._data.position.x < this._endPosition.x || this._data.position.x > this._startPosition.x){
+                    this._data.moveBy.x = - this._data.moveBy.x;
+                }
+
+            }
         }
         //Platforms moves vertically
         else{
+
+            this._sprite.position.y += this._data.moveBy.y;
+            this._data.position.y += this._data.moveBy.y;
+
+            if(this._startPosition.y < this._endPosition.y){
+
+                if(this._data.position.y < this._startPosition.y || this._data.position.y > this._endPosition.y){
+                    this._data.moveBy.y = - this._data.moveBy.y;
+                }
+
+            }
+            else{
+
+                if(this._data.position.y < this._endPosition.y || this._data.position.y > this._startPosition.y){
+                    this._data.moveBy.y = - this._data.moveBy.y;
+                }
+
+            }
 
         }
 

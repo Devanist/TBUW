@@ -258,6 +258,6 @@ function isCollisionType(type){
 
     var collisionTypes = ["Platform", "MovingPlatform"];
 
-    return collisionTypes.lastIndexOf(type) >= 0;
+    return collisionTypes.indexOf(type) >= 0;
 
 }

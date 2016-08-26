@@ -144,7 +144,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         $("#level_music").on("change", function(){
             this._level.music = $("#level_music").val();
-        });
+        }.bind(this));
 
         $("#enableBlockCoin").on("change", function(){
             if($("#enableBlockCoin").prop("checked")){
@@ -242,7 +242,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 that._background._elements[0]._sprite.texture = new PIXI.Texture.fromFrame($("#level_background").val());
                 that._level.background[0] = {
                     id: 0,
-                    type: "background",
+                    type: "Background",
                     position: {
                         x: 0,
                         y: 0

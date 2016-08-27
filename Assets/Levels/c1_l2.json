@@ -1,6 +1,7 @@
 {
     "name": "c2_l1",
     "music": "home_ifimwrong",
+    "level_end_x": 4130,
     "background":
     [
         {
@@ -19,7 +20,23 @@
     [
         {
             "name": "BlockCoin",
-            "value": 10
+            "value": 5
+        },
+        {
+            "name": "position",
+            "value":
+            {
+                "lu":
+                {
+                    "x": 3600,
+                    "y": -114
+                },
+                "rd":
+                {
+                    "x": 3850,
+                    "y": 36
+                }
+            }
         }
     ],
     "entities":
@@ -282,28 +299,190 @@
             },
             "factor": 0,
             "rotation": 0.2,
-            "anchor": {
+            "anchor":
+            {
                 "x": 0.5,
                 "y": 0.5
             }
         },
         {
+            "id": 26,
+            "type": "Background",
+            "texture": "budynek",
+            "position":
+            {
+                "x": "2508",
+                "y": "35"
+            },
+            "factor": 0
+        },
+        {
+            "id": 35,
+            "type": "Background",
+            "texture": "budynek",
+            "position":
+            {
+                "x": "3344",
+                "y": "35"
+            },
+            "factor": 0
+        },
+        {
             "id": 25,
             "type": "MovingPlatform",
             "texture": "ad",
-            "position": {
+            "position":
+            {
                 "x": 2400,
                 "y": 200
             },
-            "startPos": {
+            "startPos":
+            {
                 "x": 2400,
                 "y": 200
             },
-            "endPos": {
+            "endPos":
+            {
                 "x": 2800,
                 "y": 200
             },
             "time": 5000
+        },
+        {
+            "id": 27,
+            "type": "Platform",
+            "texture": "klima",
+            "position":
+            {
+                "x": "3250",
+                "y": "150"
+            }
+        },
+        {
+            "id": 28,
+            "type": "Background",
+            "texture": "wirnik",
+            "position":
+            {
+                "x": "3295",
+                "y": "196"
+            },
+            "factor": 0,
+            "rotation": 0.2,
+            "anchor":
+            {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "id": 29,
+            "type": "BlockCoin",
+            "texture": "blockcoin",
+            "position":
+            {
+                "x": "2900",
+                "y": "170"
+            },
+            "quantity": 1
+        },
+        {
+            "id": 30,
+            "type": "BlockCoin",
+            "texture": "blockcoin",
+            "position":
+            {
+                "x": "3320",
+                "y": "100"
+            },
+            "quantity": 1
+        },
+        {
+            "id": 31,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "2650",
+                "y": "607"
+            },
+            "factor": 0
+        },
+        {
+            "id": 32,
+            "type": "Platform",
+            "texture": "asphalt_lower",
+            "position":
+            {
+                "x": "2558",
+                "y": "703"
+            }
+        },
+        {
+            "id": 33,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "2918",
+                "y": "607"
+            },
+            "factor": 0
+        },
+        {
+            "id": 34,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "3186",
+                "y": "607"
+            },
+            "factor": 0
+        },
+        {
+            "id": 36,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "3454",
+                "y": "607"
+            },
+            "factor": 0
+        },
+        {
+            "id": 37,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "3722",
+                "y": "607"
+            },
+            "factor": 0
+        },
+        {
+            "id": 38,
+            "type": "Background",
+            "texture": "asphalt_lower",
+            "position":
+            {
+                "x": "3837",
+                "y": "703"
+            },
+            "factor": 0
+        },
+        {
+            "id": 39,
+            "type": "Background",
+            "texture": "parking",
+            "position":
+            {
+                "x": "3990",
+                "y": "607"
+            },
+            "factor": 0
         },
         {
             "id": 8,
@@ -313,6 +492,16 @@
             {
                 "x": "150",
                 "y": "620"
+            }
+        },
+        {
+            "id": 40,
+            "type": "PositionField",
+            "texture": "wcposition",
+            "position":
+            {
+                "x": "3600",
+                "y": "-114"
             }
         }
     ]

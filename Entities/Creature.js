@@ -1,7 +1,7 @@
 define(['Entities/Entity'], function(Entity){
     
     var Creature = function(id, sprite){
-        Entity.call(this,id, sprite);
+        Entity.call(this, id, sprite);
         this._isStatic = false;
         this._data.velocity = {
             x: 0,

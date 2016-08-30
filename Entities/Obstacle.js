@@ -1,14 +1,16 @@
 define(['Entities/Item'], function(Item){
 
-    var Obstacle = function(id, frames){
+    var Obstacle = function(id, frames, config){
         Item.call(this, id, frames[0]);
         this._frames = frames;
         this._data.type = "Obstacle";
         this._data.state = {
-            firstNoLoseFrame: 0,
-            lastNoLoseFrame: 0,
-            currentFrame: 0            
+            firstNoLoseFrame: config.firstNoLoseFrame,
+            lastNoLoseFrame: config.lastNoLoseFrame,
+            currentFrame: 0         
         };
+        this._config = config;
+        this._timestamp = Date.now();
     };
 
     Obstacle.prototype = Object.create(Item.prototype, {
@@ -23,7 +25,27 @@ define(['Entities/Item'], function(Item){
     var _p = Obstacle.prototype;
 
     _p.update = function(){
-        this._data.state.currentFrame++;
+
+        if(this._data.state.currentFrame === 0){
+            if(Date.now() - this._timestamp > this._config.wait){
+                this._data.state.currentFrame++;
+            }
+        }
+        else{
+            if(this._loopCounter > this._config.loopLength){
+                this._data.state.currentFrame = 0;
+                this._timestamp = Date.now();
+            }
+            else{
+                if(this._data.state.currentFrame < this._config.loopEndFrame){
+                    this._data.state.currentFrame++;
+                }
+                else{
+                    this._data.state.currentFrame = this._config.loopStartFrame;
+                }
+            }
+        }
+
     };
 
     _p.isLosingFrame = function(frameId){

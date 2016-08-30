@@ -261,3 +261,66 @@ function isCollisionType(type){
     return collisionTypes.indexOf(type) >= 0;
 
 }
+
+function isCollisionWithRotatingObject(obj1, obj2){
+    
+    var anchorPoint = calculateAnchorPoint(obj2);
+
+    var rotatedPoints = rotateRectangle(obj2, anchorPoint);
+
+    
+
+}
+
+/**
+ * Returns anchor point of given object.
+ * @param {obj} Given object 
+ * @returns {object}
+ */
+function calculateAnchorPoint(obj){
+    var anchorPoint = {
+        x: obj.position.x,
+        y: obj.position.y
+    };
+
+    if(obj.anchor !== undefined && obj.anchor !== null){
+        anchorPoint.x += obj.size.w * obj.anchor.x;
+        anchorPoint.y += obj.size.h * obj.anchor.y;
+    }
+
+    return anchorPoint;
+}
+
+/**
+ * Returns set of points of rotated rectangle.
+ * @param {object} Rectangle to rotate
+ * @param {object} Anchor point of rectangle
+ * @param {number} Angle of rotation in radians
+ * @returns {object}
+ */
+function rotateRectangle(obj, anchor, angle){
+    //  A=======B
+    //  |       |
+    //  D=======C
+    var points = {
+        A: {x: obj.position.x, y: obj.position.y},
+        B: {x: obj.position.endX, y: obj.position.y},
+        C: {x: obj.position.endX, y: obj.position.endY},
+        D: {x: obj.position.x, y: obj.position.endY}
+    };
+
+    for(let point in points){
+        if(points.hasOwnProperty(point)){
+            points[point] = rotatePoint(points[point], anchor, angle) | 0;
+        }
+    }
+
+    return points;
+}
+
+function rotatePoint(point, anchor, angle){
+    return {
+        x: (point.x - anchor.x) * Math.cos(angle) + (point.y - anchor.y) * Math.sin(angle) + anchor.x,
+        y: -((point.x - anchor.x) * Math.sin(angle) - (point.y - anchor.y) * Math.cos(angle) - anchor.y)
+    };
+}

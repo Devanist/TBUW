@@ -268,7 +268,16 @@ function isCollisionWithRotatingObject(obj1, obj2){
 
     var rotatedPoints = rotateRectangle(obj2, anchorPoint);
 
-    
+    for(let point in rotatedPoints){
+        if(rotatedPoints.hasOwnProperty(point)){
+            if( point.x > obj1.position.x && point.x < obj1.position.endX &&
+                point.y > obj1.position.y && point.y < obj1.position.endY){
+                return true;
+            }
+        }
+    }
+
+    return false;
 
 }
 

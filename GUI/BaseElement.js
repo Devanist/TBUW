@@ -1,5 +1,12 @@
 define([], function () {
-	
+
+    /**
+     * Abstract class which is a base for GUI elements.
+     * @class
+     * @param {String} id Unique name/identificator of element
+     * @param {Point} position Screen position of element
+     * @param {PIXI.Sprite} sprite Sprite for this element
+     */
 	var BaseElement = function (id, position, sprite) {
         this._sprite = new PIXI.Sprite(sprite);
         if(typeof(position) === "string"){

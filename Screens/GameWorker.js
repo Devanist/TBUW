@@ -18,7 +18,7 @@ self.onmessage = function(e){
     elementsQuantity = world.ELEMENTS.length;
     
     //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
-    for(var i = 0; i < elementsQuantity; i+=1){
+    for(let i = 0; i < elementsQuantity; i+=1){
         temp = world.ELEMENTS[i];
         temp.size.w += temp.offset.width;
         temp.size.h += temp.offset.height;
@@ -266,7 +266,7 @@ function isCollisionWithRotatingObject(obj1, obj2){
     
     var anchorPoint = calculateAnchorPoint(obj2);
 
-    var rotatedPoints = rotateRectangle(obj2, anchorPoint);
+    var rotatedPoints = rotateRectangle(obj2, anchorPoint, obj2.currentRotationAngle);
 
     for(let point in rotatedPoints){
         if(rotatedPoints.hasOwnProperty(point)){

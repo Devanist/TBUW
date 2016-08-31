@@ -6,6 +6,12 @@ define([
     'Core/TouchController'
     ], function(Screen, Stage, Utils, GUI, TouchController){
     
+    /**
+     * Game screen. Here is all logic responsible for displaying actual gameplay.
+     * @class
+     * @extends Screen
+     * @param {object} params Screen parameters
+     */
     var GameScreen = function(params){
         Screen.call(this);
         this._background = new Stage();
@@ -42,7 +48,6 @@ define([
         }
         
         this._guiStage.add(new GUI.Image("portret", {x: 20 / this._small, y: 20 / this._small}, PIXI.Texture.fromFrame("portret")));
-        
         this._guiStage.add(new GUI.Image("blockcoin", {x: 140 / this._small, y: 40 / this._small}, PIXI.Texture.fromFrame("blockcoin")));
         this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190 / this._small, y: 58 / this._small}, 0));
         
@@ -50,9 +55,10 @@ define([
         if(Utils.isTouchDevice()){
             this._stage.add(this._touchController.getStage());
         }
+
         this._GRAVITY = 0.7 / this._small;
         this._AIR_RES = 0.2 / this._small;
-        this.escapeDown = true;
+        this._escapeDown = true;
         this._isPause = false;
         this._updateWorker = new Worker('Screens/GameWorker.js');
         
@@ -73,10 +79,10 @@ define([
                     fill: 0xff4fff, 
                     align: "center"
                 });
-                this._guiStage.add(wonLabel);
                 wonLabel.move({x:0, y: -100});
-                var wonButton = new GUI.Button("wonButton", "center",
-                    null, "SUPERB!", 
+                this._guiStage.add(wonLabel);
+
+                var wonButton = new GUI.Button("wonButton", "center", null, "SUPERB!", 
                     {
                         active: true,
                         bitmap: true, 
@@ -84,13 +90,13 @@ define([
                         fill: 0xff4fff, 
                         align: "center"
                     }, 
-                    function(){
+                    () => {
                         this._onUpdateAction = this.EVENT.CHANGE;
                         this._nextScreen = "level_choose";
                         this._nextScreenParams = {
                             cfg: this._back
                         };
-                    }.bind(this)
+                    }
                 );
                 this._guiStage.add(wonButton);
             }
@@ -132,7 +138,7 @@ define([
                     );
                     YouLose.move({x: 0, y: -100});
                     this._guiStage.add(YouLose);
-                    console.log(YouLose);
+
                     var loseButton = new GUI.Button("RETRY", "center",
                         null, "RETRY", 
                         {
@@ -142,11 +148,11 @@ define([
                             fill: 0xff4fff, 
                             align: "center"
                         }, 
-                        function(){
+                        () => {
                             this._onUpdateAction = this.EVENT.RESTART;
                             this._nextScreen = "game";
                             this._nextScreenParams = this._retry;
-                        }.bind(this)
+                        }
                     );
                     loseButton.move({x: 0, y: 0});
                     this._guiStage.add(loseButton);
@@ -198,30 +204,53 @@ define([
     
     var _p = GameScreen.prototype;
         
+    /**
+     * Returns the screen main stage.
+     * @returns {Stage}
+     */
     _p.getMainStage = function(){
         return this._gameStage;
     };
     
+    /**
+     * Returns array with sounds to play.
+     * @returns {Array}
+     */
     _p.getSoundsContainer = function(){
         return this._sounds;
     };
 
+    /**
+     * Assign music to play in game.
+     * @param {string} music Song's name
+     */
     _p.setMusic = function(music){
         this._music = music;
     };
 
+    /**
+     * Sets the x-coord where to stop moving map.
+     * @param {Number} x x-coord
+     */
     _p.setEndX = function(x){
         this._levelEndX = x;
     };
     
+    /**
+     * Returns an array with win conditions for given level.
+     * returns {Array}
+     */
     _p.getWinConditions = function(){
         return this._winConditions;
     };
 
+    /**
+     * Method that handles situation, when player turns on the pause.
+     */
     _p.pauseHandler = function(){
-        if(this.escapeDown){
+        if(this._escapeDown){
                 this._isPause = !this._isPause;
-                this.escapeDown = false;
+                this._escapeDown = false;
 
                 if(this._isPause === true){
 
@@ -248,10 +277,10 @@ define([
                             fill: 0xff4fff, 
                             align: "center"
                         },
-                        function(){
-                            this.escapeDown = true;
+                        () => {
+                            this._escapeDown = true;
                             this.pauseHandler();
-                    }.bind(this));
+                    });
                     resumeButton.move({x:20, y: 50});
                     this._guiStage.add(resumeButton);
 
@@ -262,13 +291,13 @@ define([
                             fill: 0xff4fff,
                             align: "center"
                         },
-                        function(){
+                        () => {
                             this._onUpdateAction = this.EVENT.CHANGE;
                             this._nextScreen = "level_choose";
                             this._nextScreenParams = {
                                 cfg: this._back
                             };
-                    }.bind(this));
+                    });
                     returnButton.move({x: 0, y: 100});
                     this._guiStage.add(returnButton);
                 }
@@ -283,8 +312,12 @@ define([
     };
         
     /**
-     * Metoda przygotowująca dane i wysyłająca je do workera.
-     * @param {object} keysState Obecny stan klawiszy.
+     * Method that prepares data and send it to worker. It also handle the user input that must be handled in main thread.
+     * In the end it returns information to the application logic.
+     * @param {Object} keysState Keyboard state
+     * @param {Object} clicks Mouse state
+     * @param {Object} touches Touch device state
+     * @param {Object} touchController Virtual touch controller state
      */
     _p.update = function(keysState, clicks, touches, touchController){
         
@@ -321,7 +354,7 @@ define([
             this.pauseHandler();
         }
         else{
-            this.escapeDown = true;
+            this._escapeDown = true;
         }
         
         if(!this._isPause){

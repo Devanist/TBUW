@@ -6,6 +6,11 @@ define([
 ],
 function(Screen, cfg, GUI, Utils){
     
+    /**
+     * Chapter choosing screen.
+     * @class
+     * @extends Screen
+     */
     var ChapterChoose = function(){
         Screen.call(this);
 
@@ -29,7 +34,7 @@ function(Screen, cfg, GUI, Utils){
 
         this._chapters = cfg;
         this._chaptersPositions = [];
-        for(var i = 0; i < 2; i++){
+        for(let i = 0; i < 2; i++){
             for(var j = 0; j < 3; j++){
                 this._chaptersPositions.push({x: 300 * (j + 1), y: 200 * (i + 1)});
             }
@@ -39,19 +44,19 @@ function(Screen, cfg, GUI, Utils){
             {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}));
 
         this._stage.add(new GUI.Button("RETURN", {x: 80, y: 80}, PIXI.Texture.fromFrame("backarrow"), "", {},
-            function(){
+            () => {
                 this._onUpdateAction = "CHANGE";
                 this._nextScreen = "menu";
-            }.bind(this)
+            }
         ));
 
         var that = this;
         var levels;
-        for(var i = 0; i < this._chapters.length; i++){
+        for(let i = 0; i < this._chapters.length; i++){
             levels = this._chapters[i].levels;
             this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", 
             (() => {if(i === 0){ return {active: true};} else { return {};}})(), 
-                function(){
+                ()=> {
                     that._onUpdateAction = "CHANGE";
                     that._nextScreen = "level_choose";
                     that._nextScreenParams = {
@@ -81,8 +86,12 @@ function(Screen, cfg, GUI, Utils){
     
     var _p = ChapterChoose.prototype;
 
+    /**
+     * Method that handles user input and returns information to the application logic.
+     */
     _p.update = function(keysState, clicks, touches){
 
+        var i,j;
         //Keyboard handling
         if(keysState.ARROW_DOWN || keysState.S){
             if(this._buttonPressedDown === false){
@@ -150,8 +159,8 @@ function(Screen, cfg, GUI, Utils){
         }
         
         //Mouse clicks handling
-        for(j = 0; j < clicks.length; j += 1){
-            for(i = 0; i < this._stage._elements.length; i += 1){
+        for(let j = 0; j < clicks.length; j += 1){
+            for(let i = 0; i < this._stage._elements.length; i += 1){
                 temp = this._stage._elements[i];
                 if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     temp.triggerCallback();
@@ -161,8 +170,8 @@ function(Screen, cfg, GUI, Utils){
         
         //Touch handling
         if(Utils.isTouchDevice()){           
-            for(j = 0; j < touches.length; j += 1){
-                for(i = 0; i < this._stage._elements.length; i += 1){
+            for(let j = 0; j < touches.length; j += 1){
+                for(let i = 0; i < this._stage._elements.length; i += 1){
                     temp = this._stage._elements[i];
                     if(typeof temp.triggerCallback === "function" && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
@@ -171,7 +180,7 @@ function(Screen, cfg, GUI, Utils){
             }
         }
 
-        for(i = 0; i < this._stage._elements.length; i+=1){
+        for(let i = 0; i < this._stage._elements.length; i+=1){
             temp = this._stage._elements[i];
             if(temp.isEnabled() && temp.isActive()){
                 if(this._displacement.scale.y < 6){

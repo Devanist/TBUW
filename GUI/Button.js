@@ -1,5 +1,17 @@
 define(['GUI/BaseElement'], function(Base){
 
+	/**
+	 * Button for use in GUI. It can be used with or without sprite (just pass null as sprite parameter).
+	 * @class Button
+	 * @memberOf GUI
+	 * @extends GUI.BaseElement
+	 * @param {String} id Unique name of element
+	 * @param {Point} position Position of button
+	 * @param {PIXI.Sprite} sprite Sprite to display, can be null
+	 * @param {String} text Text do display
+	 * @param {Object} style Configuration object for styling button
+	 * @param {Function} cb Callback to invoke when button activated
+	 */
 	var Button = function(id, position, sprite, text, style, cb){
 		Base.call(this, id, position, sprite);
         this._data.type = "button";
@@ -39,22 +51,51 @@ define(['GUI/BaseElement'], function(Base){
     
     var _p = Button.prototype;
     
+	/**
+	 * Triggers a saved callback function.
+	 * @function
+	 * @memberOf GUI.Button
+	 */
     _p.triggerCallback = function(){
         this._callback();
     };
 	
+	/**
+	 * Sets the callback function to invoke when Button activated.
+	 * @function
+	 * @memberOf GUI.Button
+	 * @param {Function} cb Function to invoke when activated
+	 */
     _p.setCallback = function(cb){
         this._callback = cb;
     };
     
+	/**
+	 * Returns the rectangle describing sprite of button.
+	 * @function
+	 * @memberOf GUI.Button
+	 * @returns PIXI.Rectangle
+	 */
     _p.getBounds = function(){
         return this._sprite.getLocalBounds();
     };
 	
+	/**
+	 * Returns container that contain both sprite and text of a button.
+	 * @function
+	 * @memberOf GUI.Button
+	 * @returns {PIXI.Container}
+	 */
 	_p.getSprite = function(){
 		return this._container;
 	};
 
+	/**
+	 * Moves the button by specified vector.
+	 * @function
+	 * @memberOf GUI.Button
+	 * @param {Vector} vec Vector by which button will be moved
+	 */
 	_p.move = function(vec){
 		this._sprite.position.x += vec.x;
 		this._sprite.position.y += vec.y;

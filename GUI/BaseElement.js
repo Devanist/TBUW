@@ -2,7 +2,9 @@ define([], function () {
 
     /**
      * Abstract class which is a base for GUI elements.
-     * @class
+     * @class BaseElement
+     * @abstract
+     * @memberOf GUI
      * @param {String} id Unique name/identificator of element
      * @param {Point} position Screen position of element
      * @param {PIXI.Sprite} sprite Sprite for this element
@@ -40,18 +42,42 @@ define([], function () {
 	
 	BaseElement.prototype = {
 		
+        /**
+         * Returns type of an element.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {String}
+         */
 		getType: function () {
 			return this._data.type;
 		},
         
+        /**
+         * Returns ID of an element.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {String}
+         */
         getId : function(){
             return this._id;
         },
         
+        /**
+         * Returns main sprite of an element.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {PIXI.Sprite}
+         */
         getSprite : function(){
             return this._sprite;
         },
         
+        /**
+         * Method changes the position by specified vector.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @params {Vector} vec Vector by which element will be moved
+         */
         move: function(vec){
             this._sprite.position.x += vec.x;
             this._sprite.position.y += vec.y;
@@ -59,6 +85,12 @@ define([], function () {
             this._data.position.y = this._sprite.position.y;
         },
         
+        /**
+         * Method sets the element's position to the specified one.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @param {Point} pos Position to which element will be moved
+         */
         setPosition: function(pos){
             this._sprite.position.x = pos.x;
             this._sprite.position.y = pos.y;
@@ -66,23 +98,53 @@ define([], function () {
             this._data.position.y = pos.y;
         },
         
+        /**
+         * Method sets the rotation angle of element.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @param {Number} val Value of angle
+         */
         setRotationAngle : function(val){
             this._data.rotation = val;
         },
         
+        /**
+         * Method that rotates element by given angle.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @param {Number} angle Value of angle to rotate
+         */
         rotate : function(angle){
             this._data.currentRotationAngle = angle;
             this._sprite.rotation = angle;
         },
         
+        /**
+         * Method that returns information if element can be interacted with.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {Boolean}
+         */
         isEnabled : function(){
             return this._data.enabled;
         },
         
+        /**
+         * Method that return information if element is selected.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {Boolean}
+         */
         isActive : function(){
             return this._data.active;
         },
         
+        /**
+         * Method that returns the position of element.
+         * @function
+         * @memberOf GUI.BaseElement
+         * @returns {Point}
+         */
         getPosition : function(){
             return this._data.position;
         }

@@ -1,0 +1,6 @@
+{
+    "source": {
+        "include": ["."],
+        "exclude": ["Assets", "lib", "out"]
+    }
+}

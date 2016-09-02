@@ -47,7 +47,6 @@ define(['Entities/Entities'], function(Entities){
                 this._elements.splice(i,1);
                 this._stage.removeChild(this._stage.children[i]);
             }
-            console.log(this._stage.children);
         },
         
         /**

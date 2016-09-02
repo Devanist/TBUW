@@ -123,24 +123,22 @@ self.onmessage = function(e){
                 ty = temp.position.y;
                 tey = temp.position.endY;
             }
+
+            if(temp.inheritedTypes.indexOf("Obstacle") > -1){
+                let ci = null;
+                for(let i = 0; i < temp.state.collisionItems.length; i++){
+                    ci = temp.state.collisionItems[i].currentPosition;
+                    if(!(x > ci.ex + temp.position.x || ex < ci.x + temp.position.x || y > ci.ey + temp.position.y|| ey < ci.y + temp.position.y)){
+                        world.LOSE = true;
+                    }
+                }
+            }
             
             if( !(x > tex || ex < tx || y > tey || ey < ty) ){
                 
                 if(temp.type === "BlockCoin"){
                     world.REMOVE_LIST.push(temp.id);
                     continue;
-                }
-
-                if(temp.inheritedTypes.indexOf("Obstacle") > -1){
-                    let ci = null;
-                    for(let i = 0; i < temp.state.collisionItems.length; i++){
-                        ci = temp.state.collisionItems[i].currentPosition;
-                        //console.log(ci);
-                        //console.log(`x: ${x} y: ${y} ex: ${ex} ey: ${ey}`);
-                        if(!(x > ci.ex + temp.position.x || ex < ci.x + temp.position.x || y > ci.ey + temp.position.y|| ey < ci.y + temp.position.y)){
-                            world.LOSE = true;
-                        }
-                    }
                 }
                 
                 collisionOccured = true;

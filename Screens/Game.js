@@ -66,6 +66,9 @@ define([
         this._updateWorker.onmessage = function(respond){
             
             var anwser = JSON.parse(respond.data);
+            if(anwser.LOSE){
+                this._lose = true;
+            }
             if(anwser.WON){
                 this._isPause = true;
 

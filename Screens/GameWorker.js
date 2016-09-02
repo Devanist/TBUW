@@ -26,6 +26,15 @@ self.onmessage = function(e){
         if(temp.type === "Player"){
             PLAYER = temp;
         }
+        else if(temp.inheritedTypes && temp.inheritedTypes.indexOf("Obstacle") > -1){
+            for(let i = 0; i < temp.state.collisionItems.length; i++){
+                temp.state.collisionItems[i].currentPosition.y += temp.animationSpeed;
+                temp.state.collisionItems[i].currentPosition.ey += temp.animationSpeed;
+                if(temp.state.collisionItems[i].currentPosition.y < temp.state.collisionItems[i].initialPosition.y - temp.maxHeight){
+                    temp.state.collisionItems[i].currentPosition = JSON.parse(JSON.stringify(temp.state.collisionItems[i].initialPosition));
+                }
+            }
+        }
         if(temp.toBeRemoved){
             world.REMOVE_LIST.push(temp.id);
         }
@@ -120,6 +129,16 @@ self.onmessage = function(e){
                 if(temp.type === "BlockCoin"){
                     world.REMOVE_LIST.push(temp.id);
                     continue;
+                }
+
+                if(temp.inheritedTypes.indexOf("Obstacle") > -1){
+                    let ci = null;
+                    for(let i = 0; i < temp.state.collisionItems.length; i++){
+                        ci = temp.state.collisionItems[i].currentPosition;
+                        if(!(x > ci.ex || ex < ci.x || y > ci.ey || ey < ci.y)){
+                            world.LOSE = true;
+                        }
+                    }
                 }
                 
                 collisionOccured = true;

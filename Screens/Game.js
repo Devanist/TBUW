@@ -398,7 +398,8 @@ define([
         
         }
         else{
-
+            let i = 0, 
+                j = 0;
             if(keysState.ARROW_DOWN || keysState.S){
                 if(this._buttonPressedDown === false){
                     this._buttonPressedDown = true;

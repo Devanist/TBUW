@@ -28,7 +28,9 @@ var Entity = function(id, sprite){
             height: 0
         },
         rotation: 0,
-        currentRotationAngle: 0
+        currentRotationAngle: 0,
+        type: "Entity",
+        inheritedTypes: ["Entity"]
     };
 };
 

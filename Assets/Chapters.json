@@ -14,6 +14,10 @@
             {
                 "type": "level",
                 "name": "C1_L2"
+            },
+            {
+                "type": "level",
+                "name": "C1_L3"
             }
         ]
     }

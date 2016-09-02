@@ -1,16 +1,24 @@
 define(['Entities/Item'], function(Item){
 
-    var Obstacle = function(id, frames, config){
-        Item.call(this, id, frames[0]);
-        this._frames = frames;
+    /**
+     * Item that will cause lose when in touch with player.
+     * @class
+     * @memberOf Entities
+     * @extends Entities.Item
+     * @param {Number} id Unique identifier of element
+     * @param {Array} sprites Sprites to use
+     */
+    var Obstacle = function(id, sprites){
+        Item.call(this, id, null);
         this._data.type = "Obstacle";
+        this._data.inheritedTypes.push(this._data.type);
+        this._sprite = new PIXI.Container();
+        for(let i = 0; i < sprites.length; i++){
+            this._sprite.addChild(sprites[i]);
+        }
         this._data.state = {
-            firstNoLoseFrame: config.firstNoLoseFrame,
-            lastNoLoseFrame: config.lastNoLoseFrame,
-            currentFrame: 0         
+            collisionItems: []
         };
-        this._config = config;
-        this._timestamp = Date.now();
     };
 
     Obstacle.prototype = Object.create(Item.prototype, {
@@ -24,32 +32,14 @@ define(['Entities/Item'], function(Item){
 
     var _p = Obstacle.prototype;
 
+    /**
+     * This method should update the state field, that will be passed to the worker.
+     * @abstract
+     * @function
+     * @memberOf Entities.Obstacle
+     */
     _p.update = function(){
 
-        if(this._data.state.currentFrame === 0){
-            if(Date.now() - this._timestamp > this._config.wait){
-                this._data.state.currentFrame++;
-            }
-        }
-        else{
-            if(this._loopCounter > this._config.loopLength){
-                this._data.state.currentFrame = 0;
-                this._timestamp = Date.now();
-            }
-            else{
-                if(this._data.state.currentFrame < this._config.loopEndFrame){
-                    this._data.state.currentFrame++;
-                }
-                else{
-                    this._data.state.currentFrame = this._config.loopStartFrame;
-                }
-            }
-        }
-
-    };
-
-    _p.isLosingFrame = function(frameId){
-        return frameId > this._data.state.lastNoLoseFrame;
     };
 
     return Obstacle;

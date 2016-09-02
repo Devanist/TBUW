@@ -1,0 +1,65 @@
+{
+  "name": "c1_l3",
+  "music": "home_ifimwrong",
+  "level_end_x": 3600,
+  "background": [
+    {
+      "id": 0,
+      "type": "Background",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "texture": "sky",
+      "factor": 0
+    }
+  ],
+  "winConditions": [
+    {
+      "name": "BlockCoin",
+      "value": 7
+    },
+    {
+      "name": "position",
+      "value": {
+        "lu": {
+          "x": 3287,
+          "y": 450
+        },
+        "rd": {
+          "x": 3537,
+          "y": 600
+        }
+      }
+    }
+  ],
+  "entities": [
+      {
+          "id": 0,
+          "type": "Platform",
+          "texture": "asphalt_lower",
+          "position": {
+              "x": 0,
+              "y": 703
+          }
+      },
+      {
+          "id": 1,
+          "type": "LasersFromGround",
+          "texture": "lazor_00000",
+          "position": {
+              "x": 300,
+              "y": 440
+          }
+      },
+      {
+            "id": 2,
+            "type": "Player",
+            "texture": "walrus_for_scale",
+            "position": {
+                "x": "150",
+                "y": "490"
+            }
+      }
+  ]
+}

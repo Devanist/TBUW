@@ -8,6 +8,9 @@ define([
     ], function(cfg, Entities, BoundaryBox, Stage, GUI){
 
     /**
+     * @class
+     * @memberOf Core
+     * @extends PIXI.loader
      * Wrapper for PIXI.loader
      */
     var Loader = function () {
@@ -241,6 +244,9 @@ define([
                 }
                 else if(e.type === "MovingPlatform"){
                     temp = new Entities.MovingPlatform(e.id, PIXI.Texture.fromFrame(e.texture), e.startPos, e.endPos, e.time);
+                }
+                else if(e.type === "LasersFromGround"){
+                    temp = new Entities.LasersFromGround(e.id);
                 }
                 var small = 1;
                 if(window.innerWidth <= 640){

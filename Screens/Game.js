@@ -382,16 +382,14 @@ define([
                 };
             }
             
-            l = this._gameStage._elements.length;
-            for(let i = 0; i < l; i++){
+            for(let i = 0; i < this._gameStage._elements.length; i++){
                 temp = this._gameStage._elements[i];
                 temp._data.size.w = temp._sprite.getLocalBounds().width;
                 temp._data.size.h = temp._sprite.getLocalBounds().height;
                 data.ELEMENTS.push(temp._data); 
             }
             
-            l = this._guiStage._elements.length;
-            for(let i = 0; i < l; i+=1){
+            for(let i = 0; i < this._guiStage._elements.length; i+=1){
                 temp = this._guiStage._elements[i];
                 data.GUI_ELEMENTS.push(temp._data);
             }

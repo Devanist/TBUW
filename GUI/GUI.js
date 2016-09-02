@@ -5,7 +5,7 @@ define([
 ], function(Button, Image, Label){
     
     /**
-     * @namespace GUI
+     * @module GUI
      */
     var GUI = {
         Button: Button,

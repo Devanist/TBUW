@@ -4,7 +4,8 @@ define([
     'Entities/Player',
     'Entities/BlockCoin',
     'Entities/PositionField',
-    'Entities/MovingPlatform'
+    'Entities/MovingPlatform',
+    'Entities/LasersFromGround'
 ], 
 function(
     Background,
@@ -12,16 +13,21 @@ function(
     Player,
     BlockCoin,
     PositionField,
-    MovingPlatform
+    MovingPlatform,
+    LasersFromGround
 ){
-    
+
+    /**
+     * @module Entities
+     */
     var Entities = {
         Background: Background,
-        Platform : Platform,
-        Player : Player,
-        BlockCoin : BlockCoin,
-        PositionField : PositionField,
-        MovingPlatform : MovingPlatform
+        Platform: Platform,
+        Player: Player,
+        BlockCoin: BlockCoin,
+        PositionField: PositionField,
+        MovingPlatform: MovingPlatform,
+        LasersFromGround: LasersFromGround
     };
     
     return Entities;

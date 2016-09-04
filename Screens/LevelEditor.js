@@ -633,6 +633,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     else if(e.type === "PositionField"){
                         temp = new Entities.PositionField(e.id);
                     }
+                    else if(e.type === "LasersFromGround"){
+                        temp = new Entities.LasersFromGround(e.id);
+                    }
                     temp.setPosition(e.position);
                     this._gameStage.add(temp);
                     

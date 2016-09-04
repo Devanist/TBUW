@@ -128,7 +128,7 @@ self.onmessage = function(e){
                 let ci = null;
                 for(let i = 0; i < temp.state.collisionItems.length; i++){
                     ci = temp.state.collisionItems[i].currentPosition;
-                    if(!(x > ci.ex + temp.position.x || ex < ci.x + temp.position.x || y > ci.ey + temp.position.y|| ey < ci.y + temp.position.y)){
+                    if(!(x + 10 > ci.ex + temp.position.x || ex - 10 < ci.x + temp.position.x || y + 10 > ci.ey + temp.position.y|| ey - 10 < ci.y + temp.position.y)){
                         world.LOSE = true;
                     }
                 }

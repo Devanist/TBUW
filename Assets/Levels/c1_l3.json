@@ -1,65 +1,600 @@
 {
-  "name": "c1_l3",
-  "music": "home_ifimwrong",
-  "level_end_x": 3600,
-  "background": [
-    {
-      "id": 0,
-      "type": "Background",
-      "position": {
-        "x": 0,
-        "y": 0
-      },
-      "texture": "sky",
-      "factor": 0
-    }
-  ],
-  "winConditions": [
-    {
-      "name": "BlockCoin",
-      "value": 7
-    },
-    {
-      "name": "position",
-      "value": {
-        "lu": {
-          "x": 3287,
-          "y": 450
-        },
-        "rd": {
-          "x": 3537,
-          "y": 600
+    "name": "c1_l3",
+    "music": "home_ifimwrong",
+    "level_end_x": 3800,
+    "background":
+    [
+        {
+            "id": 0,
+            "type": "Background",
+            "position":
+            {
+                "x": 0,
+                "y": 0
+            },
+            "texture": "sky",
+            "factor": 0
         }
-      }
-    }
-  ],
-  "entities": [
-      {
-          "id": 0,
-          "type": "Platform",
-          "texture": "asphalt_lower",
-          "position": {
-              "x": 0,
-              "y": 703
-          }
-      },
-      {
-          "id": 1,
-          "type": "LasersFromGround",
-          "texture": "lazor_00000",
-          "position": {
-              "x": 300,
-              "y": 700
-          }
-      },
-      {
+    ],
+    "winConditions":
+    [
+        {
+            "name": "BlockCoin",
+            "value": 3
+        },
+        {
+            "name": "position",
+            "value":
+            {
+                "lu":
+                {
+                    "x": 3430,
+                    "y": 400
+                },
+                "rd":
+                {
+                    "x": 3680,
+                    "y": 550
+                }
+            }
+        }
+    ],
+    "entities":
+    [
+        {
+            "id": 0,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": 0,
+                "y": "700"
+            }
+        },
+        {
+            "id": 3,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "599",
+                "y": "700"
+            }
+        },
+        {
+            "id": 4,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": 0,
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 5,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "599",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 6,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": 0,
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 7,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "599",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 9,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": 0,
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 8,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": 0,
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 10,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "599",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 11,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "599",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 1,
+            "type": "LasersFromGround",
+            "texture": "lazor_00000",
+            "position":
+            {
+                "x": "599",
+                "y": "670"
+            }
+        },
+        {
+            "id": 12,
+            "type": "BlockCoin",
+            "texture": "blockcoin",
+            "position":
+            {
+                "x": "900",
+                "y": "640"
+            },
+            "quantity": 1
+        },
+        {
+            "id": 13,
+            "type": "Background",
+            "texture": "thingy",
+            "position":
+            {
+                "x": "300",
+                "y": "760"
+            },
+            "factor": -0.5
+        },
+        {
+            "id": 14,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "1198",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 15,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1198",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 16,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1198",
+                "y": "700"
+            }
+        },
+        {
+            "id": 20,
+            "type": "Platform",
+            "texture": "klima",
+            "position":
+            {
+                "x": "1300",
+                "y": "620"
+            }
+        },
+        {
+            "id": 21,
+            "type": "Background",
+            "texture": "wirnik",
+            "position":
+            {
+                "x": "1345",
+                "y": "666"
+            },
+            "factor": 0,
+            "rotation": 0.2,
+            "anchor":
+            {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "id": 24,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1797",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 26,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1750",
+                "y": "644"
+            },
+            "factor": 0
+        },
+        {
+            "id": 22,
+            "type": "Background",
+            "texture": "rooftop_hole",
+            "position":
+            {
+                "x": "1797",
+                "y": "650"
+            },
+            "factor": 0
+        },
+        {
+            "id": 19,
+            "type": "Background",
+            "texture": "rooftopbox",
+            "position":
+            {
+                "x": "1500",
+                "y": "610"
+            },
+            "factor": 0.2
+        },
+        {
+            "id": 25,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1997",
+                "y": "700"
+            }
+        },
+        {
+            "id": 29,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "1797",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 31,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "2396",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 32,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2396",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 33,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2396",
+                "y": "700"
+            }
+        },
+        {
+            "id": 34,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2396",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 35,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "2396",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 36,
+            "type": "BlockCoin",
+            "texture": "blockcoin",
+            "position":
+            {
+                "x": "2453",
+                "y": "620"
+            },
+            "quantity": 1
+        },
+        {
+            "id": 37,
+            "type": "LasersFromGround",
+            "texture": "lazor_00000",
+            "position":
+            {
+                "x": "2600",
+                "y": "670"
+            }
+        },
+        {
+            "id": 38,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "2995",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 39,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2995",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 40,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2995",
+                "y": "700"
+            }
+        },
+        {
+            "id": 41,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "2995",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 42,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "2995",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 43,
+            "type": "BlockCoin",
+            "texture": "blockcoin",
+            "position":
+            {
+                "x": "3000",
+                "y": "570"
+            },
+            "quantity": 1
+        },
+        {
+            "id": 44,
+            "type": "Background",
+            "texture": "rooftop_back",
+            "position":
+            {
+                "x": "3594",
+                "y": "535"
+            },
+            "factor": 0
+        },
+        {
+            "id": 45,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "3594",
+                "y": "611"
+            },
+            "factor": 0
+        },
+        {
+            "id": 46,
+            "type": "Platform",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "3594",
+                "y": "700"
+            }
+        },
+        {
+            "id": 47,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "3594",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 48,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "3594",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 49,
+            "type": "Background",
+            "texture": "rooftop_window",
+            "position":
+            {
+                "x": "3320",
+                "y": "660"
+            },
+            "factor": 0
+        },
+        {
             "id": 2,
             "type": "Player",
             "texture": "walrus_for_scale",
-            "position": {
+            "position":
+            {
                 "x": 150,
-                "y": 490
+                "y": "623"
             }
-      }
-  ]
+        },
+        {
+            "id": 17,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1198",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 18,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "1198",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 23,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1797",
+                "y": "789"
+            },
+            "factor": 0
+        },
+        {
+            "id": 27,
+            "type": "Background",
+            "texture": "rooftop_floor",
+            "position":
+            {
+                "x": "1750",
+                "y": "734"
+            },
+            "factor": 0
+        },
+        {
+            "id": 28,
+            "type": "Background",
+            "texture": "rooftop_front",
+            "position":
+            {
+                "x": "1797",
+                "y": "878"
+            },
+            "factor": 0
+        },
+        {
+            "id": 30,
+            "type": "Background",
+            "texture": "thingy",
+            "position":
+            {
+                "x": "1950",
+                "y": "760"
+            },
+            "factor": -0.5
+        },
+        {
+            "id": 50,
+            "type": "PositionField",
+            "texture": "wcposition",
+            "position":
+            {
+                "x": "3430",
+                "y": "400"
+            }
+        }
+    ]
 }

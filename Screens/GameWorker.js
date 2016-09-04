@@ -218,8 +218,8 @@ self.onmessage = function(e){
     if(world.CONTAINER.x >= 0){
         world.CONTAINER.x = 0;
     }
-    else if(world.CONTAINER.x - world.WINDOW_WIDTH <= -world.LEVEL_END_X){
-        world.CONTAINER.x = -(world.LEVEL_END_X - world.WINDOW_WIDTH);
+    else if(world.CONTAINER.x - (world.WINDOW_WIDTH - 300) <= -world.LEVEL_END_X){
+        world.CONTAINER.x = -(world.LEVEL_END_X - (world.WINDOW_WIDTH - 300));
     }
     if(PLAYER.position.y < 1100){
         world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y;

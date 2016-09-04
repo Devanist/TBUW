@@ -69,7 +69,7 @@ define([
             if(anwser.LOSE){
                 this._lose = true;
             }
-            if(anwser.WON){
+            if(anwser.WON && !this._isPause){
                 this._isPause = true;
 
                 let background = new GUI.Image("wonBackground", "center", PIXI.Texture.fromFrame("pause"));
@@ -87,6 +87,7 @@ define([
 
                 var wonButton = new GUI.Button("wonButton", "center", null, "SUPERB!", 
                     {
+                        size_override: false,
                         active: true,
                         bitmap: true, 
                         font: 30 / this._small + "px Cyberdyne Expanded", 
@@ -123,7 +124,7 @@ define([
                     this._lose = true;
                 }
 
-                if(this._lose === true){
+                if(this._lose === true && !this._isPause){
                     this._isPause = true;
                     this._updateWorker.terminate();
 
@@ -145,6 +146,7 @@ define([
                     var loseButton = new GUI.Button("RETRY", "center",
                         null, "RETRY", 
                         {
+                            size_override: false,
                             active: true,
                             bitmap: true, 
                             font: 30 / this._small + "px Cyberdyne Expanded", 
@@ -328,12 +330,16 @@ define([
         this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
         
         var temp = null;
+
+        console.log(this._guiStage._elements);
         
         //Mouse clicks handling
         for(let j = 0; j < clicks.length; j += 1){
             for(let i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
+                console.log(`${clicks[j].x}:${clicks[j].y}`);
                 if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                    console.log('click');
                     temp.triggerCallback();
                 }
             }

@@ -1,0 +1,196 @@
+{
+    "frames": [
+        "c1_c2_eye",
+        "c1_c2_hands",
+        "c1_c2_obdugun",
+        "c1_c2_platypus",
+        "c1_c2_rodo",
+        "c1_c2_test",
+        "c1_c2_what",
+        "c1_c2_window"
+    ],
+    "music": "bitburner_huntkill",
+    "music_offset": 31,
+    "animations": [
+        {
+            "id": "c1_c2_window",
+            "moveTo": {
+                "x": 126,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_window",
+            "moveTo": {
+                "x": 126,
+                "y": 30,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "c1_c2_obdugun",
+            "moveTo": {
+                "x": 730,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_obdugun",
+            "moveTo": {
+                "x": 730,
+                "y": 30,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "c1_c2_eye",
+            "moveTo": {
+                "x": 126,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_eye",
+            "moveTo": {
+                "x": 126,
+                "y": 408,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "c1_c2_what",
+            "moveTo": {
+                "x": 556,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_what",
+            "moveTo": {
+                "x": 556,
+                "y": 426,
+                "time": 1000,
+                "wait": 4000
+            }
+        },
+        {
+            "id": "c1_c2_window",
+            "moveTo": {
+                "x": 126,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_obdugun",
+            "moveTo": {
+                "x": 730,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_eye",
+            "moveTo": {
+                "x": 126,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_what",
+            "moveTo": {
+                "x": 556,
+                "y": -1000,
+                "time": 500,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_rodo",
+            "moveTo": {
+                "x": 90,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_rodo",
+            "moveTo": {
+                "x": 90,
+                "y": 37,
+                "time": 1000,
+                "wait": 1000
+            }
+        },
+        {
+            "id": "c1_c2_platypus",
+            "moveTo": {
+                "x": 570,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_platypus",
+            "moveTo": {
+                "x": 570,
+                "y": 30,
+                "time": 1000,
+                "wait": 5200
+            }
+        },
+        {
+            "id": "c1_c2_test",
+            "moveTo": {
+                "x": 40,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_test",
+            "moveTo": {
+                "x": 40,
+                "y": 380,
+                "time": 1000,
+                "wait": 8200
+            }
+        },
+        {
+            "id": "c1_c2_hands",
+            "moveTo": {
+                "x": 840,
+                "y": 2000,
+                "time": 0,
+                "wait": 0
+            }
+        },
+        {
+            "id": "c1_c2_hands",
+            "moveTo": {
+                "x": 840,
+                "y": 416,
+                "time": 1000,
+                "wait": 2000
+            }
+        }
+    ]
+}

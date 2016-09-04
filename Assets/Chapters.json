@@ -18,6 +18,10 @@
             {
                 "type": "level",
                 "name": "C1_L3"
+            },
+            {
+                "type": "cinematic",
+                "name": "c1_c2"
             }
         ]
     }

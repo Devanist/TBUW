@@ -91,7 +91,7 @@ function(Screen, cfg, GUI, Utils){
      */
     _p.update = function(keysState, clicks, touches){
 
-        var i,j;
+        var i = 0,j = 0, temp;
         //Keyboard handling
         if(keysState.ARROW_DOWN || keysState.S){
             if(this._buttonPressedDown === false){
@@ -101,7 +101,7 @@ function(Screen, cfg, GUI, Utils){
                         j = 0;
                     }
                     temp = this._stage._elements[j];
-                    if(temp !== undefined &&  temp !== null && temp.isEnabled() && temp.isActive()){
+                    if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
                         i = 1;
@@ -127,14 +127,14 @@ function(Screen, cfg, GUI, Utils){
                         j = this._stage._elements.length - 1;
                     }
                     temp = this._stage._elements[j];
-                    if(temp.isEnabled() && temp.isActive()){
+                    if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
                         i = 1;
                         j-=1;
                         continue;
                     }
-                    if(i == 1 && temp.isEnabled()){
+                    if(i == 1 && temp !== undefined && temp !== null && temp.isEnabled()){
                         temp._data.active = true;
                         i = 2;
                     }
@@ -148,7 +148,7 @@ function(Screen, cfg, GUI, Utils){
         if(keysState.ENTER){
             for(i = 0; i < this._stage._elements.length; i+=1){
                 temp = this._stage._elements[i];
-                if(temp.isActive()){
+                if(temp !== null && temp !== undefined && temp.isActive()){
                     temp.triggerCallback();
                 }
             }

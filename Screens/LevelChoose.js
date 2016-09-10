@@ -133,14 +133,14 @@ function(Screen, GUI, Utils){
                         j = this._stage._elements.length - 1;
                     }
                     temp = this._stage._elements[j];
-                    if(temp.isEnabled() && temp.isActive()){
+                    if(temp !== null && temp !== undefined && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
                         i = 1;
                         j-=1;
                         continue;
                     }
-                    if(i === 1 && temp.isEnabled()){
+                    if(i === 1 && temp !== null && temp !== undefined && temp.isEnabled()){
                         temp._data.active = true;
                         i = 2;
                     }
@@ -154,7 +154,7 @@ function(Screen, GUI, Utils){
         if(keysState.ENTER){
             for(let i = 0; i < this._stage._elements.length; i+=1){
                 temp = this._stage._elements[i];
-                if(temp.isActive()){
+                if(temp !== null && temp !== undefined && temp.isActive()){
                     temp.triggerCallback();
                 }
             }

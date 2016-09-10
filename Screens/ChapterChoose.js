@@ -101,14 +101,14 @@ function(Screen, cfg, GUI, Utils){
                         j = 0;
                     }
                     temp = this._stage._elements[j];
-                    if(temp.isEnabled() && temp.isActive()){
+                    if(temp !== undefined &&  temp !== null && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
                         i = 1;
                         j+=1;
                         continue;
                     }
-                    if(i == 1 && temp.isEnabled()){
+                    if(i == 1 && temp !== null && temp !== undefined && temp.isEnabled()){
                         temp._data.active = true;
                         i = 2;
                     }

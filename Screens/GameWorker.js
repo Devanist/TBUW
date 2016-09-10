@@ -200,6 +200,9 @@ self.onmessage = function(e){
     if(PLAYER.position.x < 0){
         PLAYER.position.x = 0;
     }
+    else if (PLAYER.position.endX > world.LEVEL_END_X) {
+        PLAYER.position.x = world.LEVEL_END_X - PLAYER.size.w - 1;
+    }
     
     //PARALLAX
     if(PLAYER.position.x > CAMERA_OFFSET){

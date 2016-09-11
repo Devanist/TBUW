@@ -4,6 +4,6 @@ require.config({
         text: 'lib/text',
         jquery: 'lib/jquery-2.2.3.min'
     },
-    baseUrl: '/'
+    baseUrl: '.'
 });
 require(["main"]);

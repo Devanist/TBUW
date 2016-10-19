@@ -652,6 +652,12 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         temp = new Entities.LasersFromGround(e.id);
                     }
                     temp.setPosition(e.position);
+                    if(e.anchor === undefined || e.anchor === null){
+                        e.anchor = {
+                            x: 0,
+                            y: 0
+                        };
+                    }
                     temp.setAnchor(e.anchor);
                     this._gameStage.add(temp);
                     

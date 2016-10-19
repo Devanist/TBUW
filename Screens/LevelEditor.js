@@ -326,12 +326,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 }
             }
             that._level.entities.splice(index, 1);
-            console.log(that._level.entities);
             $("#el_"+deletingId).remove();
 
             that.updateStage("game");
-
-            console.log(that._gameStage);
 
         });
 
@@ -354,7 +351,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             var movingId = parseInt(e.target.id.substring(5));
             var movingIndex = that.getElementIndex(movingId);
             
-            console.log(that._level.entities[movingIndex]);
             $("#el_"+movingId).insertAfter("#el_" + that._level.entities[movingIndex + 1].id);
 
             var movingElement = that._level.entities.splice(movingIndex, 1)[0];
@@ -569,13 +565,13 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         }.bind(this));
 
         $("#anchor-x").on("change", function(){
-            this._selectedElement.anchor.x = $("#anchor-x").val();
-            this.updateStage();
+            this._selectedElement.anchor.x = parseFloat( $("#anchor-x").val() );
+            this.updateStage("game");
         }.bind(this));
 
         $("#anchor-y").on("change", function(){
-            this._selectedElement.anchor.y = $('#anchor-y').val();
-            this.updateStage();
+            this._selectedElement.anchor.y = parseFloat( $('#anchor-y').val() );
+            this.updateStage("game");
         }.bind(this));
 
         $("#factor").on("change", function(){
@@ -656,7 +652,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         temp = new Entities.LasersFromGround(e.id);
                     }
                     temp.setPosition(e.position);
-                    console.log(e.anchor);
                     temp.setAnchor(e.anchor);
                     this._gameStage.add(temp);
                     

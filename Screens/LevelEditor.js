@@ -229,7 +229,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 anchor: {
                     x: 0,
                     y: 0
-                }
+                },
+                rotation: 0
             };
             $("#message_box").text("").removeClass();
             $("#details_box").hide();
@@ -367,6 +368,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
             $("#position-x").val(that._selectedElement.position.x);
             $("#position-y").val(that._selectedElement.position.y);
+            $("#anchor-x").val(that._selectedElement.anchor.x);
+            $("#anchor-y").val(that._selectedElement.anchor.y);
+            $("#rotation").val(that._selectedElement.rotation);
             $("#entities_list").val(that._selectedElement.type);
             $("#assets").val(that._selectedElement.texture);
             $("#factor").show().val("");
@@ -419,7 +423,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 '<label>X:</label><input type="text" id="position-x">'+
                 '<label>Y:</label><input type="text" id="position-y">'+
                 '<label>Anchor X:</label><input type="text" id="anchor-x" value="0">' +
-                '<label>Anchor Y:</label><input type="text" id="anchor-y" value="0">' +
+                '<label>Anchor Y:</label><input type="text" id="anchor-y" value="0"><br/>' +
+                '<label>Rotation factor</label><input type="text" id="rotation">' +
                 '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
                 '<label id="value_label">Value:</label><input type="number" id="value">' +
             '</section>'
@@ -574,6 +579,10 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             this.updateStage("game");
         }.bind(this));
 
+        $("#rotation").on("change", function(){
+            this._selectedElement.rotation = parseFloat( $("#rotation").val() );
+        }.bind(this));
+
         $("#factor").on("change", function(){
             this._selectedElement.factor = parseFloat( $("#factor").val() );
         }.bind(this));
@@ -659,6 +668,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         };
                     }
                     temp.setAnchor(e.anchor);
+                    temp.setRotationAngle(e.rotation);
                     this._gameStage.add(temp);
                     
                 }

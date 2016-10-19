@@ -330,8 +330,6 @@ define([
         this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
         
         var temp = null;
-
-        console.log(this._guiStage._elements);
         
         //Mouse clicks handling
         for(let j = 0; j < clicks.length; j += 1){

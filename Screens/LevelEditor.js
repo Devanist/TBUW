@@ -224,6 +224,10 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 texture: null,
                 position: {
                     x: 0,
+                    y: 0,
+                },
+                anchor: {
+                    x: 0,
                     y: 0
                 }
             };
@@ -321,12 +325,13 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     index = i;
                 }
             }
-            console.log(that._level.entities);
             that._level.entities.splice(index, 1);
+            console.log(that._level.entities);
             $("#el_"+deletingId).remove();
 
-            that.updateStage("background");
             that.updateStage("game");
+
+            console.log(that._gameStage);
 
         });
 
@@ -417,6 +422,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             '<section id="details_box">'+
                 '<label>X:</label><input type="text" id="position-x">'+
                 '<label>Y:</label><input type="text" id="position-y">'+
+                '<label>Anchor X:</label><input type="text" id="anchor-x" value="0">' +
+                '<label>Anchor Y:</label><input type="text" id="anchor-y" value="0">' +
                 '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
                 '<label id="value_label">Value:</label><input type="number" id="value">' +
             '</section>'
@@ -493,12 +500,14 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     $("#elements_list").append('<li id="el_' + this._curId +'">' +
                     '<img class="elementUp" title="Move this element up" id="up_' + this._curId + '" src="Assets/Editor/up.png">' +
                     '<img class="elementDown" title="Move this element down" id="down_' + this._curId + '" src="Assets/Editor/down.png">' + 
-                    '<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/><label id="ll_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</label></li>');
+                    '<img class="removeElement" title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/><label id="ll_' + this._curId +'">' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y + '</label></li>');
                 }
 
                 $("#infotext").text(this.MESSAGES.EDITING_ELEMENT + this._curId);
                 $("#position-x").val(this._selectedElement.position.x);
                 $("#position-y").val(this._selectedElement.position.y);
+                $("#anchor-x").val(this._selectedElement.anchor.x);
+                $("#anchor-y").val(this._selectedElement.anchor.y);
                 $("#details_box").show();
                 this.updateStage("game");
             }
@@ -523,7 +532,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){
                         this._gameStage._elements[i]._sprite.texture = new PIXI.Texture.fromFrame($("#assets option:selected").val());
-                        $("#el_"+this._curId).html('<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                        $("#el_"+this._curId).html('<img class="removeElement" title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._curId + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                         break;
                     }
                 }
@@ -540,7 +549,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     this._gameStage._elements[i]._sprite.position.x = $("#position-x").val();
                     $("#el_"+this._selectedElement.id).html('<img class="elementUp" title="Move this element up" id="up_' + this._selectedElement.id + '" src="Assets/Editor/up.png">' +
                     '<img class="elementDown" title="Move this element down" id="down_' + this._selectedElement.id + '" src="Assets/Editor/down.png">' + 
-                    '<img title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    '<img class="removeElement" title="Remove this element" id="remove_' + this._curId + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }
@@ -553,10 +562,20 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     this._gameStage._elements[i]._sprite.position.y = $("#position-y").val();
                     $("#el_"+this._selectedElement.id).html('<img class="elementUp" title="Move this element up" id="up_' + this._selectedElement.id + '" src="Assets/Editor/up.png">' +
                     '<img class="elementDown" title="Move this element down" id="down_' + this._selectedElement.id + '" src="Assets/Editor/down.png">' + 
-                    '<img title="Remove this element" id="remove_' + this._selectedElement.id + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
+                    '<img class="removeElement" title="Remove this element" id="remove_' + this._selectedElement.id + '" src="Assets/Editor/cross.png"/>' + this._selectedElement.id + ": " + this._selectedElement.type + '::' + this._selectedElement.texture + ' - X:' + this._selectedElement.position.x + 'Y: ' + this._selectedElement.position.y);
                     break;
                 }
             }
+        }.bind(this));
+
+        $("#anchor-x").on("change", function(){
+            this._selectedElement.anchor.x = $("#anchor-x").val();
+            this.updateStage();
+        }.bind(this));
+
+        $("#anchor-y").on("change", function(){
+            this._selectedElement.anchor.y = $('#anchor-y').val();
+            this.updateStage();
         }.bind(this));
 
         $("#factor").on("change", function(){
@@ -576,16 +595,16 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
     _p.update = function(keysState){
 
         if(keysState.ARROW_LEFT){
-            this._gameStage.getStage().position.x -= 100;
-        }
-        if(keysState.ARROW_RIGHT){
             this._gameStage.getStage().position.x += 100;
         }
+        if(keysState.ARROW_RIGHT){
+            this._gameStage.getStage().position.x -= 100;
+        }
         if(keysState.ARROW_UP){
-            this._gameStage.getStage().position.y -= 50;
+            this._gameStage.getStage().position.y += 50;
         }
         if(keysState.ARROW_DOWN){
-            this._gameStage.getStage().position.y += 50;
+            this._gameStage.getStage().position.y -= 50;
         }
         
        window.innerHeight = 600;
@@ -637,6 +656,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         temp = new Entities.LasersFromGround(e.id);
                     }
                     temp.setPosition(e.position);
+                    console.log(e.anchor);
+                    temp.setAnchor(e.anchor);
                     this._gameStage.add(temp);
                     
                 }

@@ -364,6 +364,10 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         $("body").on("click", "ul#elements_list li label", function(e){
             that._curId = e.target.id.substring(3);
             that._selectedElement = that.getElement(that._curId);
+
+            that._gameStage.getStage().position.x = -that._selectedElement.position.x;
+            that._gameStage.getStage().position.y = -that._selectedElement.position.y;
+
             $("#message_box").text("").removeClass();
             $("#infotext").text(that.MESSAGES.EDITING_ELEMENT + that._curId);
             $("#position-x").val(that._selectedElement.position.x);

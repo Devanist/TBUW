@@ -23,6 +23,11 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         
         this.appendAssetsLibrary();
         this.appendToolBox();
+
+        this.startClick = {
+            x: 0,
+            y: 0
+        };
         
         this._level = {
             name : "",
@@ -416,6 +421,22 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             }
 
             $("#details_box").show();
+        });
+
+        $("canvas").on("mousedown", function(e){
+            if(e.button === 1){
+                that.startClick.x = e.clientX;
+                that.startClick.y = e.clientY;
+            }
+        });
+
+        $("canvas").on("mousemove", function(e){
+            if(e.button === 1){
+                that._gameStage.getStage().position.x += e.clientX - that.startClick.x;
+                that._gameStage.getStage().position.y += e.clientY - that.startClick.y;
+                that.startClick.x = e.clientX;
+                that.startClick.y = e.clientY;
+            }
         });
         
     };

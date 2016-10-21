@@ -377,23 +377,40 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             $("#factor_label").show();
             $("#value").show().val("");
             $("#value_label").hide();
-            if(that._selectedElement.type !== "Background" && that._selectedElement.type !== "BlockCoin"){
-                $("#factor").hide();
-                $("#factor_label").hide();
-                $("#value").hide();
-                $("#value_label").hide();
-            }
-            else if(that._selectedElement.type === "Background"){
+    
+            if(that._selectedElement.type === "Background"){
                 $("#factor").val(that._selectedElement.factor);
                 $("#value").hide();
                 $("#value_label").hide();
+                $("#MPPosition").hide();
             }
             else if(that._selectedElement.type === "BlockCoin"){
                 $("#factor").hide();
                 $("#factor_label").hide();
                 $("#value").val(that._selectedElement.quantity);
                 $("#value, #value_label").show();
+                $("#MPPosition").hide();
             }
+            else if(that._selectedElement.type === "MovingPlatform"){
+                console.log('MP');
+                $("#factor").hide();
+                $("#factor_label").hide();
+                $("#value").hide();
+                $("#value_label").hide();
+                $("#MPPosition").show();
+                $("#startPosX").val(that._selectedElement.startPos.x);
+                $("#startPosY").val(that._selectedElement.startPos.y);
+                $("#endPosX").val(that._selectedElement.endPos.x);
+                $("#endPosY").val(that._selectedElement.endPos.y);
+            }
+            else{
+                $("#factor").hide();
+                $("#factor_label").hide();
+                $("#value").hide();
+                $("#value_label").hide();
+                $("#MPPosition").hide();
+            }
+
             $("#details_box").show();
         });
         
@@ -420,14 +437,14 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 '<img id="sprite_preview" src="Assets/Editor/No_image.png"/>' + 
             '</section>' +
             '<section id="details_box">'+
-                '<label>X:</label><input type="text" id="position-x">'+
-                '<label>Y:</label><input type="text" id="position-y">'+
-                '<label>Anchor X:</label><input type="text" id="anchor-x" value="0">' +
-                '<label>Anchor Y:</label><input type="text" id="anchor-y" value="0"><br/>' +
-                '<label>Rotation factor</label><input type="text" id="rotation">' +
-                '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
+                '<label>X:</label><input type="number" id="position-x">'+
+                '<label>Y:</label><input type="number" id="position-y">'+
+                '<label>Anchor X:</label><input type="number" id="anchor-x" value="0">' +
+                '<label>Anchor Y:</label><input type="number" id="anchor-y" value="0"><br/>' +
+                '<label>Rotation factor</label><input type="number" id="rotation">' +
+                '<label id="factor_label">Factor:</label><input type="number" id="factor">' +
                 '<label id="value_label">Value:</label><input type="number" id="value">' +
-                '<section id="MPPosition">' +
+                '<br/><section id="MPPosition">' +
                     '<label>Start position X:</label><input type="number" id="startPosX">'+
                     '<label>Start position Y:</label><input type="number" id="startPosY">'+
                     '<label>End position X:</label><input type="number" id="endPosX">'+
@@ -518,6 +535,14 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         x: this._selectedElement.position.x,
                         y: this._selectedElement.position.y
                     };
+                    this._selectedElement.endPos = {
+                        x: this._selectedElement.position.x,
+                        y: this._selectedElement.position.y
+                    };
+                    $("#startPosX").val(this._selectedElement.position.x);
+                    $("#startPosY").val(this._selectedElement.position.y);
+                    $("#endPosX").val(this._selectedElement.position.x);
+                    $("#endPosY").val(this._selectedElement.position.y);
                 }
                 
                 this._level.entities.push(this._selectedElement);
@@ -533,6 +558,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 $("#position-y").val(this._selectedElement.position.y);
                 $("#anchor-x").val(this._selectedElement.anchor.x);
                 $("#anchor-y").val(this._selectedElement.anchor.y);
+                $("#rotation").val(this._selectedElement.rotation);
                 $("#details_box").show();
                 this.updateStage("game");
             }
@@ -614,6 +640,22 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         $("#value").on("change", function(){
             this._selectedElement.quantity = parseInt( $("#value").val() );
         }.bind(this));
+
+        $("#startPosX").on("change", function(){
+            this._selectedElement.startPos.x = $(this).val();
+        });
+
+        $("#startPosY").on("change", function(){
+            this._selectedElement.startPos.y = $(this).val();
+        });
+
+        $("#endPosX").on("change", function(){
+            this._selectedElement.endPos.x = $(this).val();
+        });
+
+        $("#endPosY").on("change", function(){
+            this._selectedElement.endPos.y = $(this).val();
+        });
         
     };
     

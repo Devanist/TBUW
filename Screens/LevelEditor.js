@@ -427,6 +427,12 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 '<label>Rotation factor</label><input type="text" id="rotation">' +
                 '<label id="factor_label">Factor:</label><input type="text" id="factor">' +
                 '<label id="value_label">Value:</label><input type="number" id="value">' +
+                '<section id="MPPosition">' +
+                    '<label>Start position X:</label><input type="number" id="startPosX">'+
+                    '<label>Start position Y:</label><input type="number" id="startPosY">'+
+                    '<label>End position X:</label><input type="number" id="endPosX">'+
+                    '<label>End position Y:</label><input type="number" id="endPosY">'+
+                '</section>'+
             '</section>'
         );
         
@@ -458,6 +464,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     $("#factor_label").show();
                     $("#value").hide();
                     $("#value_label").hide();
+                    $("#MPPosition").hide();
                 }
                 else if($("#entities_list").val() === "BlockCoin"){
                     delete this._selectedElement.factor;
@@ -465,14 +472,25 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     $("#factor_label").hide();
                     $("#value").val(1);
                     $("#value, #value_label").show();
+                    $("#MPPosition").hide();
                 }
-                else{
+                else if($("#entities_list").val() === "MovingPlatform"){
+                    delete this._selectedElement.quantity;
+                    this._selectedElement.factor = 0;
+                    $("#factor").show().val(0);
+                    $("#factor_label").show();
+                    $("#value").hide();
+                    $("#value_label").hide();
+                    $("#MPPosition").show();
+                }
+                else {
                     delete this._selectedElement.factor;
                     delete this._selectedElement.quantity;
                     $("#factor").hide().val("");
                     $("#factor_label").hide();
                     $("#value").hide();
                     $("#value_label").hide();
+                    $("#MPPosition").hide();
                 }
             }
         }.bind(this));
@@ -494,6 +512,12 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 }
                 else if(this._selectedElement.type === "BlockCoin"){
                     this._selectedElement.quantity = 1;
+                }
+                else if(this._selectedElement.type === "MovingPlatform"){
+                    this._selectedElement.startPos = {
+                        x: this._selectedElement.position.x,
+                        y: this._selectedElement.position.y
+                    };
                 }
                 
                 this._level.entities.push(this._selectedElement);
@@ -599,18 +623,22 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
     
     _p.update = function(keysState){
 
-        if(keysState.ARROW_LEFT){
-            this._gameStage.getStage().position.x += 100;
-        }
-        if(keysState.ARROW_RIGHT){
-            this._gameStage.getStage().position.x -= 100;
-        }
-        if(keysState.ARROW_UP){
-            this._gameStage.getStage().position.y += 50;
-        }
-        if(keysState.ARROW_DOWN){
-            this._gameStage.getStage().position.y -= 50;
-        }
+        if(keysState.CTRL){
+
+            if(keysState.ARROW_LEFT){
+                this._gameStage.getStage().position.x += 100;
+            }
+            if(keysState.ARROW_RIGHT){
+                this._gameStage.getStage().position.x -= 100;
+            }
+            if(keysState.ARROW_UP){
+                this._gameStage.getStage().position.y += 50;
+            }
+            if(keysState.ARROW_DOWN){
+                this._gameStage.getStage().position.y -= 50;
+            }
+
+        }        
         
        window.innerHeight = 600;
        window.innerWidth = 960;
@@ -656,6 +684,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     }
                     else if(e.type === "PositionField"){
                         temp = new Entities.PositionField(e.id);
+                    }
+                    else if(e.type === "MovingPlatform"){
+                        temp = new Entities.MovingPlatform(e.id, PIXI.Texture.fromFrame(e.texture), e.startPos, e.endPos, e.time);
                     }
                     else if(e.type === "LasersFromGround"){
                         temp = new Entities.LasersFromGround(e.id);

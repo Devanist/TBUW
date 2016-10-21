@@ -293,13 +293,18 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     $("#enableBlockCoin").prop("checked", true);
                     $("#wcBlockCoin").val(that.getWinCondition("BlockCoin"));
                     $("#wcBlockCoin").prop("enabled", "");
+                    $("#wcBlockCoin").removeAttr("disabled");
                 }
                 if(that.getWinCondition("position")){
                     $("#enablePosition").prop("checked", true);
                     $("#wcPositionXL").prop("enabled", "");
+                    $("#wcPositionXL").removeAttr("disabled");
                     $("#wcPositionXR").prop("enabled", "");
+                    $("#wcPositionXR").removeAttr("disabled");
                     $("#wcPositionYL").prop("enabled", "");
+                    $("#wcPositionYL").removeAttr("disabled");
                     $("#wcPositionYR").prop("enabled", "");
+                    $("#wcPositionYR").removeAttr("disabled");
                     $("#wcPositionXL").val(that.getWinCondition("position").lu.x);
                     $("#wcPositionYL").val(that.getWinCondition("position").lu.y);
                     $("#wcPositionXR").val(that.getWinCondition("position").rd.x);

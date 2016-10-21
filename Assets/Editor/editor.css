@@ -109,3 +109,6 @@ body {
 #elementsListPanel *{
     margin-left: 10px;
 }
+#details_box input{
+    width: 60px;
+}

@@ -474,6 +474,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                     '<label>Start position Y:</label><input type="number" id="startPosY">'+
                     '<label>End position X:</label><input type="number" id="endPosX">'+
                     '<label>End position Y:</label><input type="number" id="endPosY">'+
+                    '<label>Show element in end position</label><input type="checkbox" id="showInEndPosition">' +
                 '</section>'+
             '</section>'
         );
@@ -680,6 +681,17 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         $("#endPosY").on("change", function(){
             this._selectedElement.endPos.y = $(this).val();
+        });
+
+        $("#showInEndPosition").on("change", function(){
+            if($(this).is(':checked')){
+                console.log('end')
+                that._gameStage.getElement(that._selectedElement.id).setPosition({x: that._selectedElement.endPos.x, y: that._selectedElement.endPos.y});
+            }
+            else{
+                console.log('start')
+                that._gameStage.getElement(that._selectedElement.id).setPosition({x: that._selectedElement.startPos.x, y: that._selectedElement.startPos.y});
+            }
         });
         
     };

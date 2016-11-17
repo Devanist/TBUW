@@ -69,12 +69,12 @@ self.onmessage = function(e){
         if(PLAYER.state.inAir === false){
             PLAYER.state.inAir = true;
             PLAYER.velocity.y -= 16 / world.SMALL;
-            world.SOUNDS.push("jump");
+            world.SOUNDS.push({name: "jump"});
         }
         else if(PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true){
             PLAYER.state.doubleJumped = true;
             PLAYER.velocity.y -= 14 / world.SMALL;
-            world.SOUNDS.push("jump");
+            world.SOUNDS.push({name: "jump"});
         }
     }
     if(world.KEYS_STATE.ARROW_DOWN || world.KEYS_STATE.S){

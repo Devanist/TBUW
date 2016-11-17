@@ -40,7 +40,7 @@ function(Screen){
     
     _p.setMusic = function(sound){
         sound.effect = "fadeIn";
-        this._sounds.push(sound);
+        this._sounds.push({name: sound});
     };
 
     _p.update = function(){

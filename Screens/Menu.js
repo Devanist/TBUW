@@ -15,7 +15,7 @@ function(Screen, Stage, GUI, Entities, Utils){
         if(window.innerWidth <= 640){
             this._small = 2;
         }
-        this._sounds = ["home_beforethenight"];
+        this._sounds = [{name: "home_beforethenight"}];
         this._buttonPressedDown = false;
         
         this._background = new Stage();

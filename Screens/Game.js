@@ -174,7 +174,7 @@ define([
                         if(temp.getType() === "BlockCoin"){
                             if(temp._data.toBeRemoved !== undefined){
                                 this._gameStage.remove(anwser.REMOVE_LIST[i]);
-                                this._sounds.push("collect_coin");
+                                this._sounds.push({name: "collect_coin"});
                             }
                             this._player.collectCurrency(temp.collect());
                         }
@@ -376,7 +376,7 @@ define([
                 VCONTROLLER: this._touchController.getState(),
                 GRAVITY: this._GRAVITY,
                 AIR_RES: this._AIR_RES,
-                SOUNDS: [this._music],
+                SOUNDS: [{name: this._music}],
                 PAUSE: this._isPause,
                 ELEMENTS: [],
                 GUI_ELEMENTS: [],

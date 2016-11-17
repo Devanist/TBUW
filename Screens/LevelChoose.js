@@ -26,7 +26,7 @@ function(Screen, GUI, Utils){
         if(window.innerWidth <= 640){
             this._small = 2;
         }
-        this._sounds = ["home_beforethenight"];
+        this._sounds = [{name: "home_beforethenight"}];
         this._sameMusic = false;
 
         this._stage.add(new GUI.Label("RETURN_CHAPTER_CHOOSE_TEXT", {x: 20, y: 10}, "RETURN TO CHOOSING CHAPTER",

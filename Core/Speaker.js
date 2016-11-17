@@ -36,10 +36,16 @@ define(['Core/Utils'], function(Utils){
             }
             for(let i = 0; i < sounds.length; i+=1){
                 t = sounds[i];
-                if(this._soundsLibrary.hasOwnProperty(t) || this._soundsLibrary.hasOwnProperty(t.name)){
-                    if(!this.isSoundPlaying(t) && !this.isSoundPlaying(t.name)){
-                        this.play(t);
+                if(t.stop && (this._soundsLibrary.hasOwnProperty(t.name) || t.name === "all")){
+                    this.stop(t.name);
+                }
+                else if(this._soundsLibrary.hasOwnProperty(t.name)){
+                    if(!this.isSoundPlaying(t.name)){
+                        this.play(t.name);
                     }
+                }
+                else{
+                    console.error("There is no sound like " + t.name);
                 }
             }
         },
@@ -53,7 +59,7 @@ define(['Core/Utils'], function(Utils){
             }
             else if(typeof sound === "object"){
                 node.name = sound.name;
-                offset = sound.offset;
+                offset = sound.offset || 0;
             }
             node.buffer = this._soundsLibrary[node.name];
             if(sound.effect !== undefined){

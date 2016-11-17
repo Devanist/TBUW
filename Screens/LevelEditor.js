@@ -17,6 +17,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
         
+        this._musicPlaying = false;
+        this._sounds = [];
+
         this._canvas = $("canvas")[0];
         
         $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.css"/>');
@@ -110,7 +113,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 '<input id="save_button" type="button" value="Save"/>' + 
                 '<input id="load_button" type="file" value="Load"/><br/>' + 
                 '<div class="toolbox_div">Level background: <select id="level_background" size="1"></select></div>' +
-                '<div class="toolbox_div">Level music: <select id="level_music" size="1"></select></div>' +
+                '<div class="toolbox_div">Level music: <select id="level_music" size="1"></select> <input type="button" id="playMusic" value="Play music"/></div>' +
                 '<div id="winConditionsPanel" class="panelInactive">' +
                     '<span title="Click to edit win conditions."><></span>' +
                     '<div id="winConditionsPanelContent">' +
@@ -149,6 +152,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         $("#level_music").on("change", function(){
             this._level.music = $("#level_music").val();
+            this._sounds.push({name: "all", stop: true});
+            $("#playMusic").val("Play music");
+
         }.bind(this));
 
         $("#enableBlockCoin").on("change", function(){
@@ -168,6 +174,23 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 }
             }
             console.log(this._level.winConditions);
+        }.bind(this));
+
+        $("#playMusic").on("click", function(){
+            this._musicPlaying = !this._musicPlaying;
+            this._sounds = [
+                {
+                    name: $("#level_music").val(), 
+                    stop: !this._musicPlaying
+                }
+            ];
+            if(this._musicPlaying){
+                $("#playMusic").val("Stop music");
+            }
+            else{
+                $("#playMusic").val("Play music");
+            }
+            console.log(this._sounds);
         }.bind(this));
 
         $("#enablePosition").on("change", function(){
@@ -707,6 +730,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
     
     _p.update = function(keysState){
 
+        let soundsToPlay = [].concat(this._sounds);
+        this._sounds = [];
+
         if(keysState.CTRL){
 
             if(keysState.ARROW_LEFT){
@@ -729,7 +755,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
        // this._canvas.setAttribute("height", "600");
        // this._canvas.setAttribute("width", "960");
         
-        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: []};
+        return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: soundsToPlay};
     };
     
     /**

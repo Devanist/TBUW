@@ -3,6 +3,9 @@ body {
     background-color: grey;
     overflow:hidden;
 }
+.hidden{
+    display: none;
+}
 #toolbox{
     position: absolute;
     top: 0;

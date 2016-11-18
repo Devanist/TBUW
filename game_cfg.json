@@ -1,4 +1,4 @@
 {
-    "initScreen": "editor",
+    "initScreen": "guieditor",
     "showBorderLines": false
 }

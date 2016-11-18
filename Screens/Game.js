@@ -264,8 +264,7 @@ define([
         for(let j = 0; j < clicks.length; j += 1){
             for(let i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
-                if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
-                    console.log('click');
+                if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
                     temp.triggerCallback();
                 }
             }

@@ -150,11 +150,12 @@ function(Screen, Stage, GUI, Entities, Utils){
             this._buttonPressedDown = false;
         }
         
-        //Mouse clicks handling`
+        //Mouse clicks handling
+        console.log(clicks[0]);
         for(j = 0; j < clicks.length; j += 1){
             for(i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
-                if(temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                if(temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
                     temp.triggerCallback();
                 }
             }

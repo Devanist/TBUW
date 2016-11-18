@@ -162,7 +162,7 @@ function(Screen, cfg, GUI, Utils){
         for(let j = 0; j < clicks.length; j += 1){
             for(let i = 0; i < this._stage._elements.length; i += 1){
                 temp = this._stage._elements[i];
-                if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
+                if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
                     temp.triggerCallback();
                 }
             }

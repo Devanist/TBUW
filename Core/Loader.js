@@ -276,6 +276,53 @@ define([
                 
             }
             
+        },
+
+        loadGUILayer : function(stage, cfg){
+
+            cfg.children.map(configToElements)
+                .forEach( (el) => {
+                    stage.add(el);
+                });
+
+            function configToElements( obj ){
+
+                let temp;
+
+                let small = 1;
+                if(window.innerWidth <= 640){
+                    small = 2;
+                }
+
+                if(obj.options && obj.options.fontSize && obj.options.fontFamily){
+                    obj.options.font = `${parseInt(obj.options.fontSize) / small}px ${obj.options.fontFamily}`;
+                }
+
+                switch(obj.type){
+                    case "image":
+                        temp = new GUI.Image(obj.id, obj.position, PIXI.Texture.fromFrame(obj.texture));
+                        break;
+                    case "label":
+                        temp = new GUI.Label(obj.id, obj.position, obj.text, obj.options);
+                        break;
+                    case "button":
+                        temp = new GUI.Button(obj.id, obj.position, obj.texture, obj.text, obj.options);
+                        break;
+                    default: 
+                        console.error(`Bad type: ${obj.type}`);
+                        break;
+                }
+
+                if(obj.move){
+                    temp.move(obj.move);
+                }
+                if(obj.visible !== undefined && obj.visible !== null){
+                    temp.display(obj.visible);
+                }
+                return temp;
+
+            }
+
         }
 
     };

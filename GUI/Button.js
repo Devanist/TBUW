@@ -68,6 +68,7 @@ define(['GUI/BaseElement'], function(Base){
 	 */
     _p.setCallback = function(cb){
         this._callback = cb;
+		return this;
     };
     
 	/**
@@ -103,6 +104,17 @@ define(['GUI/BaseElement'], function(Base){
 		this._data.position.y = this._sprite.position.y;
 		this._text.position.x += vec.x;
 		this._text.position.y += vec.y;
+	};
+
+	_p.display = function(b){
+		this._container.visible = b;
+		this._data.enabled = b;
+		return this;
+	};
+
+	_p.active = function(b){
+		this._data.active = b;
+		return this;
 	};
     
 	return Button;

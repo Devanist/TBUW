@@ -4,6 +4,8 @@ define([
     
     var Screen = function(){
         this._stage = new Stage();
+        this._background = new Stage();
+        this._guiStage = new Stage();
         this._sounds = [];
         this.EVENT = {
             RESTART : 'RESTART',
@@ -42,6 +44,10 @@ define([
          */
         getStage : function(){
             return this._stage;
+        },
+
+        getGUIStage : function(){
+            return this._guiStage;
         }
         
     };

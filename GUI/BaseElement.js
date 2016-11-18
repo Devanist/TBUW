@@ -61,6 +61,11 @@ define([], function () {
         getId : function(){
             return this._id;
         },
+
+        display : function(b){
+            this._sprite.visible = b;
+            return this;
+        },
         
         /**
          * Returns main sprite of an element.

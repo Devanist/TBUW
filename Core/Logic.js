@@ -3,8 +3,9 @@ define([
     'Assets/Levels/Levels',
     'Screens/Screens',
     'Assets/Cinematics/Cinematics',
-    'json!game_cfg.json'
-    ], function(Stage, Levels, Screens, Cinematics, cfg){
+    'json!game_cfg.json',
+    'json!Assets/GUI/Game.json'
+    ], function(Stage, Levels, Screens, Cinematics, cfg, GameGUI){
     
     /**
      * Class handling all not-game involved logic like changing screens, updating gfx
@@ -88,6 +89,8 @@ define([
                 this._currentScreen.screen.setEndX(Levels[params.cfg].level_end_x);
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities, cfg.showBorderLines);
+                this._loader.loadGUILayer(this._currentScreen.screen.getGUIStage(), GameGUI);
+                this._currentScreen.screen.everythingLoaded();
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);
             }
             if(screen === "cinematic"){

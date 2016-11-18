@@ -236,13 +236,6 @@ self.onmessage = function(e){
         PLAYER.velocity.x = 0;
     }
     
-    //GUI
-    var l = world.GUI_ELEMENTS.length;
-    for(i = 0; i < l; i+=1){
-        temp = world.GUI_ELEMENTS[i];
-        temp.currentRotationAngle += temp.rotation;
-    }
-    
     l = world.WIN_CONDITIONS.length;
     conditionsMet = 0;
     for(i = 0; i < l; i+=1){

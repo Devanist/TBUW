@@ -14,9 +14,7 @@ define([
      */
     var GameScreen = function(params){
         Screen.call(this);
-        this._background = new Stage();
         this._gameStage = new Stage();
-        this._guiStage = new Stage();
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
@@ -24,6 +22,7 @@ define([
         this._sounds = [];
         this._levelEndX = null;
         this._lose = false;
+        this._won = false;
         this._music = null;
         this._back = params.back;
         this._retry = params;
@@ -69,40 +68,13 @@ define([
             if(anwser.LOSE){
                 this._lose = true;
             }
-            if(anwser.WON && !this._isPause){
+            else if(anwser.WON && !this._isPause){
+                this._won = true;
+                this._guiStage.getElement("pauseBackground").display(true);
+                this._guiStage.getElement("wonLabel").display(true);
+                this._guiStage.getElement("wonButton").display(true).active(true);
+
                 this._isPause = true;
-
-                let background = new GUI.Image("wonBackground", "center", PIXI.Texture.fromFrame("pause"));
-                background.move({x: -20, y: 0});
-                this._guiStage.add(background);
-
-                var wonLabel = new GUI.Label("wonLabel", "center", "MISSION SUCCESSFUL", {
-                    bitmap: true, 
-                    font: 40 / this._small + "px Cyberdyne Expanded", 
-                    fill: 0xff4fff, 
-                    align: "center"
-                });
-                wonLabel.move({x:0, y: -100});
-                this._guiStage.add(wonLabel);
-
-                var wonButton = new GUI.Button("wonButton", "center", null, "SUPERB!", 
-                    {
-                        size_override: false,
-                        active: true,
-                        bitmap: true, 
-                        font: 30 / this._small + "px Cyberdyne Expanded", 
-                        fill: 0xff4fff, 
-                        align: "center"
-                    }, 
-                    () => {
-                        this._onUpdateAction = this.EVENT.CHANGE;
-                        this._nextScreen = "level_choose";
-                        this._nextScreenParams = {
-                            cfg: this._back
-                        };
-                    }
-                );
-                this._guiStage.add(wonButton);
             }
             var temp = null;
             this._sounds = anwser.SOUNDS;
@@ -125,42 +97,12 @@ define([
                 }
 
                 if(this._lose === true && !this._isPause){
+                    this._guiStage.getElement("pauseBackground").display(true);
+                    this._guiStage.getElement("LOSE").display(true);
+                    this._guiStage.getElement("RETRY").display(true).active(true);
+                    
                     this._isPause = true;
                     this._updateWorker.terminate();
-
-                    let loseBackground = new GUI.Image("loseBackground", "center", PIXI.Texture.fromFrame("pause"));
-                    loseBackground.move({x:-50, y: 0});
-                    this._guiStage.add(loseBackground);
-
-                    var YouLose = new GUI.Label("LOSE", "center", "YOU LOSE", 
-                        {
-                            bitmap: true, 
-                            font: 40 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xff4fff, 
-                            align: "center"
-                        }
-                    );
-                    YouLose.move({x: 0, y: -100});
-                    this._guiStage.add(YouLose);
-
-                    var loseButton = new GUI.Button("RETRY", "center",
-                        null, "RETRY", 
-                        {
-                            size_override: false,
-                            active: true,
-                            bitmap: true, 
-                            font: 30 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xff4fff, 
-                            align: "center"
-                        }, 
-                        () => {
-                            this._onUpdateAction = this.EVENT.RESTART;
-                            this._nextScreen = "game";
-                            this._nextScreenParams = this._retry;
-                        }
-                    );
-                    loseButton.move({x: 0, y: 0});
-                    this._guiStage.add(loseButton);
                 }
             }
             
@@ -183,15 +125,6 @@ define([
                         
                     }
                 }
-            }
-            
-            for(let i = 0; i < anwser.GUI_ELEMENTS.length; i+=1){
-                temp = this._guiStage._elements[i];
-                temp._data = anwser.GUI_ELEMENTS[i];
-                if(temp.getId() === "blockcoinValue"){
-                    temp.setText(this._player._currencies.getQuantity("BlockCoin"));
-                }
-                temp._sprite.rotation = temp._data.currentRotationAngle;
             }
             
         }.bind(this);
@@ -253,67 +186,63 @@ define([
      * Method that handles situation, when player turns on the pause.
      */
     _p.pauseHandler = function(){
-        if(this._escapeDown){
+        if(this._escapeDown && !this._lose && !this._won){
                 this._isPause = !this._isPause;
                 this._escapeDown = false;
 
                 if(this._isPause === true){
 
-                    let pauseBG = new GUI.Image("pauseBackground", "center", PIXI.Texture.fromFrame("pause"));
-                    pauseBG.move({x: 50, y: 0});
-                    this._guiStage.add(pauseBG);
+                    this._guiStage.getElement("pauseBackground").display(true);
+                    this._guiStage.getElement("pauseLabel").display(true);
+                    this._guiStage.getElement("resumeButton").
+                        display(true).
+                        active(true).
+                        setCallback( 
+                            () => {
+                                this.pauseHandler();
+                            }
+                        );
 
-                    let pauseLabel = new GUI.Label("pauseLabel", "center", "PAUSE",
-                        {
-                                bitmap: true, 
-                                font: 40 / this._small + "px Cyberdyne Expanded", 
-                                fill: 0xff4fff, 
-                                align: "center"
-                        }
-                    );
-                    pauseLabel.move({x: 100, y: -100});
-                    this._guiStage.add(pauseLabel);
-
-                    let resumeButton = new GUI.Button("resumeButton", "center", null, "RESUME", {
-                            active: true,
-                            size_override: false,
-                            bitmap: true, 
-                            font: 40 / this._small + "px Cyberdyne Expanded", 
-                            fill: 0xff4fff, 
-                            align: "center"
-                        },
-                        () => {
-                            this._escapeDown = true;
-                            this.pauseHandler();
-                    });
-                    resumeButton.move({x:20, y: 50});
-                    this._guiStage.add(resumeButton);
-
-                    let returnButton = new GUI.Button("returnButton", "center", null, "ABANDON", {
-                            size_override: false,
-                            bitmap: true,
-                            font: 40 / this._small + "px Cyberdyne Expanded",
-                            fill: 0xff4fff,
-                            align: "center"
-                        },
-                        () => {
-                            this._onUpdateAction = this.EVENT.CHANGE;
-                            this._nextScreen = "level_choose";
-                            this._nextScreenParams = {
-                                cfg: this._back
-                            };
-                    });
-                    returnButton.move({x: 0, y: 100});
-                    this._guiStage.add(returnButton);
+                    this._guiStage.getElement("returnButton").
+                        display(true).
+                        setCallback(
+                            () => {
+                                    this._onUpdateAction = this.EVENT.CHANGE;
+                                    this._nextScreen = "level_choose";
+                                    this._nextScreenParams = {
+                                        cfg: this._back
+                                    };
+                            }
+                        );
                 }
                 else{
-                    this._guiStage.remove("pauseBackground");
-                    this._guiStage.remove("pauseLabel");
-                    this._guiStage.remove("resumeButton");
-                    this._guiStage.remove("returnButton");
+                    this._guiStage.getElement("pauseBackground").display(false);
+                    this._guiStage.getElement("pauseLabel").display(false);
+                    this._guiStage.getElement("resumeButton").display(false);
+                    this._guiStage.getElement("returnButton").display(false);
                 }
 
             }
+    };
+
+    _p.everythingLoaded = function(){
+        this._guiStage.getElement("wonButton").setCallback(
+            () => {
+                this._onUpdateAction = this.EVENT.CHANGE;
+                this._nextScreen = "level_choose";
+                this._nextScreenParams = {
+                    cfg: this._back
+                };
+            }
+        );
+
+        this._guiStage.getElement("RETRY").setCallback(
+            () => {
+                this._onUpdateAction = this.EVENT.RESTART;
+                this._nextScreen = "game";
+                this._nextScreenParams = this._retry;
+            }
+        )
     };
         
     /**
@@ -335,7 +264,6 @@ define([
         for(let j = 0; j < clicks.length; j += 1){
             for(let i = 0; i < this._guiStage._elements.length; i += 1){
                 temp = this._guiStage._elements[i];
-                console.log(`${clicks[j].x}:${clicks[j].y}`);
                 if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].x, y: clicks[j].y})){
                     console.log('click');
                     temp.triggerCallback();
@@ -379,7 +307,6 @@ define([
                 SOUNDS: [{name: this._music}],
                 PAUSE: this._isPause,
                 ELEMENTS: [],
-                GUI_ELEMENTS: [],
                 WIN_CONDITIONS: this._winConditions,
                 PLAYER_CURRENCIES : {}
             };
@@ -396,10 +323,13 @@ define([
                 data.ELEMENTS.push(temp._data); 
             }
             
-            for(let i = 0; i < this._guiStage._elements.length; i+=1){
-                temp = this._guiStage._elements[i];
-                data.GUI_ELEMENTS.push(temp._data);
-            }
+            this._guiStage._elements.forEach( (temp) => {
+                temp._data.currentRotationAngle += temp._data.rotation;
+                temp._sprite.rotation = temp._data.currentRotationAngle;
+                if(temp.getId() === "blockcoinValue" && this._player){
+                    temp.setText(this._player._currencies.getQuantity("BlockCoin"));
+                }
+            });
             
             this._updateWorker.postMessage(JSON.stringify(data));
         
@@ -416,14 +346,14 @@ define([
                         }
                         temp = this._guiStage._elements[j];
                         if(temp.isEnabled() && temp.isActive()){
-                            temp._data.active = false;
+                            temp.active(false);
                             temp._text.filters = null;
                             i = 1;
                             j+=1;
                             continue;
                         }
                         if(i == 1 && temp.isEnabled()){
-                            temp._data.active = true;
+                            temp.active(true);
                             i = 2;
                         }
                         else{
@@ -442,14 +372,14 @@ define([
                         }
                         temp = this._guiStage._elements[j];
                         if(temp.isEnabled() && temp.isActive()){
-                            temp._data.active = false;
+                            temp.active(false);
                             temp._text.filters = null;
                             i = 1;
                             j-=1;
                             continue;
                         }
                         if(i == 1 && temp.isEnabled()){
-                            temp._data.active = true;
+                            temp.active(true);
                             i = 2;
                         }
                         else{
@@ -460,12 +390,11 @@ define([
             }
             
             if(keysState.ENTER){
-                for(let i = 0; i < this._guiStage._elements.length; i+=1){
-                    temp = this._guiStage._elements[i];
+                this._guiStage._elements.forEach( (temp) => {
                     if(temp && temp.isActive()){
                         temp.triggerCallback();
                     }
-                }
+                });
             }
             
             if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){

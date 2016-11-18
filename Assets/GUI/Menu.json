@@ -1,0 +1,79 @@
+{
+    "GUI": {
+        "children": [
+            {
+                "type": "button",
+                "id": "new_game",
+                "position": {
+                    "x": 390,
+                    "y": 500
+                },
+                "texture": null,
+                "text": "NEW GAME",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xffffff",
+                    "align": "center"
+                }
+            },
+            {
+                "type": "button",
+                "id": "load_game",
+                "position": {
+                    "x": 390,
+                    "y": 550
+                },
+                "texture": null,
+                "text": "LOAD GAME",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xffffff",
+                    "align": "center"
+                }
+            },
+            {
+                "type": "button",
+                "id": "options",
+                "position": {
+                    "x": 390,
+                    "y": 600
+                },
+                "texture": null,
+                "text": "OPTIONS",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill":"0xffffff",
+                    "align":"center"
+                }
+            }
+        ]
+    },
+    "Background": {
+        "children": [
+            {
+                "type": "image",
+                "id": "background",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "texture": "menu"
+            },
+            {
+                "type": "image",
+                "id": "walluce",
+                "position": "bottom-right",
+                "texture": "walrus_menu"
+            }
+        ]
+    }
+}

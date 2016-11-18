@@ -84,18 +84,20 @@ define([
         initScreen : function(screen, params){
             params = params || {};
             this.setCurrentScreen(screen, params);
+            this._loader.loadGUILayer(this._currentScreen.screen.getGUIStage(), this._currentScreen.screen.getBackgroundStage(), GUILayers[screen]);
             if(screen === "game"){
                 this._currentScreen.screen.setMusic(Levels[params.cfg].music);
                 this._currentScreen.screen.setEndX(Levels[params.cfg].level_end_x);
                 this._loader.loadStageConfig(this._currentScreen.screen.getBackgroundStage(), Levels[params.cfg].background);
                 this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities, cfg.showBorderLines);
-                this._loader.loadGUILayer(this._currentScreen.screen.getGUIStage(), GUILayers[screen]);
-                this._currentScreen.screen.everythingLoaded();
                 this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);
             }
             if(screen === "cinematic"){
                 this._loader.loadCinematicConfig(Cinematics[params.cfg], this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);
             }
+
+            this._currentScreen.screen.everythingLoaded();
+
             this._rootStage.add(this._currentScreen.screen.getStage());
         }
     };

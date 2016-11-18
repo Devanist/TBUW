@@ -19,13 +19,18 @@ define([], function () {
                 };
             }
             else if(position === "bottom-right"){
+                this._sprite.anchor.x = 1;
+                this._sprite.anchor.y = 1;
                 position = {
                     x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4,
                     y: 806,//window.innerHeight / this._sprite.scale.y
                 };
-                console.log(position.x);
-                this._sprite.anchor.x = 1;
-                this._sprite.anchor.y = 1;
+            }
+            else if(position === "top-left"){
+                position = {
+                    x: 0,
+                    y: 0
+                };
             }
         }
         this._sprite.position = position;

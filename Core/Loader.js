@@ -278,11 +278,16 @@ define([
             
         },
 
-        loadGUILayer : function(stage, cfg){
+        loadGUILayer : function(GUI_stage, Background_stage, cfg){
 
-            cfg.children.map(configToElements)
+            cfg.Background.children.map(configToElements).
+                forEach( (el) => {
+                    Background_stage.add(el);
+                });
+
+            cfg.GUI.children.map(configToElements)
                 .forEach( (el) => {
-                    stage.add(el);
+                    GUI_stage.add(el);
                 });
 
             function configToElements( obj ){
@@ -298,15 +303,20 @@ define([
                     obj.options.font = `${parseInt(obj.options.fontSize) / small}px ${obj.options.fontFamily}`;
                 }
 
+                let texture = null;
+                if(obj.texture !== null && obj.texture !== undefined){
+                    texture = PIXI.Texture.fromFrame(obj.texture);
+                }
+
                 switch(obj.type){
                     case "image":
-                        temp = new GUI.Image(obj.id, obj.position, PIXI.Texture.fromFrame(obj.texture));
+                        temp = new GUI.Image(obj.id, obj.position, texture);
                         break;
                     case "label":
                         temp = new GUI.Label(obj.id, obj.position, obj.text, obj.options);
                         break;
                     case "button":
-                        temp = new GUI.Button(obj.id, obj.position, obj.texture, obj.text, obj.options);
+                        temp = new GUI.Button(obj.id, obj.position, texture, obj.text, obj.options);
                         break;
                     default: 
                         console.error(`Bad type: ${obj.type}`);

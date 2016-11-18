@@ -29,17 +29,6 @@ function(Screen, GUI, Utils){
         this._sounds = [{name: "home_beforethenight"}];
         this._sameMusic = false;
 
-        this._stage.add(new GUI.Label("RETURN_CHAPTER_CHOOSE_TEXT", {x: 20, y: 10}, "RETURN TO CHOOSING CHAPTER",
-            {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}));
-
-        this._stage.add(new GUI.Button("RETURN", {x: 80, y: 80}, PIXI.Texture.fromFrame("backarrow"), "", {},
-            function(){
-                this._onUpdateAction = "CHANGE";
-                this._nextScreen = "chapter_choose";
-                this._sameMusic = true;
-            }.bind(this)
-        ));
-
         var temp;
         var num;
         var that = this;
@@ -59,11 +48,10 @@ function(Screen, GUI, Utils){
             if(i === 0){
                 temp._data.active = true;
             }
-            this._stage.add(temp);
+            this._guiStage.add(temp);
         }
 
         function cinematicCallback(){
-            console.log('run cinematic ' + this._id.substr(6));
             that._onUpdateAction = "CHANGE";
             that._nextScreen = "cinematic";
             that._nextScreenParams = {
@@ -73,7 +61,6 @@ function(Screen, GUI, Utils){
         }
 
         function levelCallback(){
-            console.log('run level ' + this._id.substr(6));
             that._onUpdateAction = "CHANGE";
             that._nextScreen = "game";
             that._nextScreenParams = {
@@ -81,6 +68,8 @@ function(Screen, GUI, Utils){
                 back: that._levels
             };
         }
+
+        this._stage.add(this._guiStage);
 
     };
 
@@ -94,6 +83,16 @@ function(Screen, GUI, Utils){
     });
 
     var _p = LevelChoose.prototype;
+
+    _p.everythingLoaded = function(){
+        this._guiStage.getElement("RETURN").setCallback(
+            () => {
+                this._onUpdateAction = "CHANGE";
+                this._nextScreen = "chapter_choose";
+                this._sameMusic = true;
+            }
+        );
+    };
     
     _p.update = function(keysState, clicks, touches){
         var i = 0, j = 0, temp;
@@ -103,10 +102,10 @@ function(Screen, GUI, Utils){
             if(this._buttonPressedDown === false){
                 this._buttonPressedDown = true;
                 while(i !== 2){
-                    if(j === this._stage._elements.length){
+                    if(j === this._guiStage._elements.length){
                         j = 0;
                     }
-                    temp = this._stage._elements[j];
+                    temp = this._guiStage._elements[j];
                     if(temp !== null && temp !== undefined && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
@@ -130,9 +129,9 @@ function(Screen, GUI, Utils){
                 this._buttonPressedDown = true;
                 while(i !== 2){
                     if(j === -1){
-                        j = this._stage._elements.length - 1;
+                        j = this._guiStage._elements.length - 1;
                     }
-                    temp = this._stage._elements[j];
+                    temp = this._guiStage._elements[j];
                     if(temp !== null && temp !== undefined && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
@@ -152,8 +151,8 @@ function(Screen, GUI, Utils){
         }
         
         if(keysState.ENTER){
-            for(let i = 0; i < this._stage._elements.length; i+=1){
-                temp = this._stage._elements[i];
+            for(let i = 0; i < this._guiStage._elements.length; i+=1){
+                temp = this._guiStage._elements[i];
                 if(temp !== null && temp !== undefined && temp.isActive()){
                     temp.triggerCallback();
                 }
@@ -166,8 +165,8 @@ function(Screen, GUI, Utils){
         
         //Mouse clicks handling
         for(let j = 0; j < clicks.length; j += 1){
-            for(let i = 0; i < this._stage._elements.length; i += 1){
-                temp = this._stage._elements[i];
+            for(let i = 0; i < this._guiStage._elements.length; i += 1){
+                temp = this._guiStage._elements[i];
                 if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
                     temp.triggerCallback();
                 }
@@ -177,8 +176,8 @@ function(Screen, GUI, Utils){
         //Touch handling
         if(Utils.isTouchDevice()){           
             for(j = 0; j < touches.length; j += 1){
-                for(i = 0; i < this._stage._elements.length; i += 1){
-                    temp = this._stage._elements[i];
+                for(i = 0; i < this._guiStage._elements.length; i += 1){
+                    temp = this._guiStage._elements[i];
                     if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
                     }                     
@@ -186,8 +185,8 @@ function(Screen, GUI, Utils){
             }
         }
 
-        for(i = 0; i < this._stage._elements.length; i+=1){
-            temp = this._stage._elements[i];
+        for(i = 0; i < this._guiStage._elements.length; i+=1){
+            temp = this._guiStage._elements[i];
             if(temp.isEnabled() && temp.isActive()){
                 if(this._displacement.scale.y < 6){
                     this._displacement.scale.y += 0.1;

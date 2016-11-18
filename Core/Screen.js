@@ -48,6 +48,14 @@ define([
 
         getGUIStage : function(){
             return this._guiStage;
+        },
+
+        /** 
+         * Here place all callbacks for GUI elements that are created by loader from config.
+         * Needs to be overloaded.
+        */
+        everythingLoaded : function(){
+
         }
         
     };

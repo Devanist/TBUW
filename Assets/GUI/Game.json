@@ -1,169 +1,175 @@
 {
-    "type": "stage",
-    "children": [
-        {
-            "type": "image",
-            "id": "portret",
-            "position":{
-                "x": 20, 
-                "y": 20
+    "GUI": {
+        "children": [
+            {
+                "type": "image",
+                "id": "portret",
+                "position":{
+                    "x": 20, 
+                    "y": 20
+                },
+                "texture": "portret"
             },
-            "texture": "portret"
-        },
-        {
-            "type": "image",
-            "id": "blockcoin",
-            "position": {
-                "x": 140,
-                "y": 40
+            {
+                "type": "image",
+                "id": "blockcoin",
+                "position": {
+                    "x": 140,
+                    "y": 40
+                },
+                "texture" : "blockcoin"
             },
-            "texture" : "blockcoin"
-        },
-        {
-            "type": "label",
-            "id": "blockcoinValue",
-            "position": {
-                "x": 190,
-                "y": 58
+            {
+                "type": "label",
+                "id": "blockcoinValue",
+                "position": {
+                    "x": 190,
+                    "y": 58
+                },
+                "text": 0
             },
-            "text": 0
-        },
-        {
-            "type": "image",
-            "id": "pauseBackground",
-            "position": "center",
-            "texture": "pause",
-            "move": {
-                "x": -20,
-                "y": 0
+            {
+                "type": "image",
+                "id": "pauseBackground",
+                "position": "center",
+                "texture": "pause",
+                "move": {
+                    "x": -20,
+                    "y": 0
+                },
+                "visible": false
             },
-            "visible": false
-        },
-        {
-            "type": "label",
-            "id": "wonLabel",
-            "position":"center",
-            "text": "MISSION SUCCESFUL",
-            "options": {
-                "bitmap": true,
-                "fontSize": 40,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align": "center"
+            {
+                "type": "label",
+                "id": "wonLabel",
+                "position":"center",
+                "text": "MISSION SUCCESFUL",
+                "options": {
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "move":{
+                    "x": 0,
+                    "y": -100
+                },
+                "visible": false
             },
-            "move":{
-                "x": 0,
-                "y": -100
+            {
+                "type": "button",
+                "id": "wonButton",
+                "position": "center",
+                "texture": null,
+                "text": "SUPERB!",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 30,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "visible": false
             },
-            "visible": false
-        },
-        {
-            "type": "button",
-            "id": "wonButton",
-            "position": "center",
-            "texture": null,
-            "text": "SUPERB!",
-            "options": {
-                "size_override": false,
-                "bitmap": true,
-                "fontSize": 30,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align": "center"
+            {
+                "type": "label",
+                "id": "LOSE",
+                "position": "center",
+                "text": "YOU LOSE",
+                "options": {
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "move": {
+                    "x": 0,
+                    "y": -100
+                },
+                "visible": false
             },
-            "visible": false
-        },
-        {
-            "type": "label",
-            "id": "LOSE",
-            "position": "center",
-            "text": "YOU LOSE",
-            "options": {
-                "bitmap": true,
-                "fontSize": 40,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align": "center"
+            {
+                "type": "button",
+                "id": "RETRY",
+                "position": "center",
+                "texture": null,
+                "text": "RETRY",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 30,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align":"center"
+                },
+                "visible": false
             },
-            "move": {
-                "x": 0,
-                "y": -100
+            {
+                "type": "label",
+                "id": "pauseLabel",
+                "position": "center",
+                "text": "PAUSE",
+                "options": {
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "move": {
+                    "x": 30,
+                    "y": -100
+                },
+                "visible": false
             },
-            "visible": false
-        },
-        {
-            "type": "button",
-            "id": "RETRY",
-            "position": "center",
-            "texture": null,
-            "text": "RETRY",
-            "options": {
-                "size_override": false,
-                "bitmap": true,
-                "fontSize": 30,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align":"center"
+            {
+                "type": "button",
+                "id" : "resumeButton",
+                "position": "center",
+                "texture": null,
+                "text": "RESUME",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fontSize": 40,
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "move": {
+                    "x": -40,
+                    "y": 50
+                },
+                "visible": false
             },
-            "visible": false
-        },
-        {
-            "type": "label",
-            "id": "pauseLabel",
-            "position": "center",
-            "text": "PAUSE",
-            "options": {
-                "bitmap": true,
-                "fontSize": 40,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align": "center"
-            },
-            "move": {
-                "x": 30,
-                "y": -100
-            },
-            "visible": false
-        },
-        {
-            "type": "button",
-            "id" : "resumeButton",
-            "position": "center",
-            "texture": null,
-            "text": "RESUME",
-            "options": {
-                "size_override": false,
-                "bitmap": true,
-                "fontFamily": "Cyberdyne Expanded",
-                "fontSize": 40,
-                "fill": "0xff4fff",
-                "align": "center"
-            },
-            "move": {
-                "x": -40,
-                "y": 50
-            },
-            "visible": false
-        },
-        {
-            "type": "button",
-            "id": "returnButton",
-            "position": "center",
-            "texture": null,
-            "text": "ABANDON",
-            "options": {
-                "size_override": false,
-                "bitmap": true,
-                "fontSize": 40,
-                "fontFamily": "Cyberdyne Expanded",
-                "fill": "0xff4fff",
-                "align": "center"
-            },
-            "move": {
-                "x": -70,
-                "y": 100
-            },
-            "visible": false
-        }
-    ]
+            {
+                "type": "button",
+                "id": "returnButton",
+                "position": "center",
+                "texture": null,
+                "text": "ABANDON",
+                "options": {
+                    "size_override": false,
+                    "bitmap": true,
+                    "fontSize": 40,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xff4fff",
+                    "align": "center"
+                },
+                "move": {
+                    "x": -70,
+                    "y": 100
+                },
+                "visible": false
+            }
+        ]
+    },
+    "Background": {
+        "children": [
+            
+        ]
+    }
 }

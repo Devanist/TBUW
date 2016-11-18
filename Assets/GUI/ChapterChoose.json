@@ -1,0 +1,38 @@
+{
+    "GUI": {
+        "children": [
+            {
+                "type": "label",
+                "id": "RETURN_MENU_TEXT",
+                "position": {
+                    "x": 20,
+                    "y": 10
+                },
+                "text": "RETURN TO MENU",
+                "options": {
+                    "bitmap": true,
+                    "fontSize": 20,
+                    "fontFamily": "Cyberdyne Expanded",
+                    "fill": "0xffffff",
+                    "align": "center"
+                }
+            },
+            {
+                "type": "button",
+                "id": "RETURN",
+                "position": {
+                    "x": 80,
+                    "y": 80
+                },
+                "texture": "backarrow",
+                "text": "",
+                "options": {}
+            }
+        ]
+    },
+    "Background": {
+        "children": [
+
+        ]
+    }
+}

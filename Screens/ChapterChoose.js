@@ -40,21 +40,11 @@ function(Screen, cfg, GUI, Utils){
             }
         }
 
-        this._stage.add(new GUI.Label("RETURN_MENU_TEXT", {x: 20, y: 10}, "RETURN TO MENU",
-            {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}));
-
-        this._stage.add(new GUI.Button("RETURN", {x: 80, y: 80}, PIXI.Texture.fromFrame("backarrow"), "", {},
-            () => {
-                this._onUpdateAction = "CHANGE";
-                this._nextScreen = "menu";
-            }
-        ));
-
         var that = this;
         var levels;
         for(let i = 0; i < this._chapters.length; i++){
             levels = this._chapters[i].levels;
-            this._stage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", 
+            this._guiStage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", 
             (() => {if(i === 0){ return {active: true};} else { return {};}})(), 
                 ()=> {
                     that._onUpdateAction = "CHANGE";
@@ -64,7 +54,7 @@ function(Screen, cfg, GUI, Utils){
                     };
                 }
             ));
-            this._stage.add(new GUI.Label(this._chapters[i].name + "_label", 
+            this._guiStage.add(new GUI.Label(this._chapters[i].name + "_label", 
                 {
                     x: this._chaptersPositions[i].x - 158,
                     y: this._chaptersPositions[i].y + 120
@@ -73,6 +63,9 @@ function(Screen, cfg, GUI, Utils){
                 {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}
             ));
         }
+
+        this._stage.add(this._guiStage);
+        this._stage.add(this._background);
     };
     
     ChapterChoose.prototype = Object.create(Screen.prototype, {
@@ -86,6 +79,15 @@ function(Screen, cfg, GUI, Utils){
     
     var _p = ChapterChoose.prototype;
 
+    _p.everythingLoaded = function(){
+        this._guiStage.getElement("RETURN").setCallback(
+            () => {
+                this._onUpdateAction = "CHANGE";
+                this._nextScreen = "menu";
+            }
+        );
+    };
+
     /**
      * Method that handles user input and returns information to the application logic.
      */
@@ -97,10 +99,10 @@ function(Screen, cfg, GUI, Utils){
             if(this._buttonPressedDown === false){
                 this._buttonPressedDown = true;
                 while(i != 2){
-                    if(j == this._stage._elements.length){
+                    if(j == this._guiStage._elements.length){
                         j = 0;
                     }
-                    temp = this._stage._elements[j];
+                    temp = this._guiStage._elements[j];
                     if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
@@ -124,9 +126,9 @@ function(Screen, cfg, GUI, Utils){
                 this._buttonPressedDown = true;
                 while(i != 2){
                     if(j == -1){
-                        j = this._stage._elements.length - 1;
+                        j = this._guiStage._elements.length - 1;
                     }
-                    temp = this._stage._elements[j];
+                    temp = this._guiStage._elements[j];
                     if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
                         temp._data.active = false;
                         temp._sprite.filters = null;
@@ -146,8 +148,8 @@ function(Screen, cfg, GUI, Utils){
         }
         
         if(keysState.ENTER){
-            for(i = 0; i < this._stage._elements.length; i+=1){
-                temp = this._stage._elements[i];
+            for(i = 0; i < this._guiStage._elements.length; i+=1){
+                temp = this._guiStage._elements[i];
                 if(temp !== null && temp !== undefined && temp.isActive()){
                     temp.triggerCallback();
                 }
@@ -160,8 +162,8 @@ function(Screen, cfg, GUI, Utils){
         
         //Mouse clicks handling
         for(let j = 0; j < clicks.length; j += 1){
-            for(let i = 0; i < this._stage._elements.length; i += 1){
-                temp = this._stage._elements[i];
+            for(let i = 0; i < this._guiStage._elements.length; i += 1){
+                temp = this._guiStage._elements[i];
                 if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
                     temp.triggerCallback();
                 }
@@ -171,8 +173,8 @@ function(Screen, cfg, GUI, Utils){
         //Touch handling
         if(Utils.isTouchDevice()){           
             for(let j = 0; j < touches.length; j += 1){
-                for(let i = 0; i < this._stage._elements.length; i += 1){
-                    temp = this._stage._elements[i];
+                for(let i = 0; i < this._guiStage._elements.length; i += 1){
+                    temp = this._guiStage._elements[i];
                     if(typeof temp.triggerCallback === "function" && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
                         temp.triggerCallback();
                     }                     
@@ -180,8 +182,8 @@ function(Screen, cfg, GUI, Utils){
             }
         }
 
-        for(let i = 0; i < this._stage._elements.length; i+=1){
-            temp = this._stage._elements[i];
+        for(let i = 0; i < this._guiStage._elements.length; i+=1){
+            temp = this._guiStage._elements[i];
             if(temp.isEnabled() && temp.isActive()){
                 if(this._displacement.scale.y < 6){
                     this._displacement.scale.y += 0.1;

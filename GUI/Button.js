@@ -29,7 +29,7 @@ define(['GUI/BaseElement'], function(Base){
 			this._text = new PIXI.Text(text, style);
 			this._text.anchor.x = 0.5;
 			this._text.anchor.y = 0.5;
-			this._text.position = position;
+			this._text.position = this._sprite.position;
 		}
 		this._container.addChild(this._text);
 		this._sprite.anchor.x = 0.5;

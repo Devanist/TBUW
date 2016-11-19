@@ -713,11 +713,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         $("#showInEndPosition").on("change", function(){
             if($(this).is(':checked')){
-                console.log('end')
                 that._gameStage.getElement(that._selectedElement.id).setPosition({x: that._selectedElement.endPos.x, y: that._selectedElement.endPos.y});
             }
             else{
-                console.log('start')
                 that._gameStage.getElement(that._selectedElement.id).setPosition({x: that._selectedElement.startPos.x, y: that._selectedElement.startPos.y});
             }
         });

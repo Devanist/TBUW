@@ -69,6 +69,14 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 removeClass("hidden");
         });
 
+        $("#elements_list, #bg_elements_list").on("click", (e) => {
+            let stage = "background";
+            if($(e.target).parent().attr("id") === "elements_list"){
+                stage = "gui";
+            }
+            loadElement.call(this, e.target.id, stage);
+        });
+
         $("#load_button").on("change", (e) => {
             let file = e.target.files[0];
             if(!file){
@@ -215,6 +223,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 }
 
                 $("#typeProps").removeClass("hidden");
+                $("#info").text(`Editing ${this._selectedElementLayer} item with id ${this._currentElement.id}`);
                 displayTypeProps(this._currentElement);
 
             }
@@ -408,8 +417,61 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
     }
 
+    function loadElement(id, stage){
+        switch(stage){
+            case "gui":
+                this._currentElement = this._guiElements.find( (item) => {
+                    return id === item.id; 
+                });
+                this._selectedElementLayer = "gui";
+                break;
+            case "background":
+                this._currentElement = this._backgroundElements.find( (item) => {
+                    return id === item.id; 
+                });
+                this._selectedElementLayer = "background";
+                break;
+        }
+        displayTypeProps(this._currentElement);
+        fillInputsFromElement(this._currentElement, this._selectedElementLayer);
+        $("#props, #typeProps").removeClass("hidden");
+        $("#info").text(`Editing ${this._selectedElementLayer} item with id ${this._currentElement.id}`);
+    }
+
+    function fillInputsFromElement(e, l){
+        let layer = "GUI";
+        if(l === "background"){
+            layer = "Background";
+        }
+
+        $("#elem_type").val(e.type);
+        $("#identifier").val(e.id);
+        $("#layer_list").val(layer);
+
+        if(typeof e.position === "string"){
+            $("#positionString").val(e.position).removeAttr("disabled");
+            $("#positionX").val(e.position.x).attr("disabled", "");
+            $("#positionY").val(e.position.y).attr("disabled", "");
+            $("#positionSystem").prop("checked", false);
+        }
+        else{
+            $("#positionX").val(e.position.x).removeAttr("disabled");
+            $("#positionY").val(e.position.y).removeAttr("disabled");
+            $("#positionString").attr("disabled", "");
+            $("#positionSystem").prop("checked", true);
+        }
+
+        if(e.text !== undefined){
+            $("#text").val(e.text);
+        }
+        if(e.texture !== undefined){
+            $("#texture").val(e.texture);
+        }
+
+    }
+
     function stateToList(item){
-        return `<li>${item.id}::${item.type}</li>`;
+        return `<li id="${item.id}">${item.id}::${item.type}</li>`;
     }
 
     function displayTypeProps(item){

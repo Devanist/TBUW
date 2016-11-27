@@ -148,7 +148,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
                     '<input type="text" id="positionString" placeholder="ex. center" value="center"/>' +
                     '<input type="number" id="positionX" value="0" disabled />' +
                     '<input type="number" id="positionY" value="0" disabled />' +
-                    '<label id="textureLabel" class="hidden">Texture: </label><input class="hidden" type="text" id="texture" />' +
+                    '<label id="textureLabel" class="hidden">Texture: </label><select name="assets_list" id="assets" size="1"></select>' +
                     '<label id="textLabel" class="hidden">Text: </label><input class="hidden" type="text" id="text" />' + 
                     '<label id="optionsLabel" class="hidden">Options</label><section class="hidden" id="options">' +
                          '<label id="size_overrideLabel">Size override</label><input type="checkbox" id="size_override" />' +
@@ -166,6 +166,12 @@ function(Screen, Stage, GUI, Spritesheet, $){
         for(let type in GUI){
             if(GUI.hasOwnProperty(type)){
                 $("#types").append(`<option value="${type}">`);
+            }
+        }
+
+        for(var asset in Spritesheet.frames){
+            if(Spritesheet.frames.hasOwnProperty(asset)){
+                $("#assets").append('<option value="' + asset + '">' + asset + '</option>');
             }
         }
 
@@ -277,8 +283,8 @@ function(Screen, Stage, GUI, Spritesheet, $){
             this.updateStage(this._selectedElementLayer);
         });
 
-        $("#texture").on("change", () => {
-            this._currentElement.texture = $("#texture").val();
+        $("#assets").on("change", () => {
+            this._currentElement.texture = $("#assets option:selected").val();
             saveElement.call(this, this._selectedElementLayer);
             this.updateStage(this._selectedElementLayer);
         });
@@ -472,7 +478,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             $("#text").val(e.text);
         }
         if(e.texture !== undefined){
-            $("#texture").val(e.texture);
+            $("#assets").val(e.texture);
         }
 
     }

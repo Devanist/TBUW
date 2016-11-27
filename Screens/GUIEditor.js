@@ -143,6 +143,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
                     'Unique identifier: <input type="text" id="identifier"/>' +
                 '</section>' +
                 '<section id="typeProps" class="hidden">' +
+                    'Visible: <input type="checkbox" id="visible" />' +
                     'Coordinate position <input type="checkbox" id="positionSystem" />' +
                     '<input type="text" id="positionString" placeholder="ex. center" value="center"/>' +
                     '<input type="number" id="positionX" value="0" disabled />' +
@@ -241,6 +242,11 @@ function(Screen, Stage, GUI, Spritesheet, $){
             this._currentElement.id = $("#identifier").val();
             saveElement.call(this, this._selectedElementLayer);
             this.updateStage(this._selectedElementLayer);
+        });
+
+        $("#visible").on("change", () => {
+                this._currentElement.visible = $("#visible").prop('checked');
+                this.updateStage(this._selectedElementLayer);
         });
 
         $("#positionSystem").on("change", () => {
@@ -446,6 +452,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
         $("#elem_type").val(e.type);
         $("#identifier").val(e.id);
+        $("#visible").prop("checked", e.visible);
         $("#layer_list").val(layer);
 
         if(typeof e.position === "string"){

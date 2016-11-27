@@ -487,7 +487,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 '<select name="assets_list" id="assets" size="1">' +
                 '</select>' +
                 '<img id="clear_selection_button" title="Clear selection" src="Assets/Editor/cross.png"/>' +  
-                '<img id="sprite_preview" src="Assets/Editor/No_image.png"/>' + 
             '</section>' +
             '<section id="details_box">'+
                 '<label>X:</label><input type="number" id="position-x">'+
@@ -509,7 +508,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         
         $("#clear_selection_button").on("click", function(e){
             $("#assets_list").val("");
-            $("#sprite_preview").attr("src", "Assets/Editor/No_image.png");
         });
         
         for(var entity in Entities){
@@ -632,7 +630,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         
         $("#assets").on("change", function(e){
             if(Spritesheet.frames.hasOwnProperty($("#assets option:selected").val())){
-                $("#sprite_preview").attr("src", "http://foka.servebeer.com/static/UTCWB/" + $("#assets option:selected").val() + ".png");
                 this._selectedElement.texture = $("#assets option:selected").val();
                 for(var i = 0; i < this._gameStage._elements.length; i+=1){
                     if(this._selectedElement.id === this._gameStage._elements[i]._id){
@@ -641,9 +638,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                         break;
                     }
                 }
-            }
-            else{
-                $("#sprite_preview").attr("src", "Assets/Editor/No_image.png");
             }
         }.bind(this));
         

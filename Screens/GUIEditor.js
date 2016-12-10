@@ -148,6 +148,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
                     '<input type="text" id="positionString" placeholder="ex. center" value="center"/>' +
                     '<input type="number" id="positionX" value="0" disabled />' +
                     '<input type="number" id="positionY" value="0" disabled />' +
+                    'Move X: <input type="number" id="moveX" value="0" /> Move Y:<input type="number" id="moveY" value="0" />' +
                     '<label id="textureLabel" class="hidden">Texture: </label><select name="assets_list" id="assets" size="1"></select>' +
                     '<label id="textLabel" class="hidden">Text: </label><input class="hidden" type="text" id="text" />' + 
                     '<label id="optionsLabel" class="hidden">Options</label><section class="hidden" id="options">' +
@@ -279,6 +280,13 @@ function(Screen, Stage, GUI, Spritesheet, $){
         $("#positionX, #positionY").on("change", () => {
             this._currentElement.position.x = parseInt($("#positionX").val());
             this._currentElement.position.y = parseInt($("#positionY").val());
+            saveElement.call(this, this._selectedElementLayer);
+            this.updateStage(this._selectedElementLayer);
+        });
+
+        $("#moveX, #moveY").on("change", () => {
+            this._currentElement.move.x = parseInt($("#moveX").val());
+            this._currentElement.move.y = parseInt($("#moveY").val());
             saveElement.call(this, this._selectedElementLayer);
             this.updateStage(this._selectedElementLayer);
         });
@@ -460,6 +468,8 @@ function(Screen, Stage, GUI, Spritesheet, $){
         $("#identifier").val(e.id);
         $("#visible").prop("checked", e.visible);
         $("#layer_list").val(layer);
+        $("#moveX").val(e.move.x);
+        $("#moveY").val(e.move.y);
 
         if(typeof e.position === "string"){
             $("#positionString").val(e.position).removeAttr("disabled");

@@ -46,10 +46,6 @@ define([
             this._small = 2;
         }
         
-        this._guiStage.add(new GUI.Image("portret", {x: 20 / this._small, y: 20 / this._small}, PIXI.Texture.fromFrame("portret")));
-        this._guiStage.add(new GUI.Image("blockcoin", {x: 140 / this._small, y: 40 / this._small}, PIXI.Texture.fromFrame("blockcoin")));
-        this._guiStage.add(new GUI.Label("blockcoinValue", {x: 190 / this._small, y: 58 / this._small}, 0));
-        
         this._touchController = new TouchController();
         if(Utils.isTouchDevice()){
             this._stage.add(this._touchController.getStage());

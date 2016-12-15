@@ -3,16 +3,21 @@ body {
     background-color: grey;
     overflow:hidden;
 }
+
+canvas{
+    width: 70%;
+    height: 80%;
+}
 .hidden{
     display: none;
 }
 #toolbox{
     position: absolute;
     top: 0;
-    left: 960px;
+    right: 0;
     background-color: grey;
-    width: 640px;
-    height: 600px;
+    width: 30%;
+    height: 100%;
 }
 #toolbox_content{
     margin-left: 10px;
@@ -32,11 +37,11 @@ body {
 }
 #library{
     position: absolute;
-    top: 600px;
+    bottom: 0;
     left: 0;
     background-color: #AEAEAE;
-    width: 1600px;
-    height: 175px;
+    width: 70%;
+    height: 20%;
 }
 #library section{
     margin-left: 5px;

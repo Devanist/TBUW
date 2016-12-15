@@ -54,7 +54,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             '<input id="save_button" type="button" value="Generate"/>' + 
             '<input id="load_button" type="file" value="Load"/><br/>' +
             '<input type="button" id="add_new_button" value="Add new element"><br/>' + 
-            'Time: <input type="range" id="timeBar" min="0" value="0" max="0"/><input type="text" value="0:00" style="width: 35px;"><br/>' +
+            'Time: <input type="range" id="timeBar" min="0" value="0" max="0"/><input id="timeInput" type="text" value="0:00" style="width: 35px;"><br/>' +
             '<input type="button" id="play" value="Play"/><br/>' +
             '<div id="elementsListPanel">' +
                 '<h2>Animations list</h2>' + 
@@ -124,6 +124,14 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 $("#play").val("Play");
             }
 
+        });
+
+        $("#save_button").on("click", () => {
+            let data = JSON.stringify(this._config);
+            let linkData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(data);
+            $("#download").
+                attr("href", linkData).
+                removeClass("hidden");
         });
 
     };
@@ -230,6 +238,9 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
         let allDiff = Date.now() - this._startTime;
         $("#timeBar").val(allDiff);
+        let minutes = parseInt(allDiff / 60000);
+        let seconds = parseInt((allDiff - 60000 * minutes) / 1000);
+        $("#timeInput").val(`${minutes}:${seconds}`);
 
     };
 

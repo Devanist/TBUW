@@ -20,6 +20,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
         };
 
         this._currentAnimation = null;
+
         this._maxTime = 0;
         this._play = false;
         this._currentTime = 0;
@@ -93,7 +94,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             reader.readAsText(file);
         });
 
-        $("#add_new_button").on("click", function(){
+        $("#add_new_button").on("click", () => {
             this._currentAnimation = {
                 id: "",
                 moveTo: {
@@ -103,6 +104,8 @@ function(Screen, Stage, GUI, Spritesheet, $){
                     wait: 0
                 }
             };
+            $("#info").text("Adding new element");
+            $("#save_anim, #cancel, #sprite_select").removeClass("hidden");
         });
 
         $("#play").on("click", () => {
@@ -110,6 +113,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             this._play = !this._play;
 
             if(this._play){
+                this._stage._stage.alpha = 1;
                 $("#play").val("Stop");
                 this._currentTime = 0;
                 this._startTime = Date.now();
@@ -141,8 +145,9 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
         $("#library").append(
             '<p id="info">Add new animation or edit existing one</p>' +
-            '<section id="props">'+
-                'Select sprite: <select name="assets_list" id="assets" size="1"></select><br/>' +
+            '<p id="sprite_select" class="hidden">Select sprite: <select name="assets_list" id="assets" size="1"></select></p>' +
+            '<input class="hidden" type="button" id="save_anim" value="Add" /><input class="hidden" type="button" id="cancel" value="cancel"/>' +
+            '<section id="props" class="hidden">'+
                 'Move to x: <input type="number" id="moveToX"/>' + 
                 'y: <input type="number" id="moveToY" />' +
                 'time of animation: <input type="number" id="time"/>' +
@@ -155,6 +160,51 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 $("#assets").append('<option value="' + asset + '">' + asset + '</option>');
             }
         }
+
+        $("#save_anim").on("click", () => {
+            this._currentAnimation.id = $("#assets option:selected").val();
+            $("#props").removeClass("hidden");
+            $("#save_anim, #cancel").addClass("hidden");
+
+            $("#animations_list").append(stateToList.call(this, this._currentAnimation, this._config.animations.length));
+
+            fillWithProps.call(this);
+
+            if(this._config.frames.findIndex( (item) => {item === this._currentAnimation.id}) === -1){
+                this._config.frames.push(this._currentAnimation.id);
+            }
+            this._config.animations.push(this._currentAnimation);
+
+            this.updateStage();
+
+        });
+
+        $("#cancel").on("click", () => {
+            this._currentAnimation = null;
+            $("#info").text("Add new animation or edit existing one");
+        });
+
+        $("#assets").on("change", () => {
+            this._currentAnimation.id = $("#assets option:selected").val();
+            this.updateStage();
+        });
+
+        $("#moveToX").on("change", () => {
+            this._currentAnimation.moveTo.x = $("#moveToX").val();
+        });
+
+        $("#moveToY").on("change", () => {
+            this._currentAnimation.moveTo.y = $("#moveToY").val();
+        });
+
+        $("#time").on("change", () => {
+            this._currentAnimation.moveTo.time = $("#time").val();
+        });
+
+        $("#wait").on("change", () => {
+            this._currentAnimation.moveTo.wait = $("#wait").val();
+        });
+
     };
 
     _p.updateStage = function(){
@@ -225,6 +275,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             else{
                 $("#play").val("Play");
                 $("#timeBar").val(0);
+                this._stage._elements.forEach(moveToInitialPosition);
                 this._currentTime = 0;
 
                 this._finished = false;
@@ -266,6 +317,21 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
     function addToStage(frame){
         this._stage.add(new GUI.Image(frame, {x: -2000, y: -2000}, PIXI.Texture.fromFrame(frame)));
+    }
+
+    function fillWithProps(){
+
+        $("#assets option").prop("checked", false);
+        $(`#assets option:contains($(this._currentAnimation.id)`).prop("checked", true);
+
+        $("#moveToX").val(this._currentAnimation.moveTo.x);
+        $("#moveToY").val(this._currentAnimation.moveTo.y);
+        $("#time").val(this._currentAnimation.moveTo.time);
+        $("#wait").val(this._currentAnimation.moveTo.wait);
+    }
+
+    function moveToInitialPosition(item){
+        item.setPosition({x: -2000, y: -2000});
     }
 
     return CinematicEditor;

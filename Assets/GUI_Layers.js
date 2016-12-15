@@ -5,9 +5,10 @@ define([
     'json!Assets/GUI/ChapterChoose.json',
     'json!Assets/GUI/LevelChoose.json',
     'json!Assets/GUI/Editor.json',
-    'json!Assets/GUI/GUIEditor.json'
+    'json!Assets/GUI/GUIEditor.json',
+    'json!Assets/GUI/CinematicEditor.json'
 ],
-function(Game, Menu, Cinematic, ChapterChoose, LevelChoose, Editor, GUIEditor){
+function(Game, Menu, Cinematic, ChapterChoose, LevelChoose, Editor, GUIEditor, CinematicEditor){
     
     var GUI_Layers = {
         game: Game,
@@ -16,7 +17,8 @@ function(Game, Menu, Cinematic, ChapterChoose, LevelChoose, Editor, GUIEditor){
         chapter_choose: ChapterChoose,
         level_choose: LevelChoose,
         editor: Editor,
-        guieditor: GUIEditor
+        guieditor: GUIEditor,
+        cinematiceditor: CinematicEditor
     };
 
     return GUI_Layers;

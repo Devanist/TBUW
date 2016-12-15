@@ -10,8 +10,6 @@ function(Screen, Stage, GUI, Spritesheet, $){
     var CinematicEditor = function(){
         Screen.call(this);
 
-        $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.css"/>');
-
         this._config = {
             frames: [],
             music: "",
@@ -32,6 +30,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
         this._animatedObject = null;
         this._startTime = 0;
 
+        $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.css"/>');
         this.appendToolBox();
         this.appendAssetsLibrary();
     };
@@ -59,9 +58,17 @@ function(Screen, Stage, GUI, Spritesheet, $){
             '<input type="button" id="play" value="Play"/><br/>' +
             '<div id="elementsListPanel">' +
                 '<h2>Animations list</h2>' + 
-                '<section id="animations_list"><ul id="elements_list"></ul></section>' +
+                '<section id="animations_list">'+
+                    '<ul id="elements_list"></ul>'+ 
+                '</section>' +
             '</div>'
         );
+
+        $("#elements_list").on("click", (e) => {
+            this._currentAnimation = this._config.animations[e.target.id];
+            fillWithProps.call(this);
+            $("#props").removeClass("hidden");
+        });
 
         $("#load_button").on("change", (e) => {
             let file = e.target.files[0];
@@ -74,12 +81,12 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 
                 this._config = contents;
 
-                $("#animations_list").empty();
+                $("#elements_list").empty();
                 
                 this._config.animations.
                     map(stateToList).
                     forEach( (item) => {
-                        $("#animations_list").append(item);
+                        $("#elements_list").append(item);
                     });
 
                 this._maxTime = 0;
@@ -126,6 +133,16 @@ function(Screen, Stage, GUI, Spritesheet, $){
             }
             else{
                 $("#play").val("Play");
+                $("#timeBar").val(0);
+                this._stage._elements.forEach(moveToInitialPosition);
+                this._currentTime = 0;
+
+                this._finished = false;
+                this._currentPlayingAnimation = 0;
+                this._stepCounter = 0;
+                this._animationComplete = false;
+                this._animatedObject = null;
+                this._play = false;
             }
 
         });
@@ -166,7 +183,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             $("#props").removeClass("hidden");
             $("#save_anim, #cancel").addClass("hidden");
 
-            $("#animations_list").append(stateToList.call(this, this._currentAnimation, this._config.animations.length));
+            $("#elements_list").append(stateToList.call(this, this._currentAnimation, this._config.animations.length));
 
             fillWithProps.call(this);
 
@@ -190,19 +207,19 @@ function(Screen, Stage, GUI, Spritesheet, $){
         });
 
         $("#moveToX").on("change", () => {
-            this._currentAnimation.moveTo.x = $("#moveToX").val();
+            this._currentAnimation.moveTo.x = parseInt($("#moveToX").val());
         });
 
         $("#moveToY").on("change", () => {
-            this._currentAnimation.moveTo.y = $("#moveToY").val();
+            this._currentAnimation.moveTo.y = parseInt($("#moveToY").val());
         });
 
         $("#time").on("change", () => {
-            this._currentAnimation.moveTo.time = $("#time").val();
+            this._currentAnimation.moveTo.time = parseInt($("#time").val());
         });
 
         $("#wait").on("change", () => {
-            this._currentAnimation.moveTo.wait = $("#wait").val();
+            this._currentAnimation.moveTo.wait = parseInt($("#wait").val());
         });
 
     };
@@ -308,7 +325,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
     };
 
     function stateToList(animation, index){
-        return `<li>${index}.${animation.id}</li>`;
+        return `<li id="${index}">${index}.${animation.id}</li>`;
     }
 
     function sum(item){

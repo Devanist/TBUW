@@ -27,7 +27,6 @@ define(['Core/Utils'], function(Utils){
         },
         
         update: function(sounds){
-            console.log(sounds);
             var t = null;
             if(this._gainNode.gain.value < 1){
                 this._gainNode.gain.value += 0.005;

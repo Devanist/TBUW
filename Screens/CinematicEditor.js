@@ -57,7 +57,7 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
             '<a id="download" class="hidden" download="filename.json">Download</a><br/>' + 
             '<input id="save_button" type="button" value="Generate"/>' + 
             '<input id="load_button" type="file" value="Load"/><br/>' +
-            '<select id="level_music" size="1"></select><input type="button" id="playMusic" value="Play music"/><input type="text" style="width: 35px;" id="musicTimer" value="0:00" /><br/>' +
+            '<select id="level_music" size="1"></select><input type="button" id="playMusic" value="Play music"/><input id="timeScreen" type="text" value="0:00" style="width: 35px;">Offset: <input type="text" style="width: 35px;" id="musicOffset" value="0:00" /><br/>' +
             '<input type="button" id="add_new_button" value="Add new element"><br/>' + 
             'Time: <input type="range" id="timeBar" min="0" value="0" max="0"/><input id="timeInput" type="text" value="0:00" style="width: 35px;"><br/>' +
             '<input type="button" id="play" value="Play"/><br/>' +
@@ -80,9 +80,9 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
             $("#playMusic").val("Play music");
         });
 
-        $("#musicTimer").on("change", () => {
-            let time = $("#musicTimer").val().split(":");
-            let ms = parseInt(time[0]) * 60 * 1000 + parseInt(time[1]) * 1000;
+        $("#musicOffset").on("change", () => {
+            let time = $("#musicOffset").val().split(":");
+            let ms = parseInt(time[0]) * 60 + parseInt(time[1]);
             this._config.music_offset = ms;
         });
 
@@ -97,6 +97,7 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
             ];
             if(this._musicPlaying){
                 $("#playMusic").val("Stop music");
+                this._startTime = Date.now();
             }
             else{
                 $("#playMusic").val("Play music");
@@ -358,9 +359,17 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
 
         if(this._play){
             this.play();
+            $("#timeScreen").val();
         }
         else{
             //this._sounds = [];
+        }
+
+        if(this._musicPlaying){
+            let seconds = Date.now() - this._startTime;
+            let minutes = parseInt(seconds / 60000);
+            seconds = parseInt((seconds - 60000 * minutes) / 1000);
+            $("#timeScreen").val(`${minutes}:${seconds}`);
         }
 
         return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: soundsToPlay};

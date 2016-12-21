@@ -27,6 +27,7 @@ define(['Core/Utils'], function(Utils){
         },
         
         update: function(sounds){
+            console.log(sounds);
             var t = null;
             if(this._gainNode.gain.value < 1){
                 this._gainNode.gain.value += 0.005;
@@ -41,7 +42,7 @@ define(['Core/Utils'], function(Utils){
                 }
                 else if(this._soundsLibrary.hasOwnProperty(t.name)){
                     if(!this.isSoundPlaying(t.name)){
-                        this.play(t.name);
+                        this.play(t);
                     }
                 }
                 else{
@@ -63,15 +64,15 @@ define(['Core/Utils'], function(Utils){
             }
             node.buffer = this._soundsLibrary[node.name];
             if(sound.effect !== undefined){
-                    switch(sound.effect){
-                        case "fadeIn":
-                            this._gainNode.gain.value = 0;
-                            node.connect(this._gainNode);
-                            break;
-                        default:
-                            console.log('There is no effect like ' + sound.effect);
-                            break;
-                    }
+                switch(sound.effect){
+                    case "fadeIn":
+                        this._gainNode.gain.value = 0;
+                        node.connect(this._gainNode);
+                        break;
+                    default:
+                        console.log('There is no effect like ' + sound.effect);
+                        break;
+                }
             }
             else{
                 node.connect(this._context.destination);
@@ -84,7 +85,7 @@ define(['Core/Utils'], function(Utils){
                     }
                 }
             };
-            this._soundsPlaying.push({name: sound, node: node});
+            this._soundsPlaying.push(node);
             node.start(0, offset);
         },
         
@@ -101,17 +102,15 @@ define(['Core/Utils'], function(Utils){
         stop : function(sound){
             if(sound === "all"){
                 for(let i = 0; i < this._soundsPlaying.length; i++){
-                    this._soundsPlaying[i].node.stop();
-                    delete this._soundsPlaying[i].node;
+                    this._soundsPlaying[i].stop();
                 }
                 this._soundsPlaying = [];
             }
             else{
                 for(let i = 0; i < this._soundsPlaying.length; i++){
                     if(this._soundsPlaying[i].name === sound){
-                        this._soundsPlaying[i].node.stop();
-                        delete this._soundsPlaying[i].node;
-                        this._soundsPlaying.splice(i,1);
+                        this._soundsPlaying[i].stop();
+                        delete this._soundsPlaying.splice(i,1)[0];
                     }
                 }
             }

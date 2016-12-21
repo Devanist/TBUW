@@ -154,7 +154,6 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             this._level.music = $("#level_music").val();
             this._sounds.push({name: "all", stop: true});
             $("#playMusic").val("Play music");
-
         }.bind(this));
 
         $("#enableBlockCoin").on("change", function(){

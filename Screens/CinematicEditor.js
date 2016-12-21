@@ -3,9 +3,10 @@ define([
     'Core/Stage',
     'GUI/GUI',
     'json!Assets/Gfx/sprites.json',
-    'jquery'
+    'jquery',
+    'json!Assets/assets.json',
 ],
-function(Screen, Stage, GUI, Spritesheet, $){
+function(Screen, Stage, GUI, Spritesheet, $, Assets){
 
     var CinematicEditor = function(){
         Screen.call(this);
@@ -17,7 +18,10 @@ function(Screen, Stage, GUI, Spritesheet, $){
             animations: []
         };
 
+        this._sounds = [];
+
         this._currentAnimation = null;
+        this._musicPlaying = false;
 
         this._maxTime = 0;
         this._play = false;
@@ -53,6 +57,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
             '<a id="download" class="hidden" download="filename.json">Download</a><br/>' + 
             '<input id="save_button" type="button" value="Generate"/>' + 
             '<input id="load_button" type="file" value="Load"/><br/>' +
+            '<select id="level_music" size="1"></select><input type="button" id="playMusic" value="Play music"/><input type="text" style="width: 35px;" id="musicTimer" value="0:00" /><br/>' +
             '<input type="button" id="add_new_button" value="Add new element"><br/>' + 
             'Time: <input type="range" id="timeBar" min="0" value="0" max="0"/><input id="timeInput" type="text" value="0:00" style="width: 35px;"><br/>' +
             '<input type="button" id="play" value="Play"/><br/>' +
@@ -63,6 +68,40 @@ function(Screen, Stage, GUI, Spritesheet, $){
                 '</section>' +
             '</div>'
         );
+
+        for(let i = 0; i < Assets.sounds.length; i++){
+            $("#level_music").append('<option value="' + Assets.sounds[i].name + '">' + Assets.sounds[i].name + '</option>');
+        }
+
+        $("#level_music").on("change", () => {
+            this._config.music = $("#level_music").val();
+            this._sounds.push({name: "all", stop: true});
+            this._musicPlaying = false;
+            $("#playMusic").val("Play music");
+        });
+
+        $("#musicTimer").on("change", () => {
+            let time = $("#musicTimer").val().split(":");
+            let ms = parseInt(time[0]) * 60 * 1000 + parseInt(time[1]) * 1000;
+            this._config.music_offset = ms;
+        });
+
+        $("#playMusic").on("click", () => {
+            this._musicPlaying = !this._musicPlaying;
+            this._sounds = [
+                {
+                    name: $("#level_music").val(), 
+                    stop: !this._musicPlaying,
+                    offset: this._config.music_offset
+                }
+            ];
+            if(this._musicPlaying){
+                $("#playMusic").val("Stop music");
+            }
+            else{
+                $("#playMusic").val("Play music");
+            }
+        });
 
         $("#elements_list").on("click", (e) => {
             this._currentAnimation = this._config.animations[e.target.id];
@@ -314,14 +353,17 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
     _p.update = function(){
 
+        let soundsToPlay = [].concat(this._sounds);
+        this._sounds = [];
+
         if(this._play){
             this.play();
         }
         else{
-
+            //this._sounds = [];
         }
 
-        return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};
+        return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: soundsToPlay};
     };
 
     function stateToList(animation, index){

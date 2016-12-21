@@ -97,7 +97,19 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
             ];
             if(this._musicPlaying){
                 $("#playMusic").val("Stop music");
-                this._startTime = Date.now();
+                this._startTime = Date.now() - this._config.music_offset * 1000;
+
+                $("#play").val("Play");
+                $("#timeBar").val(0);
+                this._stage._elements.forEach(moveToInitialPosition);
+                this._currentTime = 0;
+
+                this._finished = false;
+                this._currentPlayingAnimation = 0;
+                this._stepCounter = 0;
+                this._animationComplete = false;
+                this._animatedObject = null;
+                this._play = false;
             }
             else{
                 $("#playMusic").val("Play music");
@@ -170,6 +182,10 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
                 this._stepCounter = 0;
                 this._animationComplete = false;
                 this._animatedObject = null;
+
+                this._sounds.push({name: "all", stop: true});
+                this._musicPlaying = false;
+                $("#playMusic").val("Play music");
             }
             else{
                 $("#play").val("Play");

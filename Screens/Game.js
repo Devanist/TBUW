@@ -102,7 +102,7 @@ define([
                 }
             }
             
-            this._player.nextFrame((this._player._data.state.moving / 10) >> 0);
+            this._player.nextFrame((this._player._data.state.moving / 10) | 0);
             
             for(let i = 0; i < anwser.REMOVE_LIST.length; i+=1){
                 for(let j = 0; j < this._gameStage._elements.length; j+=1){
@@ -238,7 +238,7 @@ define([
                 this._nextScreen = "game";
                 this._nextScreenParams = this._retry;
             }
-        )
+        );
     };
         
     /**

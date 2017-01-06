@@ -105,6 +105,10 @@ define(['Entities/Obstacle'], function(Obstacle){
 
     };
 
+    _p.setAnchor = function(anchor){
+
+    };
+
     return LasersFromGround;
 
 });

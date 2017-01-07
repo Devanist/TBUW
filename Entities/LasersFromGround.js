@@ -8,18 +8,22 @@ define(['Entities/Obstacle'], function(Obstacle){
      * @param {Number} id Unique identifier of element
      */
     var LasersFromGround = function(id){
+        this._small = 1;
+        if(window.innerWidth <= 640){
+            this._small = 2;
+        }
         this._firstGround = new PIXI.Sprite.fromFrame("lazor_00000");
         this._lazorOne = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorOne.position.x += 24;
+        this._lazorOne.position.x += 24 / this._small;
         this._lazorTwo = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorTwo.position.x += 45;
+        this._lazorTwo.position.x += 45 / this._small;
         this._lazorThree = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorThree.position.x += 80;
+        this._lazorThree.position.x += 80 / this._small;
         this._ground = new PIXI.Sprite.fromFrame("lazor_up");
 
-        this._lazorOne.position.y += 26;
-        this._lazorTwo.position.y += 60;
-        this._lazorThree.position.y += 40;
+        this._lazorOne.position.y += 26 / this._small;
+        this._lazorTwo.position.y += 60 / this._small;
+        this._lazorThree.position.y += 40 / this._small;
 
         this._lazors = [this._lazorOne, this._lazorTwo, this._lazorThree];
 
@@ -30,10 +34,10 @@ define(['Entities/Obstacle'], function(Obstacle){
             this._lazorThree,
             this._ground
         ]);
-        this._data.maxHeight = 380;
+        this._data.maxHeight = 380 / this._small;
         this._data.type = "LasersFromGround";
         this._data.inheritedTypes.push(this._data.type);
-        this._data.animationSpeed = -10;
+        this._data.animationSpeed = -10 / this._small;
         this._data.state.collisionItems = [
             {
                 initialPosition: {

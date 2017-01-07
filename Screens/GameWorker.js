@@ -1,5 +1,5 @@
 var world = null;
-var CAMERA_OFFSET = 250;
+var CAMERA_OFFSET = 350;
 var CAMERA_OFFSET_Y = 518;
 var elementsQuantity = null;
 var PLAYER = null;
@@ -73,7 +73,7 @@ self.onmessage = function(e){
         }
         else if(PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true){
             PLAYER.state.doubleJumped = true;
-            PLAYER.velocity.y -= 14 / world.SMALL;
+            PLAYER.velocity.y = -16 / world.SMALL;
             world.SOUNDS.push({name: "jump"});
         }
     }
@@ -217,7 +217,7 @@ self.onmessage = function(e){
     }
     
     //Przemieść kamerę
-    world.CONTAINER.x = -PLAYER.position.x + CAMERA_OFFSET;
+    world.CONTAINER.x = -PLAYER.position.x + CAMERA_OFFSET / world.SMALL;
     if(world.CONTAINER.x >= 0){
         world.CONTAINER.x = 0;
     }
@@ -225,7 +225,7 @@ self.onmessage = function(e){
         world.CONTAINER.x = -(world.LEVEL_END_X - (world.WINDOW_WIDTH - 300));
     }
     if(PLAYER.position.y < 1100){
-        world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y;
+        world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y / world.SMALL;
     }
     
     //Uaktualnij prędkość playera
@@ -244,10 +244,10 @@ self.onmessage = function(e){
             conditionsMet++;
         }
         else if(temp.name === "position"){
-            if(PLAYER.position.x >= temp.value.lu.x && 
-                PLAYER.position.x <= temp.value.rd.x &&
-                PLAYER.position.y >= temp.value.lu.y &&
-                PLAYER.position.y <= temp.value.rd.y){
+            if(PLAYER.position.x >= temp.value.lu.x / world.SMALL && 
+                PLAYER.position.x <= temp.value.rd.x / world.SMALL &&
+                PLAYER.position.y >= temp.value.lu.y / world.SMALL &&
+                PLAYER.position.y <= temp.value.rd.y / world.SMALL){
                     if(playerInFinalPosition === false){
                         playerInFinalPosition = true;
                         conditionsMet++;

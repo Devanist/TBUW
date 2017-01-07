@@ -53,25 +53,16 @@ function(Screen, Stage, GUI, Entities, Utils){
                 }
             );
 
-        this._guiStage.getElement("load_game").setCallback(
-            () => {
-                this._onUpdateAction = this.EVENT.CHANGE;
-                this._nextScreen = "load_game";
-            }
-        );
-
-        this._guiStage.getElement("options").setCallback(
-            () => {
-                this._onUpdateAction = this.EVENT.CHANGE;
-                this._nextScreen = "options";
-            }
-        );
-
     };
     
     _p.update = function(keysState, clicks, touches){
         var i = 0,j = 0, temp;
-        this._background._elements[0]._sprite.width = window.innerWidth / (window.innerHeight * 1.6 / 1280);
+        if(this._small === 1){
+            this._background._elements[0]._sprite.width = window.innerWidth / (window.innerHeight * 1.6 / 1280);
+        }
+        else{
+            this._background._elements[0]._sprite.width = 640;
+        }
         
         //Keyboard handling
         if(keysState.ARROW_DOWN || keysState.S){

@@ -18,42 +18,6 @@
                     "fill": "0xffffff",
                     "align": "center"
                 }
-            },
-            {
-                "type": "button",
-                "id": "load_game",
-                "position": {
-                    "x": 390,
-                    "y": 550
-                },
-                "texture": null,
-                "text": "LOAD GAME",
-                "options": {
-                    "size_override": false,
-                    "bitmap": true,
-                    "fontSize": 40,
-                    "fontFamily": "Cyberdyne Expanded",
-                    "fill": "0xffffff",
-                    "align": "center"
-                }
-            },
-            {
-                "type": "button",
-                "id": "options",
-                "position": {
-                    "x": 390,
-                    "y": 600
-                },
-                "texture": null,
-                "text": "OPTIONS",
-                "options": {
-                    "size_override": false,
-                    "bitmap": true,
-                    "fontSize": 40,
-                    "fontFamily": "Cyberdyne Expanded",
-                    "fill":"0xffffff",
-                    "align":"center"
-                }
             }
         ]
     },

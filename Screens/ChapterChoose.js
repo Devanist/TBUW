@@ -56,8 +56,8 @@ function(Screen, cfg, GUI, Utils){
             ));
             this._guiStage.add(new GUI.Label(this._chapters[i].name + "_label", 
                 {
-                    x: this._chaptersPositions[i].x - 158,
-                    y: this._chaptersPositions[i].y + 120
+                    x: (this._chaptersPositions[i].x - 158),
+                    y: (this._chaptersPositions[i].y + 120)
                 },
                 this._chapters[i].name,
                 {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}

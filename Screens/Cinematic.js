@@ -5,6 +5,10 @@ function(Screen){
     
     var Cinematic = function(params){
         Screen.call(this);
+        this._small = 1;
+        if(window.innerWidth <= 640){
+            this._small = 2;
+        }
         this._loaded = false;
         this._finished = false;
         this._beginTime = 0;
@@ -32,6 +36,10 @@ function(Screen){
     
     _p.hasLoaded = function(){
         this._loaded = true;
+        this._cinematicConfig.forEach( (element) => {
+            element.moveTo.x /= this._small;
+            element.moveTo.y /= this._small;
+        });
     };
     
     _p.getConfig = function(){

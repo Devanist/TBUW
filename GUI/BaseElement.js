@@ -13,32 +13,57 @@ define([], function () {
         this._sprite = new PIXI.Sprite(sprite);
         if(typeof(position) === "string"){
             if(position === "center"){
-                position = {
-                    x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
-                    y: window.innerHeight / 2 - this._sprite.height / 2
-                };
+                if(window.innerWidth <= 640){
+                    this._sprite.position = {
+                        x: window.innerWidth / 2 - this._sprite.width / 2,
+                        y: window.innerHeight / 2 - this._sprite.height /2
+                    };
+                }
+                else{
+                    this._sprite.position = {
+                        x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
+                        y: window.innerHeight / 2 - this._sprite.height / 2
+                    };
+                }
             }
             else if(position === "bottom-right"){
                 this._sprite.anchor.x = 1;
                 this._sprite.anchor.y = 1;
-                position = {
-                    x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4,
-                    y: 806,//window.innerHeight / this._sprite.scale.y
-                };
+                if(window.innerWidth <= 640){
+                    this._sprite.position = {
+                        x: window.innerWidth,
+                        y: window.innerHeight
+                    };
+                }
+                else{
+                    this._sprite.position = {
+                        x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4,
+                        y: 806,//window.innerHeight / this._sprite.scale.y
+                    };
+                }
             }
             else if(position === "top-left"){
-                position = {
+                this._sprite.position = {
                     x: 0,
                     y: 0
                 };
             }
         }
-        this._sprite.position = position;
+        else{
+            if(window.innerWidth <= 640){
+                this._sprite.position.x = position.x / 2;
+                this._sprite.position.y = position.y / 2;
+            }
+            else{
+                this._sprite.position.x = position.x;
+                this._sprite.position.y = position.y;
+            }
+        }
         this._id = id;
         this._data = {
             enabled: false,
             active: false,
-            position : position,
+            position : {x: this._sprite.position.x, y: this._sprite.position.y},
             type : "",
             rotation: 0,
             currentRotationAngle: 0
@@ -157,6 +182,15 @@ define([], function () {
          */
         getPosition : function(){
             return this._data.position;
+        },
+
+        /**
+         * Sets and anchor.
+         * @function
+         * @memberOf GUI.BaseElement
+         */
+        setAnchor : function(anchor){
+            this._sprite.anchor = anchor;
         }
 		
 	};

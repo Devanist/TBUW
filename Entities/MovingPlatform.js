@@ -2,13 +2,23 @@ define(['Entities/Platform'], function(Platform){
 
     var MovingPlatform = function(id, sprite, startPosition, endPosition, time){
         Platform.call(this, id, sprite);
+        this._small = 1;
+        if(window.innerWidth <= 640){
+            this._small = 2;
+        }
         this._isStatic = false;
         this._data.type = "MovingPlatform";
         this._data.movingSpeedFactor = 1;
 
-        this._startPosition = startPosition;
+        this._startPosition = {
+            x: startPosition.x / this._small,
+            y: startPosition.y / this._small
+        };
 
-        this._endPosition = endPosition;
+        this._endPosition = {
+            x: endPosition.x / this._small,
+            y: endPosition.y / this._small
+        };
 
         this._timeToMove = time;
 
@@ -32,6 +42,8 @@ define(['Entities/Platform'], function(Platform){
 
     _p.update = function(){
 
+
+        console.log(this._data.moveBy);
         //Platforms moves horizontally
         if(this._data.moveBy.x !== 0){
             this._sprite.position.x += this._data.moveBy.x;

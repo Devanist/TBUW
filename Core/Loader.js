@@ -46,7 +46,8 @@ define([
                 var con = new Stage();
                 var ls = new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off"));
                 con.add(ls);
-                var progressbar = new GUI.Image("progressbar", {x: ls._sprite.position.x + 44, y: ls._sprite.position.y + 108}, PIXI.Texture.fromFrame("loading_progressbar"));
+                var progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
+                progressbar.move({x: -255, y: 50});
                 con.add(progressbar);
                 var blurFilter = new PIXI.filters.BlurFilter();
                 progressbar._sprite.filters = [blurFilter];
@@ -147,7 +148,7 @@ define([
             var i;
             var temp;
             for(i = 0; i < cfg.frames.length; i+=1){
-                temp = new GUI.Image(cfg.frames[i], {x: 0, y: 2000}, PIXI.Texture.fromFrame(cfg.frames[i]));
+                temp = new GUI.Image(cfg.frames[i], {x: -2000, y: 2000}, PIXI.Texture.fromFrame(cfg.frames[i]));
                 stage.add(temp);
             }
             
@@ -295,6 +296,7 @@ define([
                 let temp;
 
                 let small = 1;
+                
                 if(window.innerWidth <= 640){
                     small = 2;
                 }

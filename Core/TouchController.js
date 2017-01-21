@@ -16,10 +16,10 @@ function(Stage, GUI){
         }
         this._stickPosition = {x: 140 / small, y: 600 / small};
         
-        this._button_a = new GUI.Image("BUTTON_A", {x: window.innerWidth - 100, y: 600 / small}, PIXI.Texture.fromFrame("button_a"));
-        this._button_b = new GUI.Image("BUTTON_B", {x: window.innerWidth, y: 500}, PIXI.Texture.fromFrame("button_b"));
-        this._button_x = new GUI.Image("BUTTON_X", {x: window.innerWidth - 200, y: 500 / small}, PIXI.Texture.fromFrame("button_x"));
-        this._button_y = new GUI.Image("BUTTON_Y", {x: window.innerWidth - 100, y: 400 / small}, PIXI.Texture.fromFrame("button_y"));
+        this._button_a = new GUI.Image("BUTTON_A", {x: window.innerWidth - 100, y: 680 / small}, PIXI.Texture.fromFrame("button_a"));
+        this._button_b = new GUI.Image("BUTTON_B", {x: window.innerWidth, y: 580}, PIXI.Texture.fromFrame("button_b"));
+        this._button_x = new GUI.Image("BUTTON_X", {x: window.innerWidth - 200, y: 580 / small}, PIXI.Texture.fromFrame("button_x"));
+        this._button_y = new GUI.Image("BUTTON_Y", {x: window.innerWidth - 100, y: 480 / small}, PIXI.Texture.fromFrame("button_y"));
         
         this._analog_ring = new GUI.Image("ANALOG_RING", {x:70 / small, y:530 / small}, PIXI.Texture.fromFrame("ring"));
         
@@ -66,10 +66,10 @@ function(Stage, GUI){
 
             var w = 1280 * window.innerWidth / window.innerHeight *0.56;
             
-            this._button_a._data.position.x = w - 100;
-            this._button_b._data.position.x = w ;
-            this._button_x._data.position.x = w - 200;
-            this._button_y._data.position.x = w - 100;
+            this._button_a.setPosition({x: w - 100});
+            this._button_b.setPosition({x: w});
+            this._button_x.setPosition({x:w - 200});
+            this._button_y.setPosition({x: w - 100});
             
             this._state.BUTTON_A = false;
             this._state.BUTTON_B = false;

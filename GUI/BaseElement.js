@@ -127,10 +127,14 @@ define([], function () {
          * @param {Point} pos Position to which element will be moved
          */
         setPosition: function(pos){
-            this._sprite.position.x = pos.x;
-            this._sprite.position.y = pos.y;
-            this._data.position.x = pos.x;
-            this._data.position.y = pos.y;
+            if(pos.x !== undefined){    
+                this._sprite.position.x = pos.x;
+                this._data.position.x = pos.x;
+            }
+            if(pos.y !== undefined){
+                this._sprite.position.y = pos.y;
+                this._data.position.y = pos.y;
+            }
         },
         
         /**

@@ -77,9 +77,8 @@ define(['Core/Utils'], function(Utils){
                 node.connect(this._context.destination);
             }
             node.onended = function(){
-                var l = that._soundsPlaying.length;
-                for(var i = 0; i < l; i+=1){
-                    if(that._soundsPlaying[i].name === node.name){
+                for(var i = 0; i < that._soundsPlaying.length; i+=1){
+                    if(that._soundsPlaying[i] && that._soundsPlaying[i].name === node.name){
                         that._soundsPlaying.splice(i,1);
                     }
                 }

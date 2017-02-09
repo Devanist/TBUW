@@ -22,6 +22,8 @@ canvas{
 #toolbox_content{
     margin-left: 10px;
     margin-top: 10px;
+    height: 100%;
+    width: 100%;
 }
 #toolbox_content input{
     margin-right:5px;
@@ -92,8 +94,7 @@ canvas{
     width:450px;
     background-color: #696969;
     margin-left: -10px;
-    height: 547px;
-    float: left;
+    height: 60%;
 }
 .panelInactive{
     width: 20px !important;
@@ -113,6 +114,7 @@ canvas{
 }
 #elementsListPanel{
     display: inline-block;
+    width:95%;
 }
 #elementsListPanel *{
     margin-left: 10px;

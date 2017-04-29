@@ -1,15 +1,14 @@
-define([
-    'Core/Screen',
-    'Core/Stage',
-    'GUI/GUI',
-    'json!Assets/Gfx/sprites.json',
-    'jquery',
-    'json!Assets/assets.json',
-],
-function(Screen, Stage, GUI, Spritesheet, $, Assets){
+import Screen from '../Core/Screen';
+import Stage from '../Core/Stage';
+import GUI from '../GUI/GUI';
+import Spritesheet from '../Assets/Gfx/sprites.json';
+import $ from 'jquery';
+import Assets from '../Assets/assets.json';
 
-    var CinematicEditor = function(){
-        Screen.call(this);
+class CinematicEditor extends Screen{
+
+    constructor(){
+        super();
 
         this._config = {
             frames: [],
@@ -37,20 +36,9 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
         $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.css"/>');
         this.appendToolBox();
         this.appendAssetsLibrary();
-    };
+    }
 
-    CinematicEditor.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: CinematicEditor,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-
-    var _p = CinematicEditor.prototype;
-
-    _p.appendToolBox = function(){
+    appendToolBox(){
         $("canvas").after('<section id="toolbox"></section>');
         $("#toolbox").append(
             '<p>Click generate and then "Save link as" the Download link</p>' +
@@ -213,7 +201,7 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
 
     };
 
-    _p.appendAssetsLibrary = function(){
+    appendAssetsLibrary(){
         $("canvas").after('<section id="library"></section>');
 
         $("#library").append(
@@ -280,13 +268,13 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
 
     };
 
-    _p.updateStage = function(){
+    updateStage(){
         this._stage.removeAll();
 
         this._config.frames.forEach(addToStage.bind(this));
     };
 
-    _p.play = function(start){
+    play(start){
 
         if(!this._finished){
         
@@ -368,7 +356,7 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
 
     };
 
-    _p.update = function(){
+    update(){
 
         let soundsToPlay = [].concat(this._sounds);
         this._sounds = [];
@@ -391,33 +379,33 @@ function(Screen, Stage, GUI, Spritesheet, $, Assets){
         return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: soundsToPlay};
     };
 
-    function stateToList(animation, index){
-        return `<li id="${index}">${index}.${animation.id}</li>`;
-    }
+}
 
-    function sum(item){
-        return parseInt(item.time) + parseInt(item.wait);
-    }
+function stateToList(animation, index){
+    return `<li id="${index}">${index}.${animation.id}</li>`;
+}
 
-    function addToStage(frame){
-        this._stage.add(new GUI.Image(frame, {x: -2000, y: -2000}, PIXI.Texture.fromFrame(frame)));
-    }
+function sum(item){
+    return parseInt(item.time) + parseInt(item.wait);
+}
 
-    function fillWithProps(){
+function addToStage(frame){
+    this._stage.add(new GUI.Image(frame, {x: -2000, y: -2000}, PIXI.Texture.fromFrame(frame)));
+}
 
-        $("#assets option").prop("checked", false);
-        $(`#assets option:contains($(this._currentAnimation.id)`).prop("checked", true);
+function fillWithProps(){
 
-        $("#moveToX").val(this._currentAnimation.moveTo.x);
-        $("#moveToY").val(this._currentAnimation.moveTo.y);
-        $("#time").val(this._currentAnimation.moveTo.time);
-        $("#wait").val(this._currentAnimation.moveTo.wait);
-    }
+    $("#assets option").prop("checked", false);
+    $(`#assets option:contains($(this._currentAnimation.id)`).prop("checked", true);
 
-    function moveToInitialPosition(item){
-        item.setPosition({x: -2000, y: -2000});
-    }
+    $("#moveToX").val(this._currentAnimation.moveTo.x);
+    $("#moveToY").val(this._currentAnimation.moveTo.y);
+    $("#time").val(this._currentAnimation.moveTo.time);
+    $("#wait").val(this._currentAnimation.moveTo.wait);
+}
 
-    return CinematicEditor;
+function moveToInitialPosition(item){
+    item.setPosition({x: -2000, y: -2000});
+}
 
-});
+export default CinematicEditor;

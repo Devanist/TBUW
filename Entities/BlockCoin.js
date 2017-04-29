@@ -1,30 +1,18 @@
-define([
-    'Currencies/BlockCoin',
-    'Entities/Collectible'
-], 
-function(Currency, Collectible){
+import BlockCoinCurrency from '../Currencies/BlockCoin';
+import Collectible from './Collectible';
     
-    var BlockCoin = function(id, quantity, position) {
-        Collectible.call(this, id, PIXI.Texture.fromFrame("blockcoin"), position);
-        this._currency = new Currency();
+class BlockCoin extends Collectible{
+
+    constructor(id, quantity, position) {
+        super(id, PIXI.loader.resources.sprites.textures["blockcoin"], position);
+        this._currency = new BlockCoinCurrency();
         this._currency.setQuantity(quantity);
         this._data.type = "BlockCoin";
         this._data.rotation = 0.1;
         this._data.collected = false;
-    };
-    
-    BlockCoin.prototype = Object.create(Collectible.prototype, {
-        constructor: {
-            value: BlockCoin,
-            enumerable: false,
-            writable: true,
-            configurable: true
-        }
-    });
-    
-    var _p = BlockCoin.prototype;
-    
-    _p.collect = function(){
+    }
+
+    collect(){
         if(!this._data.collected){
             var q = Collectible.prototype.collect.call(this);
             this._data.collected = true;
@@ -35,9 +23,9 @@ function(Currency, Collectible){
             return q;
         }
         return {quantity: 0, name: "BlockCoin"};
-    };
-    
-    _p.update = function(){
+    }
+
+    update(){
         if(this._data.collected){
             var dest = {};
             dest.x = -this._sprite.parent.position.x + 140;
@@ -59,8 +47,8 @@ function(Currency, Collectible){
             }
             
         }        
-    };
-    
-    return BlockCoin;
-    
-});
+    }
+
+}
+
+export default BlockCoin;

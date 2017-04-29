@@ -1,7 +1,9 @@
-define(['Entities/Background'], function(Background){
+import Background from './Background';
 
-    var PositionField = function(id){
-        Background.call(this, id, PIXI.Texture.fromFrame("wcposition"), 0);
+class PositionField extends Background{
+
+    constructor(id){
+        super(id, PIXI.loader.resources.sprites.textures["wcposition"], 0);
         this._data.type = "PositionField";
         this.displacementMap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map_field.png");
         
@@ -18,20 +20,9 @@ define(['Entities/Background'], function(Background){
         this._displacement.scale.yoff = 0.08;
 
         this._sprite.filters = [this._displacement];
-    };
+    }
 
-    PositionField.prototype = Object.create(Background.prototype, {
-        constructor: {
-            value: PositionField,
-            writable: true,
-            configurable: true,
-            enumerable: false
-        }
-    });
-
-    var _p = PositionField.prototype;
-
-    _p.update = function(){
+    update(){
         if(this._displacement.scale.y > 6 || this._displacement.scale.y <= 1){
             this._displacement.scale.yoff = -this._displacement.scale.yoff;
         }
@@ -46,8 +37,8 @@ define(['Entities/Background'], function(Background){
             this._alphaoff = -this._alphaoff;
         }
         this._sprite.alpha += this._alphaoff;
-    };
+    }
 
-    return PositionField;
+}
 
-});
+export default PositionField;

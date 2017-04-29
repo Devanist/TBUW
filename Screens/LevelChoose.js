@@ -1,12 +1,12 @@
-define([
-    'Core/Screen',
-    'GUI/GUI',
-    'Core/Utils'
-], 
-function(Screen, GUI, Utils){
+import Screen from '../Core/Screen';
+import GUI from '../GUI/GUI';
+import Utils from '../Core/Utils';
+import * as PIXI from 'pixi.js';
 
-    var LevelChoose = function(params){
-        Screen.call(this);
+class LevelChoose extends Screen{
+
+    constructor(params){
+        super();
         this._levels = params.cfg;
 
         this._buttonPressedDown = false;
@@ -68,23 +68,10 @@ function(Screen, GUI, Utils){
                 back: that._levels
             };
         }
-
         this._stage.add(this._guiStage);
+    }
 
-    };
-
-    LevelChoose.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: LevelChoose,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-
-    var _p = LevelChoose.prototype;
-
-    _p.everythingLoaded = function(){
+    everythingLoaded(){
         this._guiStage.getElement("RETURN").setCallback(
             () => {
                 this._onUpdateAction = "CHANGE";
@@ -92,9 +79,9 @@ function(Screen, GUI, Utils){
                 this._sameMusic = true;
             }
         );
-    };
-    
-    _p.update = function(keysState, clicks, touches){
+    }
+
+    update(keysState, clicks, touches){
         var i = 0, j = 0, temp;
 
         //Keyboard handling
@@ -205,8 +192,8 @@ function(Screen, GUI, Utils){
             playSound: this._sounds,
             sameMusic: this._sameMusic
         };
-    };
+    }
 
-    return LevelChoose;
+}
 
-});
+export default LevelChoose;

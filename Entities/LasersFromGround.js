@@ -1,43 +1,51 @@
-define(['Entities/Obstacle'], function(Obstacle){
+import Obstacle from './Obstacle';
 
-    /**
-     * Object that fires missiles. When missiles are in contact with player, he loses.
-     * @class
-     * @memberOf Entities
-     * @extends Entities.Obstacle
-     * @param {Number} id Unique identifier of element
-     */
-    var LasersFromGround = function(id){
-        this._small = 1;
+/**
+ * Object that fires missiles. When missiles are in contact with player, he loses.
+ * @class
+ * @memberOf Entities
+ * @extends Entities.Obstacle
+ * @param {Number} id Unique identifier of element
+ */
+class LasersFromGround extends Obstacle{
+
+    constructor(id){
+        let small = 1;
         if(window.innerWidth <= 640){
-            this._small = 2;
+            small = 2;
         }
-        this._firstGround = new PIXI.Sprite.fromFrame("lazor_00000");
-        this._lazorOne = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorOne.position.x += 24 / this._small;
-        this._lazorTwo = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorTwo.position.x += 45 / this._small;
-        this._lazorThree = new PIXI.Sprite.fromFrame("lazor");
-        this._lazorThree.position.x += 80 / this._small;
-        this._ground = new PIXI.Sprite.fromFrame("lazor_up");
+        let firstGround = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_00000"]);
+        let lazorOne = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorOne.position.x += 24 / small;
+        let lazorTwo = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorTwo.position.x += 45 / small;
+        let lazorThree = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorThree.position.x += 80 / small;
+        let ground = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_up"]);
 
-        this._lazorOne.position.y += 26 / this._small;
-        this._lazorTwo.position.y += 60 / this._small;
-        this._lazorThree.position.y += 40 / this._small;
+        lazorOne.position.y += 26 / small;
+        lazorTwo.position.y += 60 / small;
+        lazorThree.position.y += 40 / small;
+
+        super(id, [
+            firstGround,
+            lazorOne,
+            lazorTwo,
+            lazorThree,
+            ground
+        ]);
+
+        this._firstGround = firstGround;
+        this._lazorOne = lazorOne;
+        this._lazorTwo = lazorTwo;
+        this._lazorThree =lazorThree;
+        this._ground = ground;
 
         this._lazors = [this._lazorOne, this._lazorTwo, this._lazorThree];
-
-        Obstacle.call(this, id, [
-            this._firstGround,
-            this._lazorOne,
-            this._lazorTwo,
-            this._lazorThree,
-            this._ground
-        ]);
-        this._data.maxHeight = 380 / this._small;
+        this._data.maxHeight = 380 / small;
         this._data.type = "LasersFromGround";
         this._data.inheritedTypes.push(this._data.type);
-        this._data.animationSpeed = -10 / this._small;
+        this._data.animationSpeed = -10 / small;
         this._data.state.collisionItems = [
             {
                 initialPosition: {
@@ -82,37 +90,26 @@ define(['Entities/Obstacle'], function(Obstacle){
                 }
             },
         ];
-    };
-
-    LasersFromGround.prototype = Object.create(Obstacle.prototype, {
-        constructor: {
-            value: LasersFromGround,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-
-    var _p = LasersFromGround.prototype;
+    }
 
     /**
      * This method will update the state field, that will be passed to worker.
      * @function
      * @memberOf Entities.LasersFromGround
      */
-    _p.update = function(){
+    update(){
 
         for(let i = 0; i < this._data.state.collisionItems.length; i++){
             this._lazors[i].position.x = this._data.state.collisionItems[i].currentPosition.x;
             this._lazors[i].position.y = this._data.state.collisionItems[i].currentPosition.y;
         }
 
+    }
+
+    setAnchor(anchor){
+
     };
 
-    _p.setAnchor = function(anchor){
+}
 
-    };
-
-    return LasersFromGround;
-
-});
+export default LasersFromGround;

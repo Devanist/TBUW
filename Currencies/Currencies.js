@@ -1,36 +1,35 @@
-define(['Currencies/BlockCoin'], function(BlockCoin){
+import BlockCoinCurrency from './BlockCoin';
     
-    var Currencies = function(){
+class Currencies{
+
+    constructor(){
         this._currencies = {
-            BlockCoin : new BlockCoin()
+            BlockCoin : new BlockCoinCurrency()
         };
     };
-    
-    Currencies.prototype = {
-        
-        /**
-         * Returns quantity of given currency
-         */
-        getQuantity : function(name){
-            if(this._currencies.hasOwnProperty(name)){
-                return this._currencies[name].getQuantity();
-            }
-        },
-        
-        /**
-         * Returns reference to given currency
-         */
-        get : function(name){
-            if(this._currencies.hasOwnProperty(name)){
-                return this._currencies[name];
-            }
-        },
-        
-        addQuantity: function(currency){
-            this._currencies[currency.name].addQuantity(currency.quantity);
+
+    /**
+     * Returns quantity of given currency
+     */
+    getQuantity(name){
+        if(this._currencies.hasOwnProperty(name)){
+            return this._currencies[name].getQuantity();
         }
-    };
+    }
     
-    return Currencies;
+    /**
+     * Returns reference to given currency
+     */
+    get(name){
+        if(this._currencies.hasOwnProperty(name)){
+            return this._currencies[name];
+        }
+    }
     
-});
+    addQuantity(currency){
+        this._currencies[currency.name].addQuantity(currency.quantity);
+    }
+
+}
+
+export default Currencies;

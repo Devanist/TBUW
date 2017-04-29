@@ -1,13 +1,9 @@
-define([
-    'Core/Utils/isTouchDevice',
-    'Core/Utils/copy'
-], function(isTouchDevice, copy){
+import isTouchDevice from './Utils/isTouchDevice';
+import copy from './Utils/copy';
     
-    var Utils = {
-        isTouchDevice: isTouchDevice,
-        copy: copy
-    };
-    
-    return Utils;
-    
-});
+const Utils = {
+    isTouchDevice: isTouchDevice,
+    copy: copy
+};
+
+export default Utils;

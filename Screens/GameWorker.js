@@ -1,6 +1,11 @@
+const collisionTypes = [
+    "Platform", 
+    "MovingPlatform"
+];
+
 var world = null;
-var CAMERA_OFFSET = 350;
-var CAMERA_OFFSET_Y = 518;
+const CAMERA_OFFSET = 350;
+const CAMERA_OFFSET_Y = 518;
 var elementsQuantity = null;
 var PLAYER = null;
 var oldPlayerPos = null;
@@ -16,31 +21,30 @@ self.onmessage = function(e){
     world.REMOVE_LIST = [];
     
     elementsQuantity = world.ELEMENTS.length;
-    
+
     //Zapisanie referencji do playera i uaktualnienie pozycji końcowych spritów
-    for(let i = 0; i < elementsQuantity; i+=1){
-        temp = world.ELEMENTS[i];
-        temp.size.w += temp.offset.width;
-        temp.size.h += temp.offset.height;
-        temp.currentRotationAngle += temp.rotation;
-        if(temp.type === "Player"){
-            PLAYER = temp;
+    world.ELEMENTS.forEach(elem => {
+        elem.size.w += elem.offset.width;
+        elem.size.h += elem.offset.height;
+        elem.currentRotationAngle += elem.rotation;
+        if(elem.type === "Player"){
+            PLAYER = elem;
         }
-        else if(temp.inheritedTypes && temp.inheritedTypes.indexOf("Obstacle") > -1){
-            for(let i = 0; i < temp.state.collisionItems.length; i++){
-                temp.state.collisionItems[i].currentPosition.y += temp.animationSpeed;
-                temp.state.collisionItems[i].currentPosition.ey += temp.animationSpeed;
-                if(temp.state.collisionItems[i].currentPosition.y < temp.state.collisionItems[i].initialPosition.y - temp.maxHeight){
-                    temp.state.collisionItems[i].currentPosition = JSON.parse(JSON.stringify(temp.state.collisionItems[i].initialPosition));
+        else if(elem.inheritedTypes && elem.inheritedTypes.indexOf("Obstacle") > -1){
+            elem.state.collisionItems.forEach(item => {
+                item.currentPosition.y += elem.animationSpeed;
+                item.currentPosition.ey += elem.animationSpeed;
+                if(item.currentPosition.y < item.initialPosition.y - elem.maxHeight){
+                    item.currentPosition = JSON.parse(JSON.stringify(item.initialPosition));
                 }
-            }
+            });
         }
-        if(temp.toBeRemoved){
-            world.REMOVE_LIST.push(temp.id);
+        if(elem.toBeRemoved){
+            world.REMOVE_LIST.push(elem.id);
         }
-        temp.position.endX = temp.position.x + temp.size.w;
-        temp.position.endY = temp.position.y + temp.size.h;
-    }
+        elem.position.endX = elem.position.x + elem.size.w;
+        elem.position.endY = elem.position.y + elem.size.h;
+    });
 
     oldPlayerPos = {
         x: PLAYER.position.x,
@@ -54,14 +58,14 @@ self.onmessage = function(e){
     if(world.KEYS_STATE.ARROW_RIGHT || world.KEYS_STATE.D || world.VCONTROLLER.AXIS_X > 30){
         PLAYER.velocity.x += 9 / world.SMALL;
         PLAYER.state.moving += 1;
-        if(PLAYER.direction == -1){
+        if(PLAYER.direction === -1){
             PLAYER.direction = 1;
         }
     }
     if(world.KEYS_STATE.ARROW_LEFT || world.KEYS_STATE.A || world.VCONTROLLER.AXIS_X < -30){
         PLAYER.velocity.x -= 9 / world.SMALL;
         PLAYER.state.moving += 1;
-        if(PLAYER.direction == 1){
+        if(PLAYER.direction === 1){
             PLAYER.direction = -1;
         }
     }
@@ -90,15 +94,16 @@ self.onmessage = function(e){
     if(PLAYER.velocity.x === 0){        
         PLAYER.state.moving = 0;
     }
+
     if(PLAYER.state.moving == 50){
         PLAYER.state.moving = 0;
     }
     
     //Uaktualnij pozycję playera
-    PLAYER.position.x += PLAYER.velocity.x | 0;
-    PLAYER.position.y += PLAYER.velocity.y | 0;
-    PLAYER.position.endX += PLAYER.velocity.x | 0;
-    PLAYER.position.endY += PLAYER.velocity.y | 0;
+    PLAYER.position.x += PLAYER.velocity.x      | 0;
+    PLAYER.position.y += PLAYER.velocity.y      | 0;
+    PLAYER.position.endX += PLAYER.velocity.x   | 0;
+    PLAYER.position.endY += PLAYER.velocity.y   | 0;
     
     //Wykryj kolizje
     x = PLAYER.position.x;
@@ -107,60 +112,64 @@ self.onmessage = function(e){
     ey = PLAYER.position.endY;
     collisionOccured = false;
     var tx, tex, ty, tey;
-    for(let i = 0; i < elementsQuantity; i += 1){
-        temp = world.ELEMENTS[i];
-        if(temp.type !== "Background" && temp.type !== "Player"){
+
+    world.ELEMENTS.forEach(elem => {
+        if(elem.type !== "Background" && elem.type !== "Player"){
             
-            if(temp.anchor !== undefined){
-                tx = temp.position.x - temp.anchor.x * temp.size.w;
-                tex = tx + temp.size.w;
-                ty = temp.position.y - temp.anchor.y * temp.size.h;
-                tey = ty + temp.size.h;
+            if(elem.anchor !== undefined){
+                tx = elem.position.x - elem.anchor.x * elem.size.w;
+                tex = tx + elem.size.w;
+                ty = elem.position.y - elem.anchor.y * elem.size.h;
+                tey = ty + elem.size.h;
             }
             else{
-                tx = temp.position.x;
-                tex = temp.position.endX;
-                ty = temp.position.y;
-                tey = temp.position.endY;
+                tx = elem.position.x;
+                tex = elem.position.endX;
+                ty = elem.position.y;
+                tey = elem.position.endY;
             }
 
-            if(temp.inheritedTypes.indexOf("Obstacle") > -1){
-                let ci = null;
-                for(let i = 0; i < temp.state.collisionItems.length; i++){
-                    ci = temp.state.collisionItems[i].currentPosition;
-                    if(!(x + 10 > ci.ex + temp.position.x || ex - 10 < ci.x + temp.position.x || y + 10 > ci.ey + temp.position.y|| ey - 10 < ci.y + temp.position.y)){
+            if(elem.inheritedTypes.indexOf("Obstacle") > -1){
+
+                elem.state.collisionItems.forEach(item => {
+                    if( !(
+                            x + 10 > item.currentPosition.ex + elem.position.x || 
+                            ex - 10 < item.currentPosition.x + elem.position.x || 
+                            y + 10 > item.currentPosition.ey + elem.position.y || 
+                            ey - 10 < item.currentPosition.y + elem.position.y
+                        )
+                    ){
                         world.LOSE = true;
                     }
-                }
+                });
             }
             
-            if( !(x > tex || ex < tx || y > tey || ey < ty) ){
+            if( ! (x > tex || ex < tx || y > tey || ey < ty) ){
                 
-                if(temp.type === "BlockCoin"){
-                    world.REMOVE_LIST.push(temp.id);
-                    continue;
+                if(elem.type === "BlockCoin"){
+                    world.REMOVE_LIST.push(elem.id);
+                    return;
                 }
                 
                 collisionOccured = true;
                 
                 //Jeżeli player jest powyzej obiektu z którym nastąpiła kolizja
-                if( y < ty && tey >= ey && oldPlayerPos.ey <= ty &&
-                    (ex - 10 > tx || x + 10 < tex)){
-                    if(isCollisionType(temp.type)){
+                if( y < ty && tey >= ey && oldPlayerPos.ey <= ty && (ex - 10 > tx || x + 10 < tex)){
+                    if(isCollisionType(elem.type)){
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
                         PLAYER.position.y = ty - PLAYER.size.h;
-                        if(temp.type === "MovingPlatform"){
-                            PLAYER.position.x += temp.moveBy.x;
-                            PLAYER.position.y += temp.moveBy.y;
+                        if(elem.type === "MovingPlatform"){
+                            PLAYER.position.x += elem.moveBy.x;
+                            PLAYER.position.y += elem.moveBy.y;
                         }
                     }
                 }
                 
                 //Jeżeli player jest pod obiektem
                 else if(y >= ty && tey <= ey && oldPlayerPos.y >= tey){
-                    if(isCollisionType(temp.type)){
+                    if(isCollisionType(elem.type)){
                         PLAYER.velocity.y = 1;
                         PLAYER.position.y = tey + 1;
                     }
@@ -168,8 +177,7 @@ self.onmessage = function(e){
                 
                 //Jeżeli player jest na lewo od obiektu
                 else if(ex >= tx && x <= tx){
-                    if(isCollisionType(temp.type)){
-                        console.log('collision from left');
+                    if(isCollisionType(elem.type)){
                         PLAYER.velocity.x = 0;
                         PLAYER.position.x = tx - (PLAYER.size.w + 1);
                     }
@@ -177,9 +185,9 @@ self.onmessage = function(e){
                 
                 //Jeżeli gracz jest na prawo od obiektu
                 else if(x <= tex && tex <= ex){
-                    if(isCollisionType(temp.type)){
+                    if(isCollisionType(elem.type)){
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = temp.position.endX + 1;
+                        PLAYER.position.x = elem.position.endX + 1;
                     }
                 }
                 
@@ -188,8 +196,7 @@ self.onmessage = function(e){
                 PLAYER.position.endX = PLAYER.position.x + PLAYER.size.w;
             }
         }
-        
-    }
+    });
     
     //Obsłuż, jeśli nie wystąpiła kolizja
     if(collisionOccured === false){
@@ -206,13 +213,12 @@ self.onmessage = function(e){
     
     //PARALLAX
     if(PLAYER.position.x > CAMERA_OFFSET){
-        
-        for(i = 0; i < elementsQuantity; i+=1){
-            temp = world.ELEMENTS[i];
-            if(temp.type === "Background"){
-                temp.position.x += ((PLAYER.position.x - oldPlayerPos.x) * temp.movingSpeedFactor) | 0;
+
+        world.ELEMENTS.forEach(elem => {
+            if(elem.type === "Background"){
+                elem.position.x += ((PLAYER.position.x - oldPlayerPos.x) * elem.movingSpeedFactor) | 0;
             }
-        }
+        });
         
     }
     
@@ -236,23 +242,24 @@ self.onmessage = function(e){
         PLAYER.velocity.x = 0;
     }
     
-    l = world.WIN_CONDITIONS.length;
     conditionsMet = 0;
-    for(i = 0; i < l; i+=1){
-        temp = world.WIN_CONDITIONS[i];
-        if(temp.name === "BlockCoin" && world.PLAYER_CURRENCIES.BlockCoin >= temp.value){
+    l = world.WIN_CONDITIONS.length;
+
+    world.WIN_CONDITIONS.forEach(condition => {
+        if(condition.name === "BlockCoin" && world.PLAYER_CURRENCIES.BlockCoin >= condition.value){
             conditionsMet++;
         }
-        else if(temp.name === "position"){
-            if(PLAYER.position.x >= temp.value.lu.x / world.SMALL && 
-                PLAYER.position.x <= temp.value.rd.x / world.SMALL &&
-                PLAYER.position.y >= temp.value.lu.y / world.SMALL &&
-                PLAYER.position.y <= temp.value.rd.y / world.SMALL){
-                    if(playerInFinalPosition === false){
-                        playerInFinalPosition = true;
-                        conditionsMet++;
-                    }
-                }   
+        else if(condition.name === "position"){
+            if( PLAYER.position.x >= condition.value.lu.x / world.SMALL && 
+                PLAYER.position.x <= condition.value.rd.x / world.SMALL &&
+                PLAYER.position.y >= condition.value.lu.y / world.SMALL &&
+                PLAYER.position.y <= condition.value.rd.y / world.SMALL
+            ){
+                if(playerInFinalPosition === false){
+                    playerInFinalPosition = true;
+                    conditionsMet++;
+                }
+            }   
             else{
                 if(playerInFinalPosition === true){
                     playerInFinalPosition = false;
@@ -260,7 +267,8 @@ self.onmessage = function(e){
                 }
             }
         }
-    }
+    });
+
     if(conditionsMet === l){
         world.WON = true;
     }
@@ -269,18 +277,23 @@ self.onmessage = function(e){
     
 };
 
+/**
+ * Checks if given type takes part in collisions check.
+ * @param {String} type 
+ * @returns {Boolean}
+ */
 function isCollisionType(type){
-
-    var collisionTypes = ["Platform", "MovingPlatform"];
-
     return collisionTypes.indexOf(type) >= 0;
-
 }
 
+/**
+ * 
+ * @param {Object} obj1 
+ * @param {Object} obj2 
+ */
 function isCollisionWithRotatingObject(obj1, obj2){
     
     var anchorPoint = calculateAnchorPoint(obj2);
-
     var rotatedPoints = rotateRectangle(obj2, anchorPoint, obj2.currentRotationAngle);
 
     for(let point in rotatedPoints){
@@ -291,9 +304,7 @@ function isCollisionWithRotatingObject(obj1, obj2){
             }
         }
     }
-
     return false;
-
 }
 
 /**

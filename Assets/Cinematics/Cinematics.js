@@ -1,14 +1,9 @@
-define([
-    "json!Assets/Cinematics/intro.json",
-    "json!Assets/Cinematics/c1_c2.json"
-],
-function(intro, c1_c2){
+import intro from './intro.json';
+import c1_c2 from './c1_c2.json';
     
-    var Cinematics = {
-        intro: intro,
-        c1_c2: c1_c2
-    };
-    
-    return Cinematics;
-    
-});
+const Cinematics = {
+    intro: intro,
+    c1_c2: c1_c2
+};
+
+export default Cinematics;

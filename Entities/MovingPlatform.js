@@ -1,7 +1,9 @@
-define(['Entities/Platform'], function(Platform){
+import Platform from './Platform';
 
-    var MovingPlatform = function(id, sprite, startPosition, endPosition, time){
-        Platform.call(this, id, sprite);
+class MovingPlatform extends Platform{
+
+    constructor(id, sprite, startPosition, endPosition, time){
+        super(id, sprite);
         this._small = 1;
         if(window.innerWidth <= 640){
             this._small = 2;
@@ -27,23 +29,9 @@ define(['Entities/Platform'], function(Platform){
             y: Math.abs(endPosition.y - startPosition.y) / (this._timeToMove / 1000 * 60)
         };
 
-    };
+    }
 
-    MovingPlatform.prototype = Object.create(Platform.prototype, {
-        constructor: {
-            value: MovingPlatform,
-            writable: true,
-            enumerable: false,
-            configurable: true
-        }
-    });
-
-    var _p = MovingPlatform.prototype;
-
-    _p.update = function(){
-
-
-        console.log(this._data.moveBy);
+    update(){
         //Platforms moves horizontally
         if(this._data.moveBy.x !== 0){
             this._sprite.position.x += this._data.moveBy.x;
@@ -89,6 +77,6 @@ define(['Entities/Platform'], function(Platform){
 
     };
 
-    return MovingPlatform;
+}
 
-});
+export default MovingPlatform;

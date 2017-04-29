@@ -1,11 +1,8 @@
-define([
-
-], function () {
-
-    /**
-     * Class representing the keyboard state.
-     */
-    var Keyboard = function () {
+/**
+ * Class representing the keyboard state.
+ */
+class Keyboard{
+    constructor(){
 
         //List of keys and their codes.
         this.KEYS = {
@@ -36,64 +33,59 @@ define([
             A: false,
             D: false
         };
+
+    }
+
+    /**
+     * Method returns the keyboard's state.
+     * @returns {Object}
+     */
+    getKeysState(){
+        return this._state;
+    }
     
-};
-    
-    
-    Keyboard.prototype = {
-        
-        /**
-         * Method returns the keyboard's state.
-         * @returns {object}
-         */
-        getKeysState: function () {
-            return this._state;
-        },
-        
-        /**
-         * Method changes the given key state.
-         * @param {string} key Name or code of key
-         * @param {boolean} val Key's new state
-         */
-        setKeyState: function (key, val) {
-            if (typeof (key) === "string") {
-                this._state[key] = val;
-            }
-            else if (typeof(key) === "number"){
-                for(var k in this.KEYS){
-                    if(this.KEYS.hasOwnProperty(k) && this.KEYS[k] === key){
-                        this._state[k] = val;
-                    }
-                }
-            }
-        },
-        
-        /**
-         * Setting the key state to true
-         * @param {object} event Keyboard event
-         */
-        handleKeyDown: function (event) {
-            this.setKeyState(event.keyCode, true);
-        },
-        
-        /**
-         * Setting the key state to false
-         * @param {object} event Keyboard event
-         */
-        handleKeyUp : function(event){
-            this.setKeyState(event.keyCode, false);
-        },
-        
-        reset : function(){
-            for(var k in this._state){
-                if(this._state.hasOwnProperty(k)){
-                    this._state[k] = false;
+    /**
+     * Method changes the given key state.
+     * @param {String} key Name or code of key
+     * @param {Boolean} val Key's new state
+     */
+    setKeyState(key, val) {
+        if(typeof key === "string") {
+            this._state[key] = val;
+        }
+        else if(typeof key === "number"){
+            for(var k in this.KEYS){
+                if(this.KEYS.hasOwnProperty(k) && this.KEYS[k] === key){
+                    this._state[k] = val;
                 }
             }
         }
-        
-    };
+    }
     
-    return Keyboard;
+    /**
+     * Setting the key state to true
+     * @param {object} event Keyboard event
+     */
+    handleKeyDown(event){
+        this.setKeyState(event.keyCode, true);
+    }
     
-});
+    /**
+     * Setting the key state to false
+     * @param {object} event Keyboard event
+     */
+    handleKeyUp(event){
+        this.setKeyState(event.keyCode, false);
+    }
+    
+    reset(){
+        for(var k in this._state){
+            if(this._state.hasOwnProperty(k)){
+                this._state[k] = false;
+            }
+        }
+    }
+
+}
+
+export default Keyboard;

@@ -1,23 +1,11 @@
-define([
-    'Currencies/Currency'
-], 
-function(Currency){
+import Currency from './Currency';
     
-    var BlockCoin = function(){
-        Currency.call(this, "BlockCoin");
-    };
-    
-    BlockCoin.prototype = Object.create(Currency.prototype, {
-        constructor: {
-            value: BlockCoin,
-            writable: true,
-            configurable: true,
-            enumerable: false
-        }
-    });
-    
-    var _p = BlockCoin.prototype;
-    
-    return BlockCoin;
-    
-});
+class BlockCoinCurrency extends Currency{
+
+    constructor(){
+        super("BlockCoin");
+    }
+
+}
+
+export default BlockCoinCurrency;

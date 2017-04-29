@@ -1,25 +1,19 @@
-define(['Entities/Entity'], function(Entity){
+import Entity from './Entity';
 
-    var Collectible = function(id, sprite){
-        Entity.call(this, id, sprite);
+class Collectible extends Entity{
+
+    constructor(id, sprite){
+        super(id, sprite);
         this._sprite.anchor.x = 0.5;
         this._sprite.anchor.y = 0.5;
-        this._data.anchor = this._sprite.anchor;
+        this._data.anchor = {
+            x: this._sprite.anchor._x,
+            y: this._sprite.anchor._y
+        }
         this._currency = null;
     };
 
-    Collectible.prototype = Object.create(Entity.prototype,{
-        constructor: {
-            value: Collectible,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-    
-    var _p = Collectible.prototype;
-
-    _p.collect = function(){
+    collect(){
         var q = {
             quantity: this._currency.getQuantity(),
             name: this._currency.getName()
@@ -28,6 +22,7 @@ define(['Entities/Entity'], function(Entity){
         return q;
     };
 
-    return Collectible;
-    
-});
+}
+
+
+export default Collectible;

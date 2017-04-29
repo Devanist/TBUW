@@ -1,14 +1,14 @@
-define([
-    'Core/Screen',
-    'Core/Stage',
-    'GUI/GUI',
-    'Entities/Entities',
-    'Core/Utils'
-], 
-function(Screen, Stage, GUI, Entities, Utils){
+import Screen from '../Core/Screen';
+import Stage from '../Core/Stage';
+import GUI from '../GUI/GUI';
+import Entities from '../Entities/Entities';
+import Utils from '../Core/Utils';
+import * as PIXI from 'pixi.js';
     
-    var MenuScreen = function(){
-        Screen.call(this);
+class MenuScreen extends Screen{
+
+    constructor(){
+        super();
         
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -30,20 +30,9 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         this._stage.add(this._background);
         this._stage.add(this._guiStage);
-    };
-    
-    MenuScreen.prototype = Object.create(Screen.prototype, {
-       constructor: {
-           value: MenuScreen,
-           configurable: true,
-           writable: true,
-           enumerable: false
-       } 
-    });
-    
-    var _p = MenuScreen.prototype;
+    }
 
-    _p.everythingLoaded = function(){
+    everythingLoaded(){
         this._guiStage.getElement("new_game").
             active(true).
             setCallback(
@@ -52,10 +41,9 @@ function(Screen, Stage, GUI, Entities, Utils){
                     this._nextScreen = "chapter_choose";
                 }
             );
+    }
 
-    };
-    
-    _p.update = function(keysState, clicks, touches){
+    update(keysState, clicks, touches){
         var i = 0,j = 0, temp;
         if(this._small === 1){
             this._background._elements[0]._sprite.width = window.innerWidth / (window.innerHeight * 1.6 / 1280);
@@ -168,8 +156,8 @@ function(Screen, Stage, GUI, Entities, Utils){
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds, sameMusic: true};
         
-    };
-    
-    return MenuScreen;
-    
-});
+    }
+
+}
+
+export default MenuScreen;

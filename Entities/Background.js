@@ -1,20 +1,13 @@
-define(['Entities/Item'], function(Item){
-    
-    var Background = function(id, sprite, factor){
-        Item.call(this, id, sprite);
+import Item from './Item';
+
+class Background extends Item{
+
+    constructor(id, sprite, factor){
+        super(id, sprite);
         this._data.type = "Background";
         this._data.movingSpeedFactor = factor;
     };
-    
-    Background.prototype = Object.create(Item.prototype, {
-        constructor: {
-            value: Background,
-            writable: true,
-            configurable: true,
-            enumerable: false
-        }
-    });
-    
-    return Background;
-    
-});
+
+}
+
+export default Background;

@@ -1,26 +1,21 @@
-define([
-    'json!Assets/GUI/Game.json',
-    'json!Assets/GUI/Menu.json',
-    'json!Assets/GUI/Cinematic.json',
-    'json!Assets/GUI/ChapterChoose.json',
-    'json!Assets/GUI/LevelChoose.json',
-    'json!Assets/GUI/Editor.json',
-    'json!Assets/GUI/GUIEditor.json',
-    'json!Assets/GUI/CinematicEditor.json'
-],
-function(Game, Menu, Cinematic, ChapterChoose, LevelChoose, Editor, GUIEditor, CinematicEditor){
+import GameLayers from './GUI/Game.json';
+import MenuLayers from './GUI/Menu.json';
+import CinematicLayers from './GUI/Cinematic.json';
+import ChapterChooseLayers from './GUI/ChapterChoose.json';
+import LevelChooseLayers from './GUI/LevelChoose.json';
+import EditorLayers from './GUI/Editor.json';
+import GUIEditorLayers from './GUI/GUIEditor.json';
+import CinematicEditorLayers from './GUI/CinematicEditor.json';
     
-    var GUI_Layers = {
-        game: Game,
-        menu: Menu,
-        cinematic: Cinematic,
-        chapter_choose: ChapterChoose,
-        level_choose: LevelChoose,
-        editor: Editor,
-        guieditor: GUIEditor,
-        cinematiceditor: CinematicEditor
-    };
+const GUI_Layers = {
+    game: GameLayers,
+    menu: MenuLayers,
+    cinematic: CinematicLayers,
+    chapter_choose: ChapterChooseLayers,
+    level_choose: LevelChooseLayers,
+    editor: EditorLayers,
+    guieditor: GUIEditorLayers,
+    cinematiceditor: CinematicEditorLayers
+};
 
-    return GUI_Layers;
-
-});
+export default GUI_Layers;

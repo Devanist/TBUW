@@ -1,6 +1,8 @@
-define(['Core/Utils'], function(Utils){
+import Utils from './Utils';
     
-    var Speaker = function(){
+class Speaker{
+
+    constructor(){
         this._context = null;
         if(typeof AudioContext !== "undefined"){
             this._context = new AudioContext();
@@ -15,107 +17,103 @@ define(['Core/Utils'], function(Utils){
         this._gainNode.connect(this._context.destination);
         this._soundsLibrary = {};
         this._soundsPlaying = [];
-    };
-    
-    Speaker.prototype = {
-        
-        addSoundToLibrary : function(audioData, name){
-            var that = this;
-            this._context.decodeAudioData(audioData, function(soundBuffer){
-                that._soundsLibrary[name] = soundBuffer;
-            });
-        },
-        
-        update: function(sounds){
-            var t = null;
-            if(this._gainNode.gain.value < 1){
-                this._gainNode.gain.value += 0.005;
-                if(this._gainNode.gain.value > 1){
-                    this._gainNode.gain.value = 1;
-                }
-            }
-            for(let i = 0; i < sounds.length; i+=1){
-                t = sounds[i];
-                if(t.stop && (this._soundsLibrary.hasOwnProperty(t.name) || t.name === "all")){
-                    this.stop(t.name);
-                }
-                else if(this._soundsLibrary.hasOwnProperty(t.name)){
-                    if(!this.isSoundPlaying(t.name)){
-                        this.play(t);
-                    }
-                }
-                else{
-                    console.error("There is no sound like " + t.name);
-                }
-            }
-        },
-        
-        play : function(sound){
-            var that = this;
-            var node = this._context.createBufferSource();
-            var offset = 0;
-            if(typeof sound === "string"){
-                node.name = sound;
-            }
-            else if(typeof sound === "object"){
-                node.name = sound.name;
-                offset = sound.offset || 0;
-            }
-            node.buffer = this._soundsLibrary[node.name];
-            if(sound.effect !== undefined){
-                switch(sound.effect){
-                    case "fadeIn":
-                        this._gainNode.gain.value = 0;
-                        node.connect(this._gainNode);
-                        break;
-                    default:
-                        console.log('There is no effect like ' + sound.effect);
-                        break;
-                }
-            }
-            else{
-                node.connect(this._context.destination);
-            }
-            node.onended = function(){
-                for(var i = 0; i < that._soundsPlaying.length; i+=1){
-                    if(that._soundsPlaying[i] && that._soundsPlaying[i].name === node.name){
-                        that._soundsPlaying.splice(i,1);
-                    }
-                }
-            };
-            this._soundsPlaying.push(node);
-            node.start(0, offset);
-        },
-        
-        isSoundPlaying : function(sound){
-            var l = this._soundsPlaying.length;
-            for(var i = 0; i < l; i+=1){
-                if(this._soundsPlaying[i].name === sound){
-                    return true;
-                }
-            }
-            return false;
-        },
+    }
 
-        stop : function(sound){
-            if(sound === "all"){
-                for(let i = 0; i < this._soundsPlaying.length; i++){
-                    this._soundsPlaying[i].stop();
+    addSoundToLibrary(audioData, name){
+        var that = this;
+        this._context.decodeAudioData(audioData, function(soundBuffer){
+            that._soundsLibrary[name] = soundBuffer;
+        });
+    }
+    
+    update(sounds){
+        var t = null;
+        if(this._gainNode.gain.value < 1){
+            this._gainNode.gain.value += 0.005;
+            if(this._gainNode.gain.value > 1){
+                this._gainNode.gain.value = 1;
+            }
+        }
+        for(let i = 0; i < sounds.length; i+=1){
+            t = sounds[i];
+            if(t.stop && (this._soundsLibrary.hasOwnProperty(t.name) || t.name === "all")){
+                this.stop(t.name);
+            }
+            else if(this._soundsLibrary.hasOwnProperty(t.name)){
+                if(!this.isSoundPlaying(t.name)){
+                    this.play(t);
                 }
-                this._soundsPlaying = [];
             }
             else{
-                for(let i = 0; i < this._soundsPlaying.length; i++){
-                    if(this._soundsPlaying[i].name === sound){
-                        this._soundsPlaying[i].stop();
-                        delete this._soundsPlaying.splice(i,1)[0];
-                    }
+                console.error("There is no sound like " + t.name);
+            }
+        }
+    }
+    
+    play(sound){
+        var that = this;
+        var node = this._context.createBufferSource();
+        var offset = 0;
+        if(typeof sound === "string"){
+            node.name = sound;
+        }
+        else if(typeof sound === "object"){
+            node.name = sound.name;
+            offset = sound.offset || 0;
+        }
+        node.buffer = this._soundsLibrary[node.name];
+        if(sound.effect !== undefined){
+            switch(sound.effect){
+                case "fadeIn":
+                    this._gainNode.gain.value = 0;
+                    node.connect(this._gainNode);
+                    break;
+                default:
+                    console.log('There is no effect like ' + sound.effect);
+                    break;
+            }
+        }
+        else{
+            node.connect(this._context.destination);
+        }
+        node.onended = function(){
+            for(var i = 0; i < that._soundsPlaying.length; i+=1){
+                if(that._soundsPlaying[i] && that._soundsPlaying[i].name === node.name){
+                    that._soundsPlaying.splice(i,1);
+                }
+            }
+        };
+        this._soundsPlaying.push(node);
+        node.start(0, offset);
+    }
+    
+    isSoundPlaying(sound){
+        var l = this._soundsPlaying.length;
+        for(var i = 0; i < l; i+=1){
+            if(this._soundsPlaying[i].name === sound){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    stop(sound){
+        if(sound === "all"){
+            for(let i = 0; i < this._soundsPlaying.length; i++){
+                this._soundsPlaying[i].stop();
+            }
+            this._soundsPlaying = [];
+        }
+        else{
+            for(let i = 0; i < this._soundsPlaying.length; i++){
+                if(this._soundsPlaying[i].name === sound){
+                    this._soundsPlaying[i].stop();
+                    delete this._soundsPlaying.splice(i,1)[0];
                 }
             }
         }
-        
-    };
-    
-    return Speaker;
-    
-});
+    }
+
+}
+
+export default Speaker;

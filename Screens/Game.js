@@ -1,19 +1,20 @@
-define([
-    'Core/Screen',
-    'Core/Stage',
-    'Core/Utils',
-    'GUI/GUI',
-    'Core/TouchController'
-    ], function(Screen, Stage, Utils, GUI, TouchController){
-    
-    /**
-     * Game screen. Here is all logic responsible for displaying actual gameplay.
-     * @class
-     * @extends Screen
-     * @param {object} params Screen parameters
-     */
-    var GameScreen = function(params){
-        Screen.call(this);
+import Screen from '../Core/Screen';
+import Stage from '../Core/Stage';
+import Utils from '../Core/Utils';
+import GUI from '../GUI/GUI';
+import TouchController from '../Core/TouchController';
+import * as PIXI from 'pixi.js';
+
+/**
+ * Game screen. Here is all logic responsible for displaying actual gameplay.
+ * @class
+ * @extends Screen
+ * @param {object} params Screen parameters
+ */
+class GameScreen extends Screen{
+
+    constructor(params){
+        super();
         this._gameStage = new Stage();
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
@@ -60,7 +61,7 @@ define([
         //Obsługa zwróconych przez workera danych
         this._updateWorker.onmessage = function(respond){
             
-            var anwser = JSON.parse(respond.data);
+            let anwser = JSON.parse(respond.data);
             if(anwser.LOSE){
                 this._lose = true;
             }
@@ -72,17 +73,17 @@ define([
 
                 this._isPause = true;
             }
-            var temp = null;
+            let temp = null;
             this._sounds = anwser.SOUNDS;
             this._gameStage.getStage().position = anwser.CONTAINER;
             
-            for(let i = 0; i < anwser.ELEMENTS.length; i++){
-                temp = this._gameStage._elements[i];
+            anwser.ELEMENTS.forEach((elem,index) => {
+                temp = this._gameStage._elements[index];
                 if(this._player === undefined && temp._data.type === "Player"){
                     this._player = temp;
                 }
-                temp._data = anwser.ELEMENTS[i];
-                temp._sprite.rotation = anwser.ELEMENTS[i].currentRotationAngle;
+                temp._data = elem;
+                temp._sprite.rotation = elem.currentRotationAngle;
                 
                 if(temp.update){
                     temp.update();
@@ -99,89 +100,75 @@ define([
                     
                     this._isPause = true;
                     this._updateWorker.terminate();
+                    return;
                 }
-            }
+            });
             
             this._player.nextFrame((this._player._data.state.moving / 10) | 0);
-            
-            for(let i = 0; i < anwser.REMOVE_LIST.length; i+=1){
-                for(let j = 0; j < this._gameStage._elements.length; j+=1){
-                    temp = this._gameStage._elements[j];
-                    if(anwser.REMOVE_LIST[i] === temp.getId()){
-                        
-                        if(temp.getType() === "BlockCoin"){
-                            if(temp._data.toBeRemoved !== undefined){
-                                this._gameStage.remove(anwser.REMOVE_LIST[i]);
-                                this._sounds.push({name: "collect_coin"});
+
+            anwser.REMOVE_LIST.forEach(item => {
+                this._gameStage._elements.forEach(elem => {
+                    if(item === elem.getId()){
+                        if(elem.getType() === "BlockCoin"){
+                            if(elem._data.toBeRemoved !== undefined){
+                                this._gameStage.remove(item);
+                                this._sounds.push({name : "collect_coin"});
                             }
-                            this._player.collectCurrency(temp.collect());
+                            this._player.collectCurrency(elem.collect());
                         }
-                        
-                        break;
-                        
+                        return;
                     }
-                }
-            }
+                });
+            });
             
         }.bind(this);
         
-    };
-    
-    GameScreen.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: GameScreen,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-    
-    var _p = GameScreen.prototype;
-        
+    }
+
     /**
      * Returns the screen main stage.
      * @returns {Stage}
      */
-    _p.getMainStage = function(){
+    getMainStage(){
         return this._gameStage;
-    };
-    
+    }
+
     /**
      * Returns array with sounds to play.
      * @returns {Array}
      */
-    _p.getSoundsContainer = function(){
+    getSoundsContainer(){
         return this._sounds;
-    };
+    }
 
     /**
      * Assign music to play in game.
      * @param {string} music Song's name
      */
-    _p.setMusic = function(music){
+    setMusic(music){
         this._music = music;
-    };
+    }
 
     /**
      * Sets the x-coord where to stop moving map.
      * @param {Number} x x-coord
      */
-    _p.setEndX = function(x){
+    setEndX(x){
         this._levelEndX = x;
-    };
-    
+    }
+
     /**
      * Returns an array with win conditions for given level.
      * returns {Array}
      */
-    _p.getWinConditions = function(){
+    getWinConditions(){
         return this._winConditions;
-    };
+    }
 
     /**
      * Method that handles situation, when player turns on the pause.
      */
-    _p.pauseHandler = function(){
+    pauseHandler(){
         if(this._escapeDown && !this._lose && !this._won){
                 this._isPause = !this._isPause;
                 this._escapeDown = false;
@@ -221,7 +208,7 @@ define([
             }
     };
 
-    _p.everythingLoaded = function(){
+    everythingLoaded(){
         this._guiStage.getElement("wonButton").setCallback(
             () => {
                 this._onUpdateAction = this.EVENT.CHANGE;
@@ -249,34 +236,33 @@ define([
      * @param {Object} touches Touch device state
      * @param {Object} touchController Virtual touch controller state
      */
-    _p.update = function(keysState, clicks, touches, touchController){
+    update(keysState, clicks, touches, touchController){
         
         //Background scaling
         this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
         
         var temp = null;
-        
+
         //Mouse clicks handling
-        for(let j = 0; j < clicks.length; j += 1){
-            for(let i = 0; i < this._guiStage._elements.length; i += 1){
-                temp = this._guiStage._elements[i];
-                if(temp.triggerCallback && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
-                    temp.triggerCallback();
+        clicks.forEach(click => {
+            this._guiStage._elements.forEach(elem => {
+                if(elem.triggerCallback && elem._sprite.containsPoint({x: click.clientX, y: click.clientY})){
+                    elem.triggerCallback();
                 }
-            }
-        }
+            });
+        });
         
         //Touch handling
         if(Utils.isTouchDevice()){
-            this._touchController.updateState(touches);                
-            for(let j = 0; j < touches.length; j += 1){
-                for(let i = 0; i < this._guiStage._elements.length; i += 1){
-                    temp = this._guiStage._elements[i];
-                    if(temp.triggerCallback && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                        temp.triggerCallback();
-                    }                     
-                }                    
-            }
+            this._touchController.updateState(touches);
+
+            touches.forEach(touch => {
+                this._guiStage._elements.forEach(elem => {
+                    if(elem.triggerCallback && elem._sprite.containsPoint({x: touch.pageX, y: touch.pageY})){
+                        elem.triggerCallback();
+                    }
+                });
+            });
         }
 
         //Handling escape key here, because if pause is on, worker is not working.
@@ -292,7 +278,10 @@ define([
             //Preparing data and sending it to worker.
             var data = {
                 SMALL : this._small,
-                CONTAINER: this._gameStage.getStage().position,
+                CONTAINER: {
+                    x: this._gameStage.getStage().position._x,
+                    y: this._gameStage.getStage().position._y
+                },
                 KEYS_STATE: keysState,
                 LEVEL_END_X: this._levelEndX,
                 WINDOW_WIDTH: window.innerWidth,
@@ -305,18 +294,18 @@ define([
                 WIN_CONDITIONS: this._winConditions,
                 PLAYER_CURRENCIES : {}
             };
+
             if(this._player !== undefined){
                 data.PLAYER_CURRENCIES = {
                     BlockCoin: this._player._currencies.getQuantity("BlockCoin")
                 };
             }
-            
-            for(let i = 0; i < this._gameStage._elements.length; i++){
-                temp = this._gameStage._elements[i];
-                temp._data.size.w = temp._sprite.getLocalBounds().width;
-                temp._data.size.h = temp._sprite.getLocalBounds().height;
-                data.ELEMENTS.push(temp._data); 
-            }
+
+            this._gameStage._elements.forEach(elem => {
+                elem._data.size.w = elem._sprite.width;
+                elem._data.size.h = elem._sprite.height;
+                data.ELEMENTS.push(elem._data); 
+            });
             
             this._guiStage._elements.forEach( (temp) => {
                 temp._data.currentRotationAngle += temp._data.rotation;
@@ -325,7 +314,6 @@ define([
                     temp.setText(this._player._currencies.getQuantity("BlockCoin"));
                 }
             });
-            
             this._updateWorker.postMessage(JSON.stringify(data));
         
         }
@@ -419,7 +407,7 @@ define([
         
         return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};
     };
-    
-    return GameScreen;
-    
-});
+
+}
+
+export default GameScreen;

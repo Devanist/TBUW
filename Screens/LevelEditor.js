@@ -1,15 +1,14 @@
-define([
-    'Core/Screen',
-    'Core/Stage',
-    'Entities/Entities',
-    'json!Assets/Gfx/sprites.json',
-    'json!Assets/assets.json',
-    'jquery'
-], 
-function(Screen, Stage, Entities, Spritesheet, Assets, $){
+import Screen from '../Core/Screen';
+import Stage from '../Core/Stage';
+import Entities from '../Entities/Entities';
+import Spritesheet from '../Assets/Gfx/sprites.json';
+import Assets from '../Assets/assets.json';
+import $ from 'jquery';
     
-    var LevelEditor = function(){
-        Screen.call(this);
+class LevelEditor extends Screen{
+
+    constructor(){
+        super();
         this._background = new Stage(0, "", 1);
         this._background.add(new Entities.Background());
         this._gameStage = new Stage();
@@ -50,24 +49,13 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             EDITING_ELEMENT: "Editing element #"
         };
         
-    };
-    
-    LevelEditor.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: LevelEditor,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-    
-    var _p = LevelEditor.prototype;
-    
-    _p.getMainStage = function(){
+    }
+
+    getMainStage(){
         return this._gameStage;
     };
 
-    _p.setWinCondition = function(name, value){
+    setWinCondition(name, value){
         for(let i = 0; i < this._level.winConditions.length; i++){
             if(this._level.winConditions[i].name === name){
                 this._level.winConditions[i].value = value;
@@ -75,7 +63,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         }
     };
 
-    _p.getWinCondition = function(name){
+    getWinCondition(name){
         for(let i = 0; i < this._level.winConditions.length; i++){
             if(this._level.winConditions[i].name === name){
                 return this._level.winConditions[i].value;
@@ -83,7 +71,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         }
     };
 
-    _p.getElement = function(id){
+    getElement(id){
         for(var i = 0; i < this._level.entities.length; i++){
             if(this._level.entities[i] && this._level.entities[i].id === parseInt(id)){
                 return this._level.entities[i];
@@ -92,7 +80,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         return null;
     };
 
-    _p.getElementIndex = function(id){
+    getElementIndex(id){
         for(var i = 0; i < this._level.entities.length; i++){
             if(this._level.entities[i] && this._level.entities[i].id === parseInt(id)){
                 return i;
@@ -100,8 +88,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         }
         return null;
     };
-    
-    _p.appendToolBox = function(){
+
+    appendToolBox(){
         
         var that = this;
         
@@ -413,7 +401,7 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             $("#factor_label").show();
             $("#value").show().val("");
             $("#value_label").hide();
-    
+
             if(that._selectedElement.type === "Background"){
                 $("#factor").val(that._selectedElement.factor);
                 $("#value").hide();
@@ -466,9 +454,9 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
             }
         });
         
-    };
-    
-    _p.appendAssetsLibrary = function(){
+    }
+
+    appendAssetsLibrary(){
         var that = this;
         
         $(this._canvas).after('<section id="library"></section>');
@@ -714,12 +702,12 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
         });
         
     };
-    
-    _p.getMainStage = function(){
+
+    getMainStage(){
         return this._gameStage;
-    };
-    
-    _p.update = function(keysState){
+    }
+
+    update(keysState){
 
         let soundsToPlay = [].concat(this._sounds);
         this._sounds = [];
@@ -741,19 +729,19 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
 
         }        
         
-       window.innerHeight = 600;
-       window.innerWidth = 960;
-       // this._canvas.setAttribute("height", "600");
-       // this._canvas.setAttribute("width", "960");
+        window.innerHeight = 600;
+        window.innerWidth = 960;
+        // this._canvas.setAttribute("height", "600");
+        // this._canvas.setAttribute("width", "960");
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: soundsToPlay};
-    };
-    
+    }
+
     /**
      * Creates new, updated stage.
      * @param {string} stage
      */
-    _p.updateStage = function(stage){
+    updateStage(stage){
         
         if(stage === "background"){
             this._background._elements[0]._sprite.texture = new PIXI.Texture.fromFrame($("#level_background").val());
@@ -806,8 +794,8 @@ function(Screen, Stage, Entities, Spritesheet, Assets, $){
                 }
             }
         }
-    };
-    
-    return LevelEditor;
-    
-});
+    }
+
+}
+
+export default LevelEditor;

@@ -1,18 +1,18 @@
-define([
-    'Core/Screen',
-    'json!Assets/Chapters.json',
-    'GUI/GUI',
-    'Core/Utils'
-],
-function(Screen, cfg, GUI, Utils){
+import Screen from '../Core/Screen';
+import cfg from '../Assets/Chapters.json';
+import GUI from '../GUI/GUI';
+import Utils from '../Core/Utils';
+import * as PIXI from 'pixi.js';
     
-    /**
-     * Chapter choosing screen.
-     * @class
-     * @extends Screen
-     */
-    var ChapterChoose = function(){
-        Screen.call(this);
+/**
+ * Chapter choosing screen.
+ * @class
+ * @extends Screen
+ */
+class ChapterChoose extends Screen{
+
+    constructor(){
+        super();
 
         this._small = 1;
         if(window.innerWidth <= 640){
@@ -66,32 +66,21 @@ function(Screen, cfg, GUI, Utils){
 
         this._stage.add(this._guiStage);
         this._stage.add(this._background);
-    };
-    
-    ChapterChoose.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: ChapterChoose,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-    
-    var _p = ChapterChoose.prototype;
+    }
 
-    _p.everythingLoaded = function(){
+    everythingLoaded(){
         this._guiStage.getElement("RETURN").setCallback(
             () => {
                 this._onUpdateAction = "CHANGE";
                 this._nextScreen = "menu";
             }
         );
-    };
+    }
 
     /**
      * Method that handles user input and returns information to the application logic.
      */
-    _p.update = function(keysState, clicks, touches){
+    update(keysState, clicks, touches){
 
         var i = 0,j = 0, temp;
         //Keyboard handling
@@ -202,8 +191,7 @@ function(Screen, cfg, GUI, Utils){
             playSound: this._sounds,
             sameMusic: true
         };
-    };
-    
-    return ChapterChoose;
-    
-});
+    }
+}
+
+export default ChapterChoose;

@@ -1,11 +1,10 @@
-define([
-    'Entities/Creature',
-    'Currencies/Currencies'
-], 
-function(Creature, Currencies){
+import Creature from './Creature';
+import Currencies from '../Currencies/Currencies';
     
-    var Player = function(id, frames){
-        Creature.call(this, id, frames[0]);
+class Player extends Creature{
+
+    constructor(id, frames){
+        super(id, frames[0]);
         this._frames = frames;
         this._data.type = "Player";
         this._data.state = {
@@ -20,26 +19,16 @@ function(Creature, Currencies){
         this._data.position.endY = this._data.position.y + this._data.size.h;
         this._currencies = new Currencies();
     };
-    
-    Player.prototype = Object.create(Creature.prototype, {
-        constructor: {
-            value: Player,
-            enumerable: false,
-            writable: true,
-            configurable: true
-        }
-    });
-    
-    var _p = Player.prototype;
-    
-    _p.collectCurrency = function(currency){
+
+    collectCurrency(currency){
         this._currencies.addQuantity(currency);
     };
-    
-    _p.nextFrame = function(frame){
+
+    nextFrame(frame){
         this._sprite.texture = this._frames[frame];
     };
-    
-    return Player;
-    
-});
+
+}
+
+
+export default Player;

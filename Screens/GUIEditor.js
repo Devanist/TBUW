@@ -1,14 +1,13 @@
-define([
-    'Core/Screen',
-    'Core/Stage',
-    'GUI/GUI',
-    'json!Assets/Gfx/sprites.json',
-    'jquery'
-],
-function(Screen, Stage, GUI, Spritesheet, $){
+import Screen from '../Core/Screen';
+import Stage from '../Core/Stage';
+import GUI from '../GUI/GUI';
+import Spritesheet from '../Assets/Gfx/sprites.json';
+import $ from 'jquery';
 
-    var GUIEditor = function(){
-        Screen.call(this);
+class GUIEditor extends Screen{
+
+    constructor(){
+        super();
 
         this._stage.add(this._background);        
         this._stage.add(this._guiStage);
@@ -22,21 +21,9 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
         this._currentElement = {};
         this._selectedElementLayer = "";
-    };
+    }
 
-    GUIEditor.prototype = Object.create(Screen.prototype, {
-        constructor: {
-            value: GUIEditor,
-            enumerable: false,
-            configurable: true,
-            writable: true
-        }
-    });
-
-    var _p = GUIEditor.prototype;
-
-    _p.appendToolBox = function(){
-
+    appendToolBox(){
         $("canvas").after('<section id="toolbox"></section>');
         $("#toolbox").append(
             '<p>Click generate and then "Save link as" the Download link</p>' +
@@ -126,7 +113,7 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
     };
 
-    _p.appendAssetsLibrary = function(){
+    appendAssetsLibrary(){
 
         $("canvas").after('<section id="library"></section>');
 
@@ -152,12 +139,12 @@ function(Screen, Stage, GUI, Spritesheet, $){
                     '<label id="textureLabel" class="hidden">Texture: </label><select name="assets_list" id="assets" size="1"></select>' +
                     '<label id="textLabel" class="hidden">Text: </label><input class="hidden" type="text" id="text" />' + 
                     '<label id="optionsLabel" class="hidden">Options</label><section class="hidden" id="options">' +
-                         '<label id="size_overrideLabel">Size override</label><input type="checkbox" id="size_override" />' +
-                         '<label id="bitmapLabel">Bitmap</label><input type="checkbox" id="bitmap" />' +
-                         '<label id="fontSizeLabel">Font size: </label><input type="number" id="fontSize" value="10"/>' +
-                         '<label id="fontFamilyLabel">Font family: </label><input type="text" id="fontFamily" value="Arial" />' +
-                         '<label id="fillLabel">Fill color: </label><input type="text" id="fill" value="0xffffff"/>' +
-                         '<label id="alignLabel">Text align: </label><input type="text" id="align" value="center" />' +
+                            '<label id="size_overrideLabel">Size override</label><input type="checkbox" id="size_override" />' +
+                            '<label id="bitmapLabel">Bitmap</label><input type="checkbox" id="bitmap" />' +
+                            '<label id="fontSizeLabel">Font size: </label><input type="number" id="fontSize" value="10"/>' +
+                            '<label id="fontFamilyLabel">Font family: </label><input type="text" id="fontFamily" value="Arial" />' +
+                            '<label id="fillLabel">Fill color: </label><input type="text" id="fill" value="0xffffff"/>' +
+                            '<label id="alignLabel">Text align: </label><input type="text" id="align" value="center" />' +
                     '</section>' +
                 '</section>' + 
             '</section>'
@@ -341,17 +328,17 @@ function(Screen, Stage, GUI, Spritesheet, $){
 
     };
 
-    _p.update = function(keysState){  
+    update(keysState){  
         
-       window.innerHeight = 600;
-       window.innerWidth = 960;
-       // this._canvas.setAttribute("height", "600");
-       // this._canvas.setAttribute("width", "960");
+        window.innerHeight = 600;
+        window.innerWidth = 960;
+        // this._canvas.setAttribute("height", "600");
+        // this._canvas.setAttribute("width", "960");
         
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: []};
     };
 
-    _p.updateStage = function(stage){
+    updateStage(stage){
 
         if(stage === "background"){
 
@@ -416,108 +403,107 @@ function(Screen, Stage, GUI, Spritesheet, $){
             return temp;
 
         }
-    };
+    }
+}
 
-    function saveElement(stage){
-        
-        let index;
-        let array;
-        if(stage === "gui"){
-            array = this._guiElements;
-        }
-        else if(stage === "background"){
-            array = this._backgroundElements;
-        }
-
-        index = array.findIndex( (item) => {
-            return this._currentElement.id === item.id;
-        });
-
-        array[index] = this._currentElement;
-
+function saveElement(stage){
+    
+    let index;
+    let array;
+    if(stage === "gui"){
+        array = this._guiElements;
+    }
+    else if(stage === "background"){
+        array = this._backgroundElements;
     }
 
-    function loadElement(id, stage){
-        switch(stage){
-            case "gui":
-                this._currentElement = this._guiElements.find( (item) => {
-                    return id === item.id; 
-                });
-                this._selectedElementLayer = "gui";
-                break;
-            case "background":
-                this._currentElement = this._backgroundElements.find( (item) => {
-                    return id === item.id; 
-                });
-                this._selectedElementLayer = "background";
-                break;
-        }
-        displayTypeProps(this._currentElement);
-        fillInputsFromElement(this._currentElement, this._selectedElementLayer);
-        $("#props, #typeProps").removeClass("hidden");
-        $("#info").text(`Editing ${this._selectedElementLayer} item with id ${this._currentElement.id}`);
+    index = array.findIndex( (item) => {
+        return this._currentElement.id === item.id;
+    });
+
+    array[index] = this._currentElement;
+
+}
+
+function loadElement(id, stage){
+    switch(stage){
+        case "gui":
+            this._currentElement = this._guiElements.find( (item) => {
+                return id === item.id; 
+            });
+            this._selectedElementLayer = "gui";
+            break;
+        case "background":
+            this._currentElement = this._backgroundElements.find( (item) => {
+                return id === item.id; 
+            });
+            this._selectedElementLayer = "background";
+            break;
+    }
+    displayTypeProps(this._currentElement);
+    fillInputsFromElement(this._currentElement, this._selectedElementLayer);
+    $("#props, #typeProps").removeClass("hidden");
+    $("#info").text(`Editing ${this._selectedElementLayer} item with id ${this._currentElement.id}`);
+}
+
+function fillInputsFromElement(e, l){
+    let layer = "GUI";
+    if(l === "background"){
+        layer = "Background";
     }
 
-    function fillInputsFromElement(e, l){
-        let layer = "GUI";
-        if(l === "background"){
-            layer = "Background";
-        }
+    $("#elem_type").val(e.type);
+    $("#identifier").val(e.id);
+    $("#visible").prop("checked", e.visible);
+    $("#layer_list").val(layer);
+    $("#moveX").val(e.move.x);
+    $("#moveY").val(e.move.y);
 
-        $("#elem_type").val(e.type);
-        $("#identifier").val(e.id);
-        $("#visible").prop("checked", e.visible);
-        $("#layer_list").val(layer);
-        $("#moveX").val(e.move.x);
-        $("#moveY").val(e.move.y);
-
-        if(typeof e.position === "string"){
-            $("#positionString").val(e.position).removeAttr("disabled");
-            $("#positionX").val(e.position.x).attr("disabled", "");
-            $("#positionY").val(e.position.y).attr("disabled", "");
-            $("#positionSystem").prop("checked", false);
-        }
-        else{
-            $("#positionX").val(e.position.x).removeAttr("disabled");
-            $("#positionY").val(e.position.y).removeAttr("disabled");
-            $("#positionString").attr("disabled", "");
-            $("#positionSystem").prop("checked", true);
-        }
-
-        if(e.text !== undefined){
-            $("#text").val(e.text);
-        }
-        if(e.texture !== undefined){
-            $("#assets").val(e.texture);
-        }
-
-    }
-
-    function stateToList(item){
-        return `<li id="${item.id}">${item.id}::${item.type}</li>`;
-    }
-
-    function displayTypeProps(item){
-
-        if(item.texture !== undefined){
-            $("#textureLabel, #texture").removeClass("hidden");
-        }
-        if(item.text !== undefined){
-            $("#textLabel, #text").removeClass("hidden");
-        }
-        if(item.options !== undefined){
-            $("#optionsLabel, #options").removeClass("hidden"); 
-        }
-    }
-
-    function resetInputs(){
-        $("#texture, #text, #layer_list, #elem_type, #identifier").val("");
-        $("#positionX, #positionY").val(0).attr("disabled", "");
-        $("#positionString").val("center").removeAttr("disabled");
+    if(typeof e.position === "string"){
+        $("#positionString").val(e.position).removeAttr("disabled");
+        $("#positionX").val(e.position.x).attr("disabled", "");
+        $("#positionY").val(e.position.y).attr("disabled", "");
         $("#positionSystem").prop("checked", false);
-        $("#typeProps").addClass("hidden");
+    }
+    else{
+        $("#positionX").val(e.position.x).removeAttr("disabled");
+        $("#positionY").val(e.position.y).removeAttr("disabled");
+        $("#positionString").attr("disabled", "");
+        $("#positionSystem").prop("checked", true);
     }
 
-    return GUIEditor;
+    if(e.text !== undefined){
+        $("#text").val(e.text);
+    }
+    if(e.texture !== undefined){
+        $("#assets").val(e.texture);
+    }
 
-});
+}
+
+function stateToList(item){
+    return `<li id="${item.id}">${item.id}::${item.type}</li>`;
+}
+
+function displayTypeProps(item){
+
+    if(item.texture !== undefined){
+        $("#textureLabel, #texture").removeClass("hidden");
+    }
+    if(item.text !== undefined){
+        $("#textLabel, #text").removeClass("hidden");
+    }
+    if(item.options !== undefined){
+        $("#optionsLabel, #options").removeClass("hidden"); 
+    }
+}
+
+function resetInputs(){
+    $("#texture, #text, #layer_list, #elem_type, #identifier").val("");
+    $("#positionX, #positionY").val(0).attr("disabled", "");
+    $("#positionString").val("center").removeAttr("disabled");
+    $("#positionSystem").prop("checked", false);
+    $("#typeProps").addClass("hidden");
+}
+
+export default GUIEditor;

@@ -1,10 +1,9 @@
-define([
-    'Core/Screen'
-],
-function(Screen){
-    
-    var Cinematic = function(params){
-        Screen.call(this);
+import Screen from '../Core/Screen';
+
+class Cinematic extends Screen{
+
+    constructor(params){
+        super();
         this._small = 1;
         if(window.innerWidth <= 640){
             this._small = 2;
@@ -21,37 +20,26 @@ function(Screen){
         this._sounds = [];
         this._date = new Date();
         this._back = params.back;
-    };
-    
-    Cinematic.prototype = Object.create(Screen.prototype, {
-        constructor:{
-            value: Cinematic,
-            writable: true,
-            configurable: true,
-            enumerable: false
-        }
-    });
-    
-    var _p = Cinematic.prototype;
-    
-    _p.hasLoaded = function(){
+    }
+
+    hasLoaded(){
         this._loaded = true;
         this._cinematicConfig.forEach( (element) => {
             element.moveTo.x /= this._small;
             element.moveTo.y /= this._small;
         });
-    };
-    
-    _p.getConfig = function(){
+    }
+
+    getConfig(){
         return this._cinematicConfig;
-    };
-    
-    _p.setMusic = function(sound){
+    }
+
+    setMusic(sound){
         sound.effect = "fadeIn";
         this._sounds.push(sound);
-    };
+    }
 
-    _p.update = function(){
+    update(){
         
         if(!this._finished){
         
@@ -123,7 +111,7 @@ function(Screen){
         }
         return {action: this._onUpdateAction, params: this._nextScreenParams, changeTo: this._nextScreen, playSound: this._sounds};
     };
-    
-    return Cinematic;
-    
-});
+
+}
+
+export default Cinematic;

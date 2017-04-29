@@ -1,45 +1,50 @@
-define([], function(){
-    
+/**
+ * Class representing some currency for example Health Points or gold amount.
+ * @class
+ */
+class Currency{
+
     /**
-     * Class representing some currency for example Health Points or gold amount.
-     * @param {string} name
+     * @constructor
+     * @param {String} name 
      */
-    var Currency = function(name){
+    constructor(name){
         this._name = name;
         this._quantity = 0;
-    };
+    }
+
+    /**
+     * Returns this currency name.
+     * @returns {String}
+     */
+    getName(){
+        return this._name;
+    }
     
-    Currency.prototype = {
-        
-        /**
-         * Returns this currency name.
-         * @returns {string}
-         */
-        getName : function(){
-            return this._name;
-        },
-        
-        /**
-         * Returns quantity of this currency.
-         * @returns {number}
-         */
-        getQuantity : function(){
-            return this._quantity;
-        },
-        
-        /**
-         * Sets the quantity to a given number.
-         * @param {number} number
-         */
-        setQuantity : function(number){
-            this._quantity = number;
-        },
-        
-        addQuantity : function(number){
-            this._quantity += number;
-        }
-        
-    };
+    /**
+     * Returns quantity of this currency.
+     * @returns {Number}
+     */
+    getQuantity(){
+        return this._quantity;
+    }
     
-    return Currency;
-});
+    /**
+     * Sets the quantity to a given number.
+     * @param {Number} number
+     */
+    setQuantity(number){
+        this._quantity = number;
+    }
+    
+    /**
+     * Changes quantity by given number.
+     * @param {Number} number 
+     */
+    addQuantity(number){
+        this._quantity += number;
+    }
+
+}
+
+export default Currency;

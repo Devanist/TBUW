@@ -1,25 +1,21 @@
-define([
-    'Screens/Game',
-    'Screens/LevelEditor',
-    'Screens/Menu',
-    'Screens/Cinematic',
-    'Screens/ChapterChoose',
-    'Screens/LevelChoose',
-    'Screens/GUIEditor',
-    'Screens/CinematicEditor'
-], function(Game, LevelEditor, Menu, Cinematic, ChapterChoose, LevelChoose, GUIEditor, CinematicEditor){
+import GameScreen from './Game';
+import LevelEditorScreen from './LevelEditor.js';
+import MenuScreen from './Menu';
+import CinematicScreen from './Cinematic';
+import ChapterChooseScreen from './ChapterChoose';
+import LevelChooseScreen from './LevelChoose';
+import GUIEditorScreen from './GUIEditor';
+import CinematicEditorScreen from './CinematicEditor';
     
-    var Screens = {
-        game: Game,
-        editor: LevelEditor,
-        guieditor: GUIEditor,
-        cinematiceditor: CinematicEditor,
-        menu: Menu,
-        cinematic: Cinematic,
-        chapter_choose: ChapterChoose,
-        level_choose: LevelChoose
-    };
-    
-    return Screens;
-    
-});
+const Screens = {
+    game:               GameScreen,
+    editor:             LevelEditorScreen,
+    guieditor:          GUIEditorScreen,
+    cinematiceditor:    CinematicEditorScreen,
+    menu:               MenuScreen,
+    cinematic:          CinematicScreen,
+    chapter_choose:     ChapterChooseScreen,
+    level_choose:       LevelChooseScreen
+};
+
+export default Screens;

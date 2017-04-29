@@ -1,18 +1,14 @@
-define([
-    'GUI/Button',
-    'GUI/Image',
-    'GUI/Label'
-], function(Button, Image, Label){
+import Button from './Button';
+import Image from './Image';
+import Label from './Label';
     
-    /**
-     * @module GUI
-     */
-    var GUI = {
-        Button: Button,
-        Image: Image,
-        Label: Label
-    };
-    
-    return GUI;
-    
-});
+/**
+ * @module GUI
+ */
+const GUI = {
+    Button: Button,
+    Image: Image,
+    Label: Label
+};
+
+export default GUI;

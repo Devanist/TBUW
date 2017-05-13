@@ -3,10 +3,10 @@
  */
 class Entity{
 
-    constructor(id, sprite){
+    constructor(id, texture){
         this._id = id;
         this._isStatic = null;
-        this._sprite = new PIXI.Sprite(sprite);
+        this._sprite = new PIXI.Sprite(texture);
         this._data = {
             id : id,
             direction: 1,

@@ -6,6 +6,7 @@ import LevelChooseLayers from './GUI/LevelChoose.json';
 import EditorLayers from './GUI/Editor.json';
 import GUIEditorLayers from './GUI/GUIEditor.json';
 import CinematicEditorLayers from './GUI/CinematicEditor.json';
+import ReactLevelEditor from './GUI/ReactLevelEditor.json';
     
 const GUI_Layers = {
     game: GameLayers,
@@ -15,7 +16,8 @@ const GUI_Layers = {
     level_choose: LevelChooseLayers,
     editor: EditorLayers,
     guieditor: GUIEditorLayers,
-    cinematiceditor: CinematicEditorLayers
+    cinematiceditor: CinematicEditorLayers,
+    reacteditor: ReactLevelEditor
 };
 
 export default GUI_Layers;

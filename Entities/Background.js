@@ -8,6 +8,16 @@ class Background extends Item{
         this._data.movingSpeedFactor = factor;
     };
 
+    static get Properties(){
+        return {
+            factor : {
+                name : "Factor",
+                type : "Number",
+                defaultValue : 1
+            }
+        }
+    }
+
 }
 
 export default Background;

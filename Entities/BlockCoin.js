@@ -49,6 +49,16 @@ class BlockCoin extends Collectible{
         }        
     }
 
+    static get Properties(){
+        return {
+            quantity : {
+                name : "Quantity",
+                type : "Number",
+                defaultValue : 1
+            }
+        }
+    }
+
 }
 
 export default BlockCoin;

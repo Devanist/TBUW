@@ -8,9 +8,6 @@ canvas{
     width: 70%;
     height: 80%;
 }
-.hidden{
-    display: none;
-}
 #toolbox{
     position: absolute;
     top: 0;
@@ -121,4 +118,76 @@ canvas{
 }
 #details_box input{
     width: 60px;
+}
+
+#editorRoot{
+    width: 29%;
+}
+
+#Editor{
+    width: 100%;
+}
+
+#EditorMenu{
+    display : block;
+    height: 100%;
+    width: 100%;
+
+    input, select{
+        width: 130px;
+    }
+
+    input[type=file]{
+        width : auto;
+    }
+
+    h3{
+        cursor: pointer;
+    }
+}
+
+#EditorProps{
+    position: absolute;
+    left: 0;
+    top : 80%;
+    width : 70%;
+    height: 20%;
+    background-color: #AEAEAE;
+
+    td:last-of-type{
+        text-align: right;
+    }
+
+    input, select{
+        width : 120px;
+    }
+
+    section{
+        display: inline-block;
+        vertical-align: top;
+    }
+
+}
+
+.hidden{
+    display: none;
+}
+
+#creationWindow{
+    position : absolute;
+    left : 50%;
+    transform : translate(-50%, -50%);
+    top : 35%;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 60px 10px rgba(0,0,0,0.75);
+
+    table{
+        padding: 10px;
+    }
+}
+
+.entityIDcell{
+    cursor : pointer;
 }

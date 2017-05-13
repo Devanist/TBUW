@@ -21,7 +21,7 @@ class LevelEditor extends Screen{
 
         this._canvas = $("canvas")[0];
         
-        $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.css"/>');
+        $("head").append('<link rel="stylesheet" href="Assets/Editor/editor.scss"/>');
         
         this.appendAssetsLibrary();
         this.appendToolBox();

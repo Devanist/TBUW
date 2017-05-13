@@ -75,7 +75,42 @@ class MovingPlatform extends Platform{
 
         }
 
-    };
+    }
+
+    static get Properties(){
+        
+        let props = {
+            startPos : [
+                {
+                    name : "x",
+                    type : "Number",
+                    defaultValue : 0
+                },
+                {
+                    name : "y",
+                    type : "Number",
+                    defaultValue : 0
+                }
+            ],
+            endPos : [
+                {
+                    name : "x",
+                    type : "Number",
+                    defaultValue : 0
+                },
+                {
+                    name : "y",
+                    type : "Number",
+                    defaultValue : 0
+                }
+            ]
+        };
+
+        props.StartPos.name = "Start position";
+        props.EndPos.name = "End position";
+    
+        return props;
+    }
 
 }
 

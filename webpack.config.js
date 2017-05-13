@@ -7,17 +7,17 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.css$/, loader: "style!css"},
+            {test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"},
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
                 query: {
-                    presets: ['es2015'],
-                    plugins: []
+                    presets: ['react', 'es2015'],
+                    plugins: ['transform-object-rest-spread', 'transform-regenerator']
                 }
             },
-            {test: /\.json$/, loader: "json-loader"}
+            {test: /\.json$/, loader: "json-loader"},
         ]
     },
     node : { fs : "empty"}

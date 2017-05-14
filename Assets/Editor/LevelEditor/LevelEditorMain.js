@@ -18,7 +18,11 @@ class LevelEditorMain extends Component{
                         entities: []
                     },
                     selection : null,
-                    musicPlaying : false
+                    musicPlaying : false,
+                    mouse : {
+                        x : 0,
+                        y : 0
+                    }
                 };
                 this.loadLevel = this.loadLevel.bind(this);
                 this.addToScene = this.addToScene.bind(this);
@@ -27,6 +31,7 @@ class LevelEditorMain extends Component{
                 this.clearSelection = this.clearSelection.bind(this);
                 this.triggerMusic = this.triggerMusic.bind(this);
                 this.selectEntity = this.selectEntity.bind(this);
+
             }
 
             render(){
@@ -76,6 +81,18 @@ class LevelEditorMain extends Component{
                     x: 0,
                     y: 0
                 };
+
+                Object.keys(Entities[element.type].Properties).forEach(prop => {
+                    if(Entities[element.type].Properties[prop].subFields){
+                        element[prop] = {};
+                        Entities[element.type].Properties[prop].subFields.forEach(sub => {
+                            element[prop][sub.name] = sub.defaultValue;
+                        });
+                    }
+                    else{
+                        element[prop] = Entities[element.type].Properties[prop].defaultValue;
+                    }
+                });
 
                 this.setState({
                     level : {

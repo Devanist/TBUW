@@ -27,7 +27,7 @@ else{
 }
 
 //Initialize PIXI and devices.
-const renderer = new PIXI.Application({
+const Application = new PIXI.Application({
     width : window.innerWidth,
     height : window.innerHeight
 });
@@ -40,8 +40,8 @@ const mouse = new Mouse();
 rootStage.setScale({ x: scale.x, y: scale.y });
 var logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
 
-renderer.backgroundColor = 0x000000;
-renderer.autoResize = true;
+Application.backgroundColor = 0x000000;
+Application.autoResize = true;
 
 window.onresize = function(event){
     h = window.innerHeight;
@@ -58,13 +58,13 @@ window.onresize = function(event){
             x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
         };
     }
-    renderer.view.style.width = w + "px";
-    renderer.view.style.height = h + "px";
+    Application.view.style.width = w + "px";
+    Application.view.style.height = h + "px";
     rootStage.setScale({ x: scale.x, y: scale.y });
-    renderer.resize(w, h);
+    Application.renderer.resize(w, h);
 };
 
-document.body.appendChild(renderer.view);
+document.body.appendChild(Application.view);
 animate();
 loader.preload();
 //Showing progress of loading assets.
@@ -101,6 +101,6 @@ loader.loadAssets(function(datloader, resources){
 }, speaker, rootStage);
 
 function animate(){
-    renderer.stage.addChild(rootStage.getStage());
+    Application.stage.addChild(rootStage.getStage());
     requestAnimationFrame(animate);
 }

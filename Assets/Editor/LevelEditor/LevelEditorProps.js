@@ -45,22 +45,25 @@ class LevelEditorProps extends Component{
                             <table><tbody>
                                 {Object.keys(Entities[this.props.selection.type].Properties).map(prop => {
                                     let entity = Entities[this.props.selection.type].Properties[prop];
-                                    if(Array.isArray(entity)){
+                                    if(entity.subFields){
                                         return <tr key={`prop_${prop}`}>
                                             <td>{entity.name}</td>
                                             <td>
                                                 <table><tbody>
-                                                    {entity.forEach(sub => {
+                                                    {entity.subFields.map(sub => {
+                                                        console.log(sub);
                                                         switch(sub.type){
-                                                            case "Number": return <tr key={`${prop}_${sub.name}`}>
-                                                                <td>{sub.name}:</td>
-                                                                <td><input  name={`${prop}_${sub.name}`} 
-                                                                            type="number" 
-                                                                            defaultValue={sub.defaultValue} 
-                                                                            onChange={this.props.update}
-                                                                    />
-                                                                </td>
-                                                            </tr>
+                                                            case "Number": 
+                                                                console.log('dupa');
+                                                                return <tr key={`${prop}_${sub.name}`}>
+                                                                    <td>{sub.name}:</td>
+                                                                    <td><input  name={`${prop}_${sub.name}`} 
+                                                                                type="number" 
+                                                                                defaultValue={sub.defaultValue} 
+                                                                                onChange={this.props.update}
+                                                                        />
+                                                                    </td>
+                                                                </tr>
                                                         }
                                                     })}
                                                 </tbody></table>

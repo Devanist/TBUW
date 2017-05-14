@@ -31,6 +31,47 @@ class LevelEditor extends Screen{
         this._musicPlaying = false;
         this._sounds = [];
 
+        this._startClick = {
+            x: 0,
+            y: 0
+        };
+
+        this._buttonDown = false;
+
+        document.querySelector("canvas").addEventListener("mousedown", (e) => {
+            if(e.button === 0){
+                this._startClick.x = e.clientX;
+                this._startClick.y = e.clientY;
+                this._buttonDown = true;
+            }
+        });
+
+        document.querySelector("canvas").addEventListener("mouseup", (e) => {
+            this._buttonDown = false;
+        });
+
+        document.querySelector("canvas").addEventListener("mousemove", (e) => {
+            if(this._buttonDown === true){
+                this._gameStage.getStage().position.x += e.clientX - this._startClick.x;
+                this._gameStage.getStage().position.y += e.clientY - this._startClick.y;
+                this._startClick.x = e.clientX;
+                this._startClick.y = e.clientY;
+            }
+        });
+
+        document.querySelector("canvas").addEventListener("touchstart", (e) => {
+            this._startClick.x = e.touches[0].clientX;
+            this._startClick.y = e.touches[0].clientY;
+            this._buttonDown = true;
+        });
+
+        document.querySelector("canvas").addEventListener("touchmove", (e) => {
+            this._gameStage.getStage().position.x += e.touches[0].clientX - this._startClick.x;
+            this._gameStage.getStage().position.y += e.touches[0].clientY - this._startClick.y;
+            this._startClick.x = e.touches[0].clientX;
+            this._startClick.y = e.touches[0].clientY;
+        });
+
         render(<LevelEditorMain editorContext={this} />, editorRoot);
     }
 

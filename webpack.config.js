@@ -1,5 +1,7 @@
+const path = require("path");
+
 module.exports = {
-    entry: ["babel-polyfill", "D:/WalrusEngine2/main.js"],
+    entry: ["babel-polyfill", path.join(__dirname, "main.js")],
     devtool: 'source-map',
     output: {
         path: __dirname,

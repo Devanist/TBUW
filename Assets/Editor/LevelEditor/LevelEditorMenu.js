@@ -79,7 +79,8 @@ class LevelEditorMenu extends Component{
                         <tr>
                             <td>Level background</td>
                             <td>
-                                <select id="level_background" size="1" onClick={this.props.update}>
+                                <select id="level_background" defaultValue="none" size="1" onClick={this.props.update}>
+                                    <option disabled value="none">Select background</option>
                                     {Object.keys(Spritesheet.frames).map(asset => <option key={`bg_${asset}`} value={asset}>{asset}</option>)}
                                 </select>
                             </td>

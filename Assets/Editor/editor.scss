@@ -142,12 +142,25 @@ canvas.editorCanvas{
         margin-left : 5px;
     }
 
-    input, select{
-        width: 130px;
+    header{
+
+        input, select{
+            width: 130px;
+        }
+
+        input[type=file]{
+            width : auto;
+        }
+
     }
 
-    input[type=file]{
-        width : auto;
+    table{
+        input{
+            width: auto;
+        }
+        tr{
+            vertical-align: top;
+        }
     }
 
     h3{
@@ -201,7 +214,7 @@ canvas.editorCanvas{
     cursor : pointer;
 }
 
-#sceneElements{
+#sceneElements, #guiList{
     margin : 0;
     width: 99%;
     height: 68%;

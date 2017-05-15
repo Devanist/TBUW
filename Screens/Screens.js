@@ -1,23 +1,23 @@
 import GameScreen from './Game';
-import LevelEditorScreen from './LevelEditor.js';
 import MenuScreen from './Menu';
 import CinematicScreen from './Cinematic';
 import ChapterChooseScreen from './ChapterChoose';
 import LevelChooseScreen from './LevelChoose';
 import GUIEditorScreen from './GUIEditor';
 import CinematicEditorScreen from './CinematicEditor';
-import ReactLevelEditor from './ReactLevelEditor';
+import LevelEditor from './LevelEditor';
+import ReactGUIEditor from './ReactGUIEditor';
     
 const Screens = {
     game:               GameScreen,
-    editor:             LevelEditorScreen,
     guieditor:          GUIEditorScreen,
     cinematiceditor:    CinematicEditorScreen,
     menu:               MenuScreen,
     cinematic:          CinematicScreen,
     chapter_choose:     ChapterChooseScreen,
     level_choose:       LevelChooseScreen,
-    reacteditor:        ReactLevelEditor
+    editor:             LevelEditor,
+    reactguieditor:     ReactGUIEditor
 };
 
 export default Screens;

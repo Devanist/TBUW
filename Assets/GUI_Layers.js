@@ -3,10 +3,10 @@ import MenuLayers from './GUI/Menu.json';
 import CinematicLayers from './GUI/Cinematic.json';
 import ChapterChooseLayers from './GUI/ChapterChoose.json';
 import LevelChooseLayers from './GUI/LevelChoose.json';
-import EditorLayers from './GUI/Editor.json';
 import GUIEditorLayers from './GUI/GUIEditor.json';
 import CinematicEditorLayers from './GUI/CinematicEditor.json';
-import ReactLevelEditor from './GUI/ReactLevelEditor.json';
+import LevelEditor from './GUI/LevelEditor.json';
+import ReactGUIEditor from './GUI/ReactGUIEditor.json';
     
 const GUI_Layers = {
     game: GameLayers,
@@ -14,10 +14,10 @@ const GUI_Layers = {
     cinematic: CinematicLayers,
     chapter_choose: ChapterChooseLayers,
     level_choose: LevelChooseLayers,
-    editor: EditorLayers,
     guieditor: GUIEditorLayers,
     cinematiceditor: CinematicEditorLayers,
-    reacteditor: ReactLevelEditor
+    editor: LevelEditor,
+    reactguieditor : ReactGUIEditor
 };
 
 export default GUI_Layers;

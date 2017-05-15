@@ -64,7 +64,7 @@ class LevelEditorMenu extends Component{
                 <input id="loadFile" type="file" onChange={this.props.load}/>
                 {
                     this.state.url && 
-                        <p><a href={this.state.url}>Right click here and select 'save as'</a></p>
+                        <p><a href={this.state.url}>Right click here and select 'Save as'</a></p>
                 }
                 <table>
                     <tbody>

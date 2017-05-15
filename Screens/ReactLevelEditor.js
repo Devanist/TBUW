@@ -38,6 +38,8 @@ class LevelEditor extends Screen{
 
         this._buttonDown = false;
 
+        document.querySelector("canvas").className = "editorCanvas";
+
         document.querySelector("canvas").addEventListener("mousedown", (e) => {
             if(e.button === 0){
                 this._startClick.x = e.clientX;

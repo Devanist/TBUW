@@ -10,9 +10,19 @@ class LevelEditorMenu extends Component{
         super();
         this.state = {
             expanded : "scene",
-            creation : false
+            creation : false,
+            url : null
         }
         this.expand = this.expand.bind(this);
+        this.saveToFile = this.saveToFile.bind(this);
+    }
+
+    saveToFile(){
+        const data = JSON.stringify(this.props.level);
+        const linkData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(data);
+        this.setState({
+            url : linkData
+        });
     }
 
     render(){
@@ -52,10 +62,14 @@ class LevelEditorMenu extends Component{
             }
             <header>
                 <input id="loadFile" type="file" onChange={this.props.load}/>
+                {
+                    this.state.url && 
+                        <p><a href={this.state.url}>Right click here and select 'save as'</a></p>
+                }
                 <table>
                     <tbody>
                         <tr>
-                            <td><input type="button" value="Save level" /></td>
+                            <td><input type="button" value="Save level" onClick={this.saveToFile}/></td>
                             <td><input type="button" value="New level" onClick={this.props.reset}/></td>
                         </tr>
                         <tr>
@@ -74,10 +88,16 @@ class LevelEditorMenu extends Component{
                             <td>Level music</td>
                             <td>
                                 <select id="level_music" size="1" value={this.props.level.music} onChange={this.props.update}>
+                                    <option disabled value="none">Select music</option>
                                     {Assets.sounds.map(asset => <option key={`sound_${asset.name}`} value={asset.name}>{asset.name}</option>)}
                                 </select>
                             </td>
-                            <td><input type="button" value={this.props.musicPlaying && "Stop" || "Play"} onClick={this.props.triggerMusic} /></td>
+                            <td>
+                                <input  type="button" 
+                                        value={this.props.musicPlaying && "Stop" || "Play"} 
+                                        onClick={() => this.props.triggerMusic(this.props.musicPlaying)} 
+                                />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -91,7 +111,12 @@ class LevelEditorMenu extends Component{
                 </tbody>
             </table>
             <h3 onClick={() => {this.expand("scene")}}>Scene</h3>
-            <input type="button" value="Add new element to scene" onClick={() => {this.setState({creation : true})}} />
+            <input type="button" value="Add new element to scene" onClick={() => {
+                        this.props.clear();
+                        this.setState({creation : true});
+                    }
+                } 
+            />
             <section id="sceneElements">
                 <table className={this.state.expanded !== "scene" && "hidden"}>
                     <thead>
@@ -106,9 +131,9 @@ class LevelEditorMenu extends Component{
                     <tbody>
                         {this.props.level.entities.length === 0 && <tr><td>Scene is empty</td></tr> || this.props.level.entities.map((entity, index) => 
                             <tr key={`entity_${index}`} >
-                                <td><input type="button" value="X" title="Remove from scene"/></td>
-                                <td><input type="button" value="&#8593;" title="Move higher" /></td>
-                                <td><input type="button" value="&#8595;" title="Move lower" /></td>
+                                <td><input type="button" value="X" title="Remove from scene" onClick={() => {this.props.remove(entity.id)}} /></td>
+                                <td><input type="button" value="&#8593;" title="Move higher" onClick={() => {this.props.moveUp(entity.id)}} /></td>
+                                <td><input type="button" value="&#8595;" title="Move lower" onClick={() => {this.props.moveDown(entity.id)}} /></td>
                                 <td className="entityIDcell" onClick={() => {this.props.select(entity.id)}}>{entity.id}</td>
                                 <td>{entity.type}</td>
                                 <td>{entity.texture}</td>

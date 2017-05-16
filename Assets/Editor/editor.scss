@@ -175,6 +175,7 @@ canvas.editorCanvas{
     width : 70%;
     height: 20%;
     background-color: #AEAEAE;
+    overflow-y: auto;
 
     td:last-of-type{
         text-align: right;

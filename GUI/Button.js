@@ -40,7 +40,58 @@ class Button extends BaseElement{
 			this._sprite.width = this._text.width + 20;
 			this._sprite.height = this._text.height + 20;
 		}
-	};
+	}
+
+	static get Properties(){
+		return {
+			text : {
+				name : "Text",
+				type : "Text",
+				defaultValue : "Default text"
+			},
+			options : {
+				name : "Options",
+				subFields : [
+					{
+						label : "Size override",
+						name : "size_override",
+						type : "Boolean",
+						defaultValue : "false"
+					},
+					{
+						label : "Is bitmap",
+						name : "bitmap",
+						type : "Boolean",
+						defaultValue : "true",
+					},
+					{
+						label : "Font size",
+						name : "fontSize",
+						type : "Number",
+						defaultValue : "14"
+					},
+					{
+						label : "Font family",
+						name : "fontFamily",
+						type : "Text",
+						defaultValue : "Arial"
+					},
+					{
+						label : "Fill color",
+						name : "fill",
+						type : "Text",
+						defaultValue : "0xffffff"
+					},
+					{
+						label : "Text align",
+						name : "align",
+						type : "Text",
+						defaultValue : "center"
+					}
+				]
+			}
+		}
+	}
 
 	/**
 	 * Triggers a saved callback function.
@@ -49,7 +100,7 @@ class Button extends BaseElement{
 	 */
 	triggerCallback(){
 		this._callback();
-	};
+	}
 
 	/**
 	 * Sets the callback function to invoke when Button activated.

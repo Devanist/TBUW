@@ -51,10 +51,8 @@ class LevelEditorProps extends Component{
                                             <td>
                                                 <table><tbody>
                                                     {entity.subFields.map(sub => {
-                                                        console.log(sub);
                                                         switch(sub.type){
                                                             case "Number": 
-                                                                console.log('dupa');
                                                                 return <tr key={`${prop}_${sub.name}`}>
                                                                     <td>{sub.name}:</td>
                                                                     <td><input  name={`${prop}_${sub.name}`} 

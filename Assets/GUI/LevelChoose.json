@@ -2,7 +2,7 @@
     "GUI": {
         "children": [
             {
-                "type": "label",
+                "type": "Label",
                 "id": "RETURN_CHAPTER_CHOOSE_TEXT",
                 "position": {
                     "x": 20,
@@ -18,7 +18,7 @@
                 }
             },
             {
-                "type": "button",
+                "type": "Button",
                 "id": "RETURN",
                 "position": {
                     "x": 80,

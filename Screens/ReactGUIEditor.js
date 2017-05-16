@@ -31,25 +31,20 @@ class ReactGUIEditor extends Screen{
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: []};
     }
 
-    updateStage(stage){
-        if(stage === "background"){
+    updateStage(stage, list){
 
+        if(stage === "Background"){
             this._background.removeAll();
-
-            this._backgroundElements.
-                map(configToElements).
+            list.
                 forEach( (item) => {
-                    this._background.add(item);
+                    this._background.add(configToElements(item));
                 });
         }
-        else if(stage === "gui"){
-
+        else if(stage === "GUI"){
             this._guiStage.removeAll();
-
-            this._guiElements.
-                map(configToElements).
+            list.
                 forEach( (item) => {
-                    this._guiStage.add(item);
+                    this._guiStage.add(configToElements(item));
                 });
         }
 
@@ -72,13 +67,13 @@ class ReactGUIEditor extends Screen{
             }
 
             switch(obj.type){
-                case "image":
+                case "Image":
                     temp = new GUI.Image(obj.id, obj.position, texture);
                     break;
-                case "label":
+                case "Label":
                     temp = new GUI.Label(obj.id, obj.position, obj.text, obj.options);
                     break;
-                case "button":
+                case "Button":
                     temp = new GUI.Button(obj.id, obj.position, texture, obj.text, obj.options);
                     break;
                 default: 

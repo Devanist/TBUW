@@ -67,7 +67,7 @@ class LevelEditorMain extends Component{
         if(!file){
             return;
         }
-        let editorthis = this;
+        const editorthis = this;
 
         let reader = new FileReader();
         reader.onload = function(e){

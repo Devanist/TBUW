@@ -2,7 +2,7 @@
     "GUI": {
         "children": [
             {
-                "type": "image",
+                "type": "Image",
                 "id": "portret",
                 "position":{
                     "x": 20, 
@@ -11,7 +11,7 @@
                 "texture": "portret"
             },
             {
-                "type": "image",
+                "type": "Image",
                 "id": "blockcoin",
                 "position": {
                     "x": 140,
@@ -20,7 +20,7 @@
                 "texture" : "blockcoin"
             },
             {
-                "type": "label",
+                "type": "Label",
                 "id": "blockcoinValue",
                 "position": {
                     "x": 190,
@@ -29,7 +29,7 @@
                 "text": 0
             },
             {
-                "type": "image",
+                "type": "Image",
                 "id": "pauseBackground",
                 "position": "center",
                 "texture": "pause",
@@ -40,7 +40,7 @@
                 "visible": false
             },
             {
-                "type": "label",
+                "type": "Label",
                 "id": "wonLabel",
                 "position":"center",
                 "text": "MISSION SUCCESFUL",
@@ -58,7 +58,7 @@
                 "visible": false
             },
             {
-                "type": "button",
+                "type": "Button",
                 "id": "wonButton",
                 "position": "center",
                 "texture": null,
@@ -74,7 +74,7 @@
                 "visible": false
             },
             {
-                "type": "label",
+                "type": "Label",
                 "id": "LOSE",
                 "position": "center",
                 "text": "YOU LOSE",
@@ -92,7 +92,7 @@
                 "visible": false
             },
             {
-                "type": "button",
+                "type": "Button",
                 "id": "RETRY",
                 "position": "center",
                 "texture": null,
@@ -108,7 +108,7 @@
                 "visible": false
             },
             {
-                "type": "label",
+                "type": "Label",
                 "id": "pauseLabel",
                 "position": "center",
                 "text": "PAUSE",
@@ -126,7 +126,7 @@
                 "visible": false
             },
             {
-                "type": "button",
+                "type": "Button",
                 "id" : "resumeButton",
                 "position": "center",
                 "texture": null,
@@ -146,7 +146,7 @@
                 "visible": false
             },
             {
-                "type": "button",
+                "type": "Button",
                 "id": "returnButton",
                 "position": "center",
                 "texture": null,

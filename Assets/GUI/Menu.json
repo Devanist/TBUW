@@ -2,7 +2,7 @@
     "GUI": {
         "children": [
             {
-                "type": "button",
+                "type": "Button",
                 "id": "new_game",
                 "position": {
                     "x": 390,
@@ -24,7 +24,7 @@
     "Background": {
         "children": [
             {
-                "type": "image",
+                "type": "Image",
                 "id": "background",
                 "position": {
                     "x": 0,
@@ -33,7 +33,7 @@
                 "texture": "menu"
             },
             {
-                "type": "image",
+                "type": "Image",
                 "id": "walluce",
                 "position": "bottom-right",
                 "texture": "walrus_menu"

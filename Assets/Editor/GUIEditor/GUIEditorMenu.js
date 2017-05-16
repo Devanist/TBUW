@@ -28,8 +28,8 @@ class GUIEditorMenu extends Component{
                             <td>Layer</td>
                             <td>
                                 <select id="layerSelection">
-                                    <option value="gui">GUI</option>
-                                    <option value="bg">Background</option>
+                                    <option value="GUI">GUI</option>
+                                    <option value="Background">Background</option>
                                 </select>
                             </td>
                         </tr>
@@ -60,7 +60,7 @@ class GUIEditorMenu extends Component{
                 </section>
             }
             <header>
-                <input id="loadFile" type="file" />
+                <input id="loadFile" type="file" onChange={this.props.load}/>
                 {
                     this.state.url &&
                         <p><a href={this.state.url}>Right click here and select 'Save as'</a></p>
@@ -95,7 +95,7 @@ class GUIEditorMenu extends Component{
                                 <td><input type="button" value="X" /></td>
                                 <td><input type="button" value="&#8593;" title="Move higher" /></td>
                                 <td><input type="button" value="&#8595;" title="Move lower" /></td>
-                                <td className="entityIDcell">{elem.id}</td>
+                                <td className="entityIDcell" onClick={() => {this.props.select("Background", elem.id)}}>{elem.id}</td>
                                 <td>{elem.type}</td>
                                 <td>{elem.texture}</td>
                                 <td>{`${elem.position.x}:${elem.position.y}`}</td>
@@ -116,11 +116,11 @@ class GUIEditorMenu extends Component{
                     </thead>
                     <tbody>
                         {this.props.guiList.map(elem => 
-                            <tr key={`bg_${elem.id}`}>
+                            <tr key={`gui_${elem.id}`}>
                                 <td><input type="button" value="X" /></td>
                                 <td><input type="button" value="&#8593;" title="Move higher" /></td>
                                 <td><input type="button" value="&#8595;" title="Move lower" /></td>
-                                <td className="entityIDcell">{elem.id}</td>
+                                <td className="entityIDcell" onClick={() => {this.props.select("GUI", elem.id)}}>{elem.id}</td>
                                 <td>{elem.type}</td>
                                 <td>{elem.texture}</td>
                                 <td>{`${elem.position.x}:${elem.position.y}`}</td>

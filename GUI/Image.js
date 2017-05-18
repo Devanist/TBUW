@@ -7,6 +7,12 @@ class Image extends BaseElement{
         this._data.type = "image";
     };
 
+    static get Properties(){
+        return {
+            
+        };
+    }
+
 }
     
 export default Image;

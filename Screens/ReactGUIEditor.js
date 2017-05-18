@@ -57,10 +57,6 @@ class ReactGUIEditor extends Screen{
                 small = 2;
             }
 
-            if(obj.options && obj.options.fontSize && obj.options.fontFamily){
-                obj.options.font = `${parseInt(obj.options.fontSize)}px ${obj.options.fontFamily}`;
-            }
-
             let texture = null;
             if(obj.texture !== null && obj.texture !== undefined && obj.texture !== ""){
                 texture = PIXI.Texture.fromFrame(obj.texture);

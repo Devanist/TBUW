@@ -56,13 +56,13 @@ class Button extends BaseElement{
 						label : "Size override",
 						name : "size_override",
 						type : "Boolean",
-						defaultValue : "false"
+						defaultValue : false
 					},
 					{
 						label : "Is bitmap",
 						name : "bitmap",
 						type : "Boolean",
-						defaultValue : "true",
+						defaultValue : false,
 					},
 					{
 						label : "Font size",

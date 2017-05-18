@@ -69,6 +69,51 @@ class Label extends BaseElement{
         this._sprite.text = text;
     }
 
+    static get Properties(){
+        return {
+            text : {
+                name : "Text",
+                type : "Text",
+                defaultValue : "Default text"
+            },
+            options : {
+				name : "Options",
+				subFields : [
+					{
+						label : "Is bitmap",
+						name : "bitmap",
+						type : "Boolean",
+						defaultValue : false,
+					},
+					{
+						label : "Font size",
+						name : "fontSize",
+						type : "Number",
+						defaultValue : "14"
+					},
+					{
+						label : "Font family",
+						name : "fontFamily",
+						type : "Text",
+						defaultValue : "Arial"
+					},
+					{
+						label : "Fill color",
+						name : "fill",
+						type : "Text",
+						defaultValue : "0xffffff"
+					},
+					{
+						label : "Text align",
+						name : "align",
+						type : "Text",
+						defaultValue : "center"
+					}
+				]
+			}
+        };
+    }
+
 }
 
 

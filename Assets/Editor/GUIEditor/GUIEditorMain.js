@@ -27,6 +27,7 @@ class GUIEditorMain extends Component{
         this.select = this.select.bind(this);
         this.clearSelection = this.clearSelection.bind(this);
         this.updateElement = this.updateElement.bind(this);
+        this.positionChange = this.positionChange.bind(this);
     }
 
     render(){
@@ -51,6 +52,7 @@ class GUIEditorMain extends Component{
                 selection={selected}
                 selectedLayer={this.state.selected.layer}
                 clear={this.clearSelection}
+                positionChange={this.positionChange}
                 update={this.updateElement}
             />
         </section>
@@ -91,7 +93,6 @@ class GUIEditorMain extends Component{
         let reader = new FileReader();
         reader.onload = function(e){
             const content = e.target.result;
-            console.log(content);
             editorThis.setState({
                 project : JSON.parse(content)
             });
@@ -102,16 +103,57 @@ class GUIEditorMain extends Component{
     }
 
     select(layer, id){
+
+        this.clearSelection();
+
+        setTimeout(() => {
+            this.setState({
+                selected : {
+                    layer,
+                    id
+                }
+            });
+        }, 1);
+    }
+
+    clearSelection(){
         this.setState({
             selected : {
-                layer,
-                id
+                layer : "",
+                id : ""
             }
         });
     }
 
-    clearSelection(){
-        this.select("", "");
+    positionChange(){
+
+        let modifiedProject = {
+            ...this.state.project
+        };
+
+        const index = this.state.project[this.state.selected.layer].children.findIndex(e => e.id === this.state.selected.id);
+
+        if(typeof this.state.project[this.state.selected.layer].children[index].position === "object"){
+            modifiedProject[this.state.selected.layer].children = [
+                ...this.state.project[this.state.selected.layer].children.slice(0, index),
+                Object.assign({}, this.state.project[this.state.selected.layer].children[index], {position : "center"}),
+                ...this.state.project[this.state.selected.layer].children.slice(index + 1)
+            ];
+        }
+        else{
+            modifiedProject[this.state.selected.layer].children = [
+                ...this.state.project[this.state.selected.layer].children.slice(0, index),
+                Object.assign({}, this.state.project[this.state.selected.layer].children[index], {position : {x: 0, y: 0}}),
+                ...this.state.project[this.state.selected.layer].children.slice(index + 1)
+            ];
+        }
+
+        this.setState({
+            project : modifiedProject
+        });
+
+        this.props.editorContext.updateStage("background", this.state.project.Background.children);
+        this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
     }
 
     updateElement(){
@@ -122,10 +164,41 @@ class GUIEditorMain extends Component{
             id : document.querySelector("#props_id").value,
             type : document.querySelector("#props_type").value,
             texture : document.querySelector("#props_texture").value,
-            position : {
+            move : {
+                x : document.querySelector("#props_move_x").value,
+                y : document.querySelector("#props_move_y").value
+            },
+            visible : document.querySelector("#props_visible").checked
+        };
+
+        if(document.querySelector("#positionChange").value === "true"){
+            modifiedEntity.position = document.querySelector("#positionString").value;
+        }
+        else{
+            modifiedEntity.position = {
                 x : document.querySelector("#props_position_x").value,
                 y : document.querySelector("#props_position_y").value
-            }
+            };
+        }
+
+        if(GUI[modifiedEntity.type].Properties){
+            Object.keys(GUI[modifiedEntity.type].Properties).forEach(prop => {
+                if(GUI[modifiedEntity.type].Properties[prop].subFields){
+                    modifiedEntity[prop] = {};
+                    GUI[modifiedEntity.type].Properties[prop].subFields.forEach(sub => {
+                        modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).value;
+                        if(sub.type === "Boolean"){
+                            modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).checked;
+                        }
+                        else if(sub.type === "Number"){
+                            modifiedEntity[prop][sub.name] = parseInt(modifiedEntity[prop][sub.name]);
+                        }
+                    });
+                }
+                else{
+                    modifiedEntity[prop] = document.querySelector(`#additionalProps input[name=${prop}]`).value
+                }
+            });
         }
 
         let modifiedProject = {
@@ -141,8 +214,8 @@ class GUIEditorMain extends Component{
         ];
 
         if(this.state.selected.layer !== layer){
+            console.log(this.state.selected.layer !== layer);
             let removedElement = modifiedProject[this.state.selected.layer].children.splice(index, 1)[0];
-
             modifiedProject[layer].children.push(removedElement);
         }
 

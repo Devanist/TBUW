@@ -28,6 +28,8 @@ class GUIEditorMain extends Component{
         this.clearSelection = this.clearSelection.bind(this);
         this.updateElement = this.updateElement.bind(this);
         this.positionChange = this.positionChange.bind(this);
+        this.generateFile = this.generateFile.bind(this);
+        this.resetScene = this.resetScene.bind(this);
     }
 
     render(){
@@ -47,6 +49,8 @@ class GUIEditorMain extends Component{
                 load={this.loadFromFile}
                 add={this.addToScene}
                 select={this.select}
+                generate={this.generateFile}
+                reset={this.resetScene}
             />
             <GUIEditorProps 
                 selection={selected}
@@ -100,6 +104,10 @@ class GUIEditorMain extends Component{
             editorThis.props.editorContext.updateStage("GUI", editorThis.state.project.GUI.children);
         }
         reader.readAsText(file);
+    }
+
+    generateFile(){
+        return 'data:application/csv;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.state.project));
     }
 
     select(layer, id){
@@ -226,6 +234,23 @@ class GUIEditorMain extends Component{
         this.props.editorContext.updateStage("background", this.state.project.Background.children);
         this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
         
+    }
+
+    resetScene(){
+        this.setState({
+            project : {
+                GUI : {
+                    children : []
+                },
+                Background : {
+                    children : []
+                },
+            },
+            selected : {
+                layer : "",
+                id : ""
+            }
+        });
     }
 
 }

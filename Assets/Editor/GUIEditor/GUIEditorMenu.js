@@ -12,6 +12,7 @@ class GUIEditorMenu extends Component{
             inserting : false
         };
         this.expand = this.expand.bind(this);
+        this.saveFile = this.saveFile.bind(this);
     }
 
     render(){
@@ -68,8 +69,8 @@ class GUIEditorMenu extends Component{
                 <table>
                     <tbody>
                         <tr>
-                            <td><input type="button" value="Save" /></td>
-                            <td><input type="button" value="New project" /></td>
+                            <td><input type="button" value="Save" onClick={this.saveFile}/></td>
+                            <td><input type="button" value="New project" onClick={this.props.reset}/></td>
                         </tr>
                     </tbody>
                 </table>
@@ -140,6 +141,13 @@ class GUIEditorMenu extends Component{
 
         this.setState({
             expanded : list
+        });
+    }
+
+    saveFile(){
+
+        this.setState({
+            url : this.props.generate()
         });
     }
 

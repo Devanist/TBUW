@@ -88,7 +88,8 @@ class GUIEditorMain extends Component{
     }
 
     loadFromFile(e){
-        const file = e.target.files[0];
+        let files = e.target;
+        let file = e.target.files[0];
         if(!file){
             return;
         }
@@ -102,6 +103,7 @@ class GUIEditorMain extends Component{
             });
             editorThis.props.editorContext.updateStage("background", editorThis.state.project.Background.children);
             editorThis.props.editorContext.updateStage("GUI", editorThis.state.project.GUI.children);
+            files.value = null;
         }
         reader.readAsText(file);
     }

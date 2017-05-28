@@ -136,10 +136,13 @@ class GUIEditorProps extends Component{
                                 let input;
                                 switch(entity.type){
                                     case "Number" :
-                                        input = <input type="number" name={prop} defaultValue={entity.defaultValue} onChange={this.props.update}/>
+                                        input = <input type="number" name={prop} defaultValue={this.props.selection[prop] || entity.defaultValue} onChange={this.props.update}/>
                                         break;
                                     case "Text" : 
-                                        input = <input type="text" name={prop} defaultValue={entity.defaultValue} onChange={this.props.update}/>
+                                        input = <input type="text" name={prop} defaultValue={this.props.selection[prop] || entity.defaultValue} onChange={this.props.update}/>
+                                        break;
+                                    case "Boolean":
+                                        input = <input type="checkbox" name={prop} defaultChecked={this.props.selection[prop] || entity.defaultValue} />
                                         break;
                                     default: 
                                         console.error(`No type like : ${entity.type}`);

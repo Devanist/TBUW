@@ -23,6 +23,10 @@ class Button extends BaseElement{
 		this._container = new PIXI.Container();
 		this._container.addChild(this._sprite);
 		if(style.bitmap){
+			style.font = {
+				size : style.fontSize,
+				name : style.fontFamily
+			};
 			this._text = new PIXI.extras.BitmapText(text, style);
 			this._text.position.x = this._sprite.position.x - this._text.width / 2;
 			this._text.position.y = this._sprite.position.y - this._text.height / 2;

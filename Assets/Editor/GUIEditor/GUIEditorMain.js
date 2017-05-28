@@ -251,6 +251,9 @@ class GUIEditorMain extends Component{
                 id : ""
             }
         });
+
+        this.props.editorContext.updateStage("background", this.state.project.Background.children);
+        this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
     }
 
 }

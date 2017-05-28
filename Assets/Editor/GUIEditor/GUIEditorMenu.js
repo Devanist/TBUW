@@ -124,7 +124,11 @@ class GUIEditorMenu extends Component{
                                 <td className="entityIDcell" onClick={() => {this.props.select("GUI", elem.id)}}>{elem.id}</td>
                                 <td>{elem.type}</td>
                                 <td>{elem.texture}</td>
-                                <td>{`${elem.position.x}:${elem.position.y}`}</td>
+                                <td>{
+                                    typeof elem.position === "string" &&
+                                    elem.position ||
+                                    `${elem.position.x}:${elem.position.y}`
+                                }</td>
                             </tr>
                         )}
                     </tbody>

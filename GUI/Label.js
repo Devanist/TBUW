@@ -3,9 +3,13 @@ import BaseElement from './BaseElement';
 class Label extends BaseElement{
 
     constructor(id, position, text, style){
-        style = style || {};
         super(id, position, null);
+        style = style || {};
         if(style.bitmap){
+            style.font = {
+				size : style.fontSize,
+				name : style.fontFamily
+			};
             this._sprite = new PIXI.extras.BitmapText(text, style);
             this._sprite.containsPoint = function(pos){
                 if( pos.x >= this.position.x &&

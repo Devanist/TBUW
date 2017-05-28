@@ -252,8 +252,10 @@ class GUIEditorMain extends Component{
             }
         });
 
-        this.props.editorContext.updateStage("background", this.state.project.Background.children);
-        this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
+        setTimeout(() => {
+            this.props.editorContext.updateStage("background", this.state.project.Background.children);
+            this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
+        }, 1);
     }
 
 }

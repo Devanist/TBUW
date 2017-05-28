@@ -74,7 +74,7 @@ class GUIEditorProps extends Component{
                             <td>
                                 <input  id="props_visible" 
                                         type="checkbox" 
-                                        defaultChecked={this.props.selection.visible || true}
+                                        defaultChecked={(this.props.selection.visible === undefined || this.props.selection.visible === null) && true || this.props.selection.visible}
                                         name="visible"
                                         onClick={this.props.update}
                                 />

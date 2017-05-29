@@ -174,6 +174,10 @@ class LevelEditorMain extends Component{
             ]
         }
 
+        if(this.state.level.music !== document.querySelector("#level_music").value){
+            this.triggerMusic(true);
+        }
+
         this.setState({
             level : {
                 ...this.state.level,

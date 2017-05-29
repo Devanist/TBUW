@@ -11,7 +11,8 @@ class LevelEditorMenu extends Component{
         this.state = {
             expanded : "scene",
             creation : false,
-            url : null
+            url : null,
+            warning : ""
         }
         this.expand = this.expand.bind(this);
         this.saveToFile = this.saveToFile.bind(this);
@@ -29,6 +30,7 @@ class LevelEditorMenu extends Component{
         return <section id="EditorMenu">
             {this.state.creation && 
                 <section id="creationWindow">
+                    <p style={{color : "red"}}>{this.state.warning}</p>
                     <table><tbody>
                         <tr>
                             <td>Identifier</td>
@@ -48,14 +50,20 @@ class LevelEditorMenu extends Component{
                         </tr>
                         <tr>
                             <td><input type="button" onClick={() => {
-                                this.props.add({
-                                    id : document.querySelector("#idSelection").value,
-                                    type : document.querySelector("#typeSelection").value,
-                                    texture : document.querySelector("#textureSelection").value
-                                });
-                                this.setState({creation : false});
+                                const id = document.querySelector("#idSelection").value;
+                                if(id === "" || this.props.contain(id)){
+                                    this.setState({warning : "ID cannot be null or duplicate"});
+                                }
+                                else{
+                                    this.props.add({
+                                        id : document.querySelector("#idSelection").value,
+                                        type : document.querySelector("#typeSelection").value,
+                                        texture : document.querySelector("#textureSelection").value
+                                    });
+                                    this.setState({creation : false, warning : ""});
+                                }
                             }} value="Add"/></td>
-                            <td><input type="button" onClick={() => {this.setState({creation : false})}} value="Cancel" /></td>
+                            <td><input type="button" onClick={() => {this.setState({creation : false, warning : false})}} value="Cancel" /></td>
                         </tr>
                     </tbody></table>
                 </section>

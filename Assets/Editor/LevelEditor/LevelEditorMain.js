@@ -34,6 +34,7 @@ class LevelEditorMain extends Component{
         this.removeFromScene = this.removeFromScene.bind(this);
         this.moveDown = this.moveDown.bind(this);
         this.moveUp = this.moveUp.bind(this);
+        this.contain = this.contain.bind(this);
     }
 
     render(){
@@ -53,6 +54,7 @@ class LevelEditorMain extends Component{
                             moveDown={this.moveDown}
                             moveUp={this.moveUp}
                             clear={this.clearSelection}
+                            contain={this.contain}
                             />
             <LevelEditorProps    selection={this.state.level.entities.find(item => item.id === this.state.selection)} 
                             update={this.update} 
@@ -276,6 +278,10 @@ class LevelEditorMain extends Component{
                 ]
             }
         });
+    }
+
+    contain(id){
+        return this.state.level.entities.find(e => e.id === id) !== undefined;
     }
 
 }

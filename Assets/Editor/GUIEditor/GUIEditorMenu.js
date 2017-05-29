@@ -73,7 +73,7 @@ class GUIEditorMenu extends Component{
                                     this.setState({inserting : false, warning : ""});
                                 }
                             }} value="Add"/></td>
-                            <td><input type="button" onClick={() => {this.setState({creation : false})}} value="Cancel" /></td>
+                            <td><input type="button" onClick={() => {this.setState({creation : false, warning : ""})}} value="Cancel" /></td>
                         </tr>
                     </tbody></table>
                 </section>

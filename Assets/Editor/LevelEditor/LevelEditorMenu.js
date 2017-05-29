@@ -79,8 +79,13 @@ class LevelEditorMenu extends Component{
                         <tr>
                             <td>Level background</td>
                             <td>
-                                <select id="level_background" defaultValue="none" size="1" onClick={this.props.update}>
-                                    <option disabled value="none">Select background</option>
+                                <select 
+                                    id="level_background" 
+                                    defaultValue="" 
+                                    size="1" 
+                                    onChange={this.props.update}
+                                >
+                                    <option value="">Select background</option>
                                     {Object.keys(Spritesheet.frames).map(asset => <option key={`bg_${asset}`} value={asset}>{asset}</option>)}
                                 </select>
                             </td>
@@ -89,7 +94,7 @@ class LevelEditorMenu extends Component{
                             <td>Level music</td>
                             <td>
                                 <select id="level_music" size="1" value={this.props.level.music} onChange={this.props.update}>
-                                    <option disabled value="none">Select music</option>
+                                    <option value="none">Select music</option>
                                     {Assets.sounds.map(asset => <option key={`sound_${asset.name}`} value={asset.name}>{asset.name}</option>)}
                                 </select>
                             </td>

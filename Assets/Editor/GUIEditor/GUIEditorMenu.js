@@ -43,6 +43,7 @@ class GUIEditorMenu extends Component{
                         <tr>
                             <td>Texture</td>
                             <td><select id="textureSelection">
+                                <option value="">none</option>
                                 {Object.keys(Spritesheet.frames).map(frame => <option key={frame} value={frame}>{frame}</option>)}
                             </select></td>
                         </tr>

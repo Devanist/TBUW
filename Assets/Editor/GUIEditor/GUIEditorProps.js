@@ -33,6 +33,7 @@ class GUIEditorProps extends Component{
                         <tr>
                             <td>Texture</td>
                             <td><select id="props_texture" defaultValue={this.props.selection.texture} onChange={this.props.update}>
+                                <option value="">none</option>
                                 {Object.keys(Spritesheet.frames).map(frame => <option key={frame} value={frame}>{frame}</option>)}
                             </select></td>
                         </tr>

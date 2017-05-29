@@ -9,10 +9,12 @@ class GUIEditorMenu extends Component{
         this.state = {
             url : "",
             expanded : "",
-            inserting : false
+            inserting : false,
+            warning : ""
         };
         this.expand = this.expand.bind(this);
         this.saveFile = this.saveFile.bind(this);
+        this.decorateWithProperties = this.decorateWithProperties.bind(this);
     }
 
     render(){
@@ -20,6 +22,7 @@ class GUIEditorMenu extends Component{
         return <section id="EditorMenu">
             {this.state.inserting &&
                 <section id="creationWindow">
+                    <p style={{color : "red"}}>{this.state.warning}</p>
                     <table><tbody>
                         <tr>
                             <td>Identifier</td>
@@ -49,12 +52,26 @@ class GUIEditorMenu extends Component{
                         </tr>
                         <tr>
                             <td><input type="button" onClick={() => {
-                                this.props.add({
-                                    id : document.querySelector("#idSelection").value,
-                                    type : document.querySelector("#typeSelection").value,
-                                    texture : document.querySelector("#textureSelection").value
-                                }, document.querySelector("#layerSelection").value);
-                                this.setState({inserting : false});
+
+                                const id = document.querySelector("#idSelection").value;
+                                const layer = document.querySelector("#layerSelection").value;
+
+                                if(id === "" || this.props.contain(layer, id)){
+                                    this.setState({
+                                        warning : "ID can't be null or duplicate"
+                                    });
+                                }
+                                else{
+
+                                    let newElement = {
+                                        id,
+                                        type : document.querySelector("#typeSelection").value,
+                                        texture : document.querySelector("#textureSelection").value
+                                    };
+                                    this.decorateWithProperties(newElement);
+                                    this.props.add(newElement, layer);
+                                    this.setState({inserting : false, warning : ""});
+                                }
                             }} value="Add"/></td>
                             <td><input type="button" onClick={() => {this.setState({creation : false})}} value="Cancel" /></td>
                         </tr>
@@ -153,6 +170,23 @@ class GUIEditorMenu extends Component{
 
         this.setState({
             url : this.props.generate()
+        });
+    }
+
+    decorateWithProperties(element){
+
+        const props = GUI[element.type].Properties;
+
+        Object.keys(props).forEach(prop => {
+            if(props[prop].subFields === undefined){
+                element[prop] = props[prop].defaultValue;
+            }
+            else{
+                element[prop] = {};
+                props[prop].subFields.forEach(subProp => {
+                    element[prop][subProp.name] = subProp.defaultValue;
+                });
+            }
         });
     }
 

@@ -30,6 +30,7 @@ class GUIEditorMain extends Component{
         this.positionChange = this.positionChange.bind(this);
         this.generateFile = this.generateFile.bind(this);
         this.resetScene = this.resetScene.bind(this);
+        this.contain = this.contain.bind(this);
     }
 
     render(){
@@ -51,6 +52,7 @@ class GUIEditorMain extends Component{
                 select={this.select}
                 generate={this.generateFile}
                 reset={this.resetScene}
+                contain={this.contain}
             />
             <GUIEditorProps 
                 selection={selected}
@@ -258,6 +260,10 @@ class GUIEditorMain extends Component{
             this.props.editorContext.updateStage("background", this.state.project.Background.children);
             this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
         }, 1);
+    }
+
+    contain(scene, id){
+        return this.state.project[scene].children.find( element => element.id === id) !== undefined;
     }
 
 }

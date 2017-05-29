@@ -65,6 +65,7 @@ class ReactGUIEditor extends Screen{
             switch(obj.type){
                 case "Image":
                     temp = new GUI.Image(obj.id, obj.position, texture);
+                    console.log(obj.position);
                     break;
                 case "Label":
                     temp = new GUI.Label(obj.id, obj.position, obj.text, obj.options);
@@ -76,7 +77,6 @@ class ReactGUIEditor extends Screen{
                     console.error(`Bad type: ${obj.type}`);
                     break;
             }
-
             if(obj.move){
                 temp.move(obj.move);
             }

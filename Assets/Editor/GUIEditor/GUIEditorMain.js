@@ -177,8 +177,8 @@ class GUIEditorMain extends Component{
             type : document.querySelector("#props_type").value,
             texture : document.querySelector("#props_texture").value,
             move : {
-                x : document.querySelector("#props_move_x").value,
-                y : document.querySelector("#props_move_y").value
+                x : parseInt(document.querySelector("#props_move_x").value),
+                y : parseInt(document.querySelector("#props_move_y").value)
             },
             visible : document.querySelector("#props_visible").checked
         };
@@ -188,8 +188,8 @@ class GUIEditorMain extends Component{
         }
         else{
             modifiedEntity.position = {
-                x : document.querySelector("#props_position_x").value,
-                y : document.querySelector("#props_position_y").value
+                x : parseInt(document.querySelector("#props_position_x").value),
+                y : parseInt(document.querySelector("#props_position_y").value)
             };
         }
 

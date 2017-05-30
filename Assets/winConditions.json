@@ -1,0 +1,31 @@
+{
+    "blockcoins" : {
+        "label" : "Amount of BlockCoins",
+        "type" : "Number"
+    },
+    "position" : {
+        "label" : "Position",
+        "type" : [
+            {
+                "name" : "lux",
+                "label" : "Left upper X",
+                "type" : "Number"
+            },
+            {
+                "name" : "luy",
+                "label" : "Left upper Y",
+                "type" : "Number"
+            },
+            {
+                "name" : "rlx",
+                "label" : "Right lower X",
+                "type" : "Number"
+            },
+            {
+                "name" : "rly",
+                "label" : "Right lower Y",
+                "type" : "Number"
+            }
+        ]
+    }
+}

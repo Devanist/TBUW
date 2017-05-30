@@ -1,6 +1,7 @@
 import Entities from '../../../Entities/Entities';
 import Spritesheet from '../../Gfx/sprites.json';
 import Assets from '../../assets.json';
+import WinConditions from '../../winConditions.json';
 
 import React, {Component} from 'react';
 
@@ -119,9 +120,29 @@ class LevelEditorMenu extends Component{
             <h3 onClick={() => {this.expand("winconditions")}}>Win conditions</h3>
             <table className={this.state.expanded !== "winconditions" && "hidden"}>
                 <tbody>
-                    <tr>
-                    
-                    </tr>
+                    {
+                        Object.keys(WinConditions).
+                        map(wc => 
+                            <tr key={wc}>
+                                <td>{WinConditions[wc].label}</td>
+                                <td>
+                                    {typeof WinConditions[wc].type !== "string" &&
+                                        <table><tbody>
+                                            {WinConditions[wc].type.map(sub => {
+                                                return <tr key={`${wc}_${sub.name}`}>
+                                                    <td>{sub.label}</td>
+                                                    <td>{
+                                                        this.typeToElement(sub, sub)
+                                                    }</td>
+                                                </tr>}
+                                            )}
+                                        </tbody></table> ||
+                                        this.typeToElement(WinConditions[wc], wc)
+                                    }
+                                </td>
+                            </tr>
+                        )
+                    }
                 </tbody>
             </table>
             <h3 onClick={() => {this.expand("scene")}}>Scene</h3>
@@ -169,6 +190,19 @@ class LevelEditorMenu extends Component{
         this.setState({
             expanded : list
         });
+    }
+
+    typeToElement(condition, name){
+        switch(condition.type){
+            case "Number" : 
+                return <input name={name} type="number" defaultValue="0" />;
+            case "Text" : 
+                return <input name={name} type="text" defaultValue="" />;
+            case "Boolean" :
+                return <input name={name} type="checkbox" defaultChecked="false" />
+            default:
+                console.error("No such input type");
+        }
     }
 
 }

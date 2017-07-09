@@ -30,6 +30,7 @@ class GUIEditorMain extends Component{
         this.positionChange = this.positionChange.bind(this);
         this.generateFile = this.generateFile.bind(this);
         this.resetScene = this.resetScene.bind(this);
+        this.contain = this.contain.bind(this);
     }
 
     render(){
@@ -51,6 +52,7 @@ class GUIEditorMain extends Component{
                 select={this.select}
                 generate={this.generateFile}
                 reset={this.resetScene}
+                contain={this.contain}
             />
             <GUIEditorProps 
                 selection={selected}
@@ -88,7 +90,8 @@ class GUIEditorMain extends Component{
     }
 
     loadFromFile(e){
-        const file = e.target.files[0];
+        let files = e.target;
+        let file = e.target.files[0];
         if(!file){
             return;
         }
@@ -102,6 +105,7 @@ class GUIEditorMain extends Component{
             });
             editorThis.props.editorContext.updateStage("background", editorThis.state.project.Background.children);
             editorThis.props.editorContext.updateStage("GUI", editorThis.state.project.GUI.children);
+            files.value = null;
         }
         reader.readAsText(file);
     }
@@ -173,8 +177,8 @@ class GUIEditorMain extends Component{
             type : document.querySelector("#props_type").value,
             texture : document.querySelector("#props_texture").value,
             move : {
-                x : document.querySelector("#props_move_x").value,
-                y : document.querySelector("#props_move_y").value
+                x : parseInt(document.querySelector("#props_move_x").value),
+                y : parseInt(document.querySelector("#props_move_y").value)
             },
             visible : document.querySelector("#props_visible").checked
         };
@@ -184,8 +188,8 @@ class GUIEditorMain extends Component{
         }
         else{
             modifiedEntity.position = {
-                x : document.querySelector("#props_position_x").value,
-                y : document.querySelector("#props_position_y").value
+                x : parseInt(document.querySelector("#props_position_x").value),
+                y : parseInt(document.querySelector("#props_position_y").value)
             };
         }
 
@@ -252,8 +256,14 @@ class GUIEditorMain extends Component{
             }
         });
 
-        this.props.editorContext.updateStage("background", this.state.project.Background.children);
-        this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
+        setTimeout(() => {
+            this.props.editorContext.updateStage("background", this.state.project.Background.children);
+            this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
+        }, 1);
+    }
+
+    contain(scene, id){
+        return this.state.project[scene].children.find( element => element.id === id) !== undefined;
     }
 
 }

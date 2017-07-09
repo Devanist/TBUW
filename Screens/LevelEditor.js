@@ -88,8 +88,12 @@ class LevelEditor extends Screen{
     updateStage(stage, level){
         
         if(stage === "background"){
-            if(level.background[0].texture !== "none"){
-                this._background._elements[0]._sprite.texture = PIXI.loader.resources.sprites.textures[level.background[0].texture];
+            this._background.removeAll();
+            if(level.background[0].texture !== null){
+                this._background.add(new Entities.Background(0, PIXI.loader.resources.sprites.textures[level.background[0].texture], 0));
+            }
+            else{
+                this._background.add(new Entities.Background(0, null, 0));
             }
         }
         else if(stage === "game"){

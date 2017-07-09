@@ -11,7 +11,8 @@ class LevelEditorMenu extends Component{
         this.state = {
             expanded : "scene",
             creation : false,
-            url : null
+            url : null,
+            warning : ""
         }
         this.expand = this.expand.bind(this);
         this.saveToFile = this.saveToFile.bind(this);
@@ -29,6 +30,7 @@ class LevelEditorMenu extends Component{
         return <section id="EditorMenu">
             {this.state.creation && 
                 <section id="creationWindow">
+                    <p style={{color : "red"}}>{this.state.warning}</p>
                     <table><tbody>
                         <tr>
                             <td>Identifier</td>
@@ -48,14 +50,20 @@ class LevelEditorMenu extends Component{
                         </tr>
                         <tr>
                             <td><input type="button" onClick={() => {
-                                this.props.add({
-                                    id : document.querySelector("#idSelection").value,
-                                    type : document.querySelector("#typeSelection").value,
-                                    texture : document.querySelector("#textureSelection").value
-                                });
-                                this.setState({creation : false});
+                                const id = document.querySelector("#idSelection").value;
+                                if(id === "" || this.props.contain(id)){
+                                    this.setState({warning : "ID cannot be null or duplicate"});
+                                }
+                                else{
+                                    this.props.add({
+                                        id : document.querySelector("#idSelection").value,
+                                        type : document.querySelector("#typeSelection").value,
+                                        texture : document.querySelector("#textureSelection").value
+                                    });
+                                    this.setState({creation : false, warning : ""});
+                                }
                             }} value="Add"/></td>
-                            <td><input type="button" onClick={() => {this.setState({creation : false})}} value="Cancel" /></td>
+                            <td><input type="button" onClick={() => {this.setState({creation : false, warning : false})}} value="Cancel" /></td>
                         </tr>
                     </tbody></table>
                 </section>
@@ -79,8 +87,13 @@ class LevelEditorMenu extends Component{
                         <tr>
                             <td>Level background</td>
                             <td>
-                                <select id="level_background" defaultValue="none" size="1" onClick={this.props.update}>
-                                    <option disabled value="none">Select background</option>
+                                <select 
+                                    id="level_background" 
+                                    defaultValue="" 
+                                    size="1" 
+                                    onChange={this.props.update}
+                                >
+                                    <option value="">Select background</option>
                                     {Object.keys(Spritesheet.frames).map(asset => <option key={`bg_${asset}`} value={asset}>{asset}</option>)}
                                 </select>
                             </td>
@@ -89,7 +102,7 @@ class LevelEditorMenu extends Component{
                             <td>Level music</td>
                             <td>
                                 <select id="level_music" size="1" value={this.props.level.music} onChange={this.props.update}>
-                                    <option disabled value="none">Select music</option>
+                                    <option value="none">Select music</option>
                                     {Assets.sounds.map(asset => <option key={`sound_${asset.name}`} value={asset.name}>{asset.name}</option>)}
                                 </select>
                             </td>

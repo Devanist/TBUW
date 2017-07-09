@@ -10,7 +10,7 @@ class LevelEditorMain extends Component{
         this.state = {
             level : {
                 name : "",
-                music: "none",
+                music: "",
                 background: [{}],
                 winConditions: [
                     
@@ -34,13 +34,12 @@ class LevelEditorMain extends Component{
         this.removeFromScene = this.removeFromScene.bind(this);
         this.moveDown = this.moveDown.bind(this);
         this.moveUp = this.moveUp.bind(this);
+        this.contain = this.contain.bind(this);
     }
 
     render(){
         this.props.editorContext.updateStage("game", this.state.level);
-        if(this.state.level.background[0].texture){
-            this.props.editorContext.updateStage("background", this.state.level);
-        }
+        this.props.editorContext.updateStage("background", this.state.level);
 
         return <section id="Editor">
             <LevelEditorMenu     level={this.state.level} 
@@ -55,6 +54,7 @@ class LevelEditorMain extends Component{
                             moveDown={this.moveDown}
                             moveUp={this.moveUp}
                             clear={this.clearSelection}
+                            contain={this.contain}
                             />
             <LevelEditorProps    selection={this.state.level.entities.find(item => item.id === this.state.selection)} 
                             update={this.update} 
@@ -114,6 +114,8 @@ class LevelEditorMain extends Component{
 
     resetEditor(){
         document.querySelector("#loadFile").value = null;
+        document.querySelector("#level_background").value = "";
+
         this.setState({
             level : {
                 name : "",
@@ -174,6 +176,10 @@ class LevelEditorMain extends Component{
             ]
         }
 
+        if(this.state.level.music !== document.querySelector("#level_music").value){
+            this.triggerMusic(true);
+        }
+
         this.setState({
             level : {
                 ...this.state.level,
@@ -187,7 +193,7 @@ class LevelEditorMain extends Component{
                             y: 0
                         },
                         type : "Background",
-                        texture : document.querySelector("#level_background").value
+                        texture : document.querySelector("#level_background").value !== "" && document.querySelector("#level_background").value || null
                     }
                 ],
                 music : document.querySelector("#level_music").value,
@@ -195,12 +201,14 @@ class LevelEditorMain extends Component{
             }
         });
 
+        this.props.editorContext.updateStage("game", this.state.level);
+        this.props.editorContext.updateStage("background", this.state.level);
 
     }
 
     triggerMusic(stop){
         
-        if(this.state.level.music !== "none"){
+        if(this.state.level.music !== ""){
             if(stop){
                 this.props.editorContext._sounds = [{
                     name : this.state.level.music,
@@ -270,6 +278,10 @@ class LevelEditorMain extends Component{
                 ]
             }
         });
+    }
+
+    contain(id){
+        return this.state.level.entities.find(e => e.id === id) !== undefined;
     }
 
 }

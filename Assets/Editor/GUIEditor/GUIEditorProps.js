@@ -33,6 +33,7 @@ class GUIEditorProps extends Component{
                         <tr>
                             <td>Texture</td>
                             <td><select id="props_texture" defaultValue={this.props.selection.texture} onChange={this.props.update}>
+                                <option value="">none</option>
                                 {Object.keys(Spritesheet.frames).map(frame => <option key={frame} value={frame}>{frame}</option>)}
                             </select></td>
                         </tr>
@@ -72,8 +73,8 @@ class GUIEditorProps extends Component{
                         <tr>
                             <td>Visible</td>
                             <td>
-                                <input  id="props_visible" 
-                                        type="checkbox" 
+                                <input  id="props_visible"
+                                        type="checkbox"
                                         defaultChecked={(this.props.selection.visible === undefined && true) ||
                                             this.props.selection.visible }
                                         name="visible"
@@ -101,7 +102,7 @@ class GUIEditorProps extends Component{
                                                         content = <input 
                                                             name={`${prop}_${sub.name}`}
                                                             type="number"
-                                                            defaultValue={this.props.selection[sub.name] || sub.defaultValue}
+                                                            defaultValue={this.props.selection[prop][sub.name] || sub.defaultValue}
                                                             onChange={this.props.update}
                                                         />;
                                                         break;
@@ -109,7 +110,7 @@ class GUIEditorProps extends Component{
                                                         content = <input 
                                                             name={`${prop}_${sub.name}`}
                                                             type="text"
-                                                            defaultValue={this.props.selection[sub.name] || sub.defaultValue}
+                                                            defaultValue={this.props.selection[prop][sub.name] || sub.defaultValue}
                                                             onChange={this.props.update}
                                                         />;
                                                         break;
@@ -117,7 +118,7 @@ class GUIEditorProps extends Component{
                                                         content = <input
                                                             name={`${prop}_${sub.name}`}
                                                             type="checkbox"
-                                                            defaultChecked={this.props.selection[sub.name] || sub.defaultValue}
+                                                            defaultChecked={(this.props.selection[prop][sub.name] === undefined || this.props.selection[prop][sub.name] === null) && sub.defaultValue || this.props.selection[prop][sub.name]}
                                                             onChange={this.props.update}
                                                         />;
                                                         break;
@@ -143,7 +144,7 @@ class GUIEditorProps extends Component{
                                         input = <input type="text" name={prop} defaultValue={this.props.selection[prop] || entity.defaultValue} onChange={this.props.update}/>
                                         break;
                                     case "Boolean":
-                                        input = <input type="checkbox" name={prop} defaultChecked={this.props.selection[prop] || entity.defaultValue} />
+                                        input = <input type="checkbox" name={prop} defaultChecked={(this.props.selection[prop] === undefined || this.props.selection[prop] === null) && entity.defaultValue || this.props.selection[prop]} />
                                         break;
                                     default: 
                                         console.error(`No type like : ${entity.type}`);

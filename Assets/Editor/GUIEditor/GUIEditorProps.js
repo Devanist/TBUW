@@ -41,8 +41,8 @@ class GUIEditorProps extends Component{
                             <td>String position: </td>
                             <td><input 
                                     id="positionChange"
-                                    type="checkbox" 
-                                    defaultValue={typeof this.props.selection.position === "string"} 
+                                    type="checkbox"
+                                    defaultChecked={typeof this.props.selection.position === "string"}
                                     onClick={this.props.positionChange}    
                                 />
                             </td>
@@ -52,7 +52,7 @@ class GUIEditorProps extends Component{
                             <td>
                                 {
                                     typeof this.props.selection.position === "string" &&
-                                    <select id="positionString" name="position-string">
+                                    <select id="positionString" name="position-string" onChange={this.props.update}>
                                         <option value="center">center</option>
                                         <option value="left-top">left-top</option>
                                     </select> ||
@@ -73,9 +73,10 @@ class GUIEditorProps extends Component{
                         <tr>
                             <td>Visible</td>
                             <td>
-                                <input  id="props_visible" 
-                                        type="checkbox" 
-                                        defaultChecked={(this.props.selection.visible === undefined || this.props.selection.visible === null) && true || this.props.selection.visible}
+                                <input  id="props_visible"
+                                        type="checkbox"
+                                        defaultChecked={(this.props.selection.visible === undefined && true) ||
+                                            this.props.selection.visible }
                                         name="visible"
                                         onClick={this.props.update}
                                 />

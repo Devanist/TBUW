@@ -126,7 +126,12 @@ class LevelEditorMenu extends Component{
                             <tr key={wc}>
                                 <td>
                                     {WinConditions[wc].label}
-                                    <input type="checkbox" name={`${wc}_isActive`} defaultChecked="false" onChange={} />
+                                    <input 
+                                        type="checkbox" 
+                                        name={`${wc}_isActive`} 
+                                        defaultChecked={false} 
+                                        onChange={(e) => {this.props.toggleWinCondition(e, wc)}} 
+                                    />
                                 </td>
                                 <td>
                                     {typeof WinConditions[wc].type !== "string" &&
@@ -135,7 +140,7 @@ class LevelEditorMenu extends Component{
                                                 return <tr key={`${wc}_${sub.name}`}>
                                                     <td>{sub.label}</td>
                                                     <td>{
-                                                        this.typeToElement(sub, sub)
+                                                        this.typeToElement(sub, sub.name)
                                                     }</td>
                                                 </tr>}
                                             )}
@@ -198,16 +203,15 @@ class LevelEditorMenu extends Component{
     typeToElement(condition, name){
         switch(condition.type){
             case "Number" : 
-                return <input name={name} type="number" defaultValue="0" onChange={} />;
+                return <input name={name} type="number" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
             case "Text" : 
-                return <input name={name} type="text" defaultValue="" onChange={} />;
+                return <input name={name} type="text" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
             case "Boolean" :
-                return <input name={name} type="checkbox" defaultChecked="false" onChange={} />
+                return <input name={name} type="checkbox" defaultChecked={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />
             default:
                 console.error("No such input type");
         }
     }
-
 }
 
 export default LevelEditorMenu;

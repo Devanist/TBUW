@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import LevelEditorMenu from './LevelEditorMenu';
 import LevelEditorProps from './LevelEditorProps';
 import Entities from '../../../Entities/Entities';
+import winConditions from '../../winConditions.json';
 
 class LevelEditorMain extends Component{
 
@@ -35,6 +36,8 @@ class LevelEditorMain extends Component{
         this.moveDown = this.moveDown.bind(this);
         this.moveUp = this.moveUp.bind(this);
         this.contain = this.contain.bind(this);
+        this.updateWinConditions = this.updateWinConditions.bind(this);
+        this.toggleWinCondition = this.toggleWinCondition.bind(this);
     }
 
     render(){
@@ -56,6 +59,8 @@ class LevelEditorMain extends Component{
                 moveUp={this.moveUp}
                 clear={this.clearSelection}
                 contain={this.contain}
+                updateWinConditions={this.updateWinConditions}
+                toggleWinCondition={this.toggleWinCondition}
             />
             <LevelEditorProps
                 selection={this.state.level.entities.find(item => item.id === this.state.selection)}
@@ -290,6 +295,57 @@ class LevelEditorMain extends Component{
         return this.state.level.entities.find(e => e.id === id) !== undefined;
     }
 
+    updateWinConditions(name, event){
+        let winCon = winConditions[Object.keys(winConditions).find(key => key === name)] || 
+            (() => {
+                for(let key in winConditions){
+                    if(winConditions.hasOwnProperty(key) && Array.isArray(winConditions[key].type)){
+                        if(winConditions[key].type.find(sub => sub.name === name)) return sub;
+                    }
+                }
+                throw 'Win condition not found';
+            })();
+        const type = winCon.type;
+        let value;
+        switch(type){
+            case 'Number':
+                value = parseInt(event.target.value);
+            case 'String':
+                value = event.target.value;
+            case 'Boolean':
+                value = event.target.checked;
+        }
+        winCon = Object.assign({}, winCon, {value});
+    }
+
+    toggleWinCondition(event, winCondition){
+        let toggledIndex = this.state.level.winConditions.findIndex(w => w.name === winCondition);
+        if(toggledIndex > -1){
+            this.setState({
+                level: {
+                    ...this.state.level,
+                    winConditions : [
+                        ...this.state.level.winConditions.splice(0, toggledIndex),
+                        ...this.state.level.winConditions.splice(toggledIndex + 1)
+                    ]
+                }
+            })
+        }
+        else{
+            this.setState({
+                level: {
+                    ...this.state.level,
+                    winConditions: [
+                        ...this.state.level.winConditions,
+                        {
+                            name: winCondition,
+                            value: winConditions[winCondition].defaultValue
+                        }
+                    ]
+                }
+            })
+        }
+    }
 }
 
 export default LevelEditorMain;

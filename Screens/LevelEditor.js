@@ -139,7 +139,6 @@ class LevelEditor extends Screen{
                     temp.setAnchor(e.anchor);
                     temp.setRotationAngle(e.rotation);
                     this._gameStage.add(temp);
-                    
                 }
             }
         }

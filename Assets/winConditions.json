@@ -1,7 +1,8 @@
 {
     "blockcoins" : {
         "label" : "Amount of BlockCoins",
-        "type" : "Number"
+        "type" : "Number",
+        "defaultValue": 1
     },
     "position" : {
         "label" : "Position",
@@ -9,23 +10,37 @@
             {
                 "name" : "lux",
                 "label" : "Left upper X",
-                "type" : "Number"
+                "type" : "Number",
+                "defaultValue": 0
             },
             {
                 "name" : "luy",
                 "label" : "Left upper Y",
-                "type" : "Number"
+                "type" : "Number",
+                "defaultValue": 0
             },
             {
                 "name" : "rlx",
                 "label" : "Right lower X",
-                "type" : "Number"
+                "type" : "Number",
+                "defaultValue": 0
             },
             {
                 "name" : "rly",
                 "label" : "Right lower Y",
-                "type" : "Number"
+                "type" : "Number",
+                "defaultValue": 0
             }
-        ]
+        ],
+        "defaultValue": {
+            "lu": {
+                "x": 0,
+                "y": 0
+            },
+            "rd": {
+                "x": 0,
+                "y": 0
+            }
+        }
     }
 }

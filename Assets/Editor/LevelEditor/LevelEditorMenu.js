@@ -124,7 +124,10 @@ class LevelEditorMenu extends Component{
                         Object.keys(WinConditions).
                         map(wc => 
                             <tr key={wc}>
-                                <td>{WinConditions[wc].label}</td>
+                                <td>
+                                    {WinConditions[wc].label}
+                                    <input type="checkbox" name={`${wc}_isActive`} defaultChecked="false" onChange={} />
+                                </td>
                                 <td>
                                     {typeof WinConditions[wc].type !== "string" &&
                                         <table><tbody>
@@ -195,11 +198,11 @@ class LevelEditorMenu extends Component{
     typeToElement(condition, name){
         switch(condition.type){
             case "Number" : 
-                return <input name={name} type="number" defaultValue="0" />;
+                return <input name={name} type="number" defaultValue="0" onChange={} />;
             case "Text" : 
-                return <input name={name} type="text" defaultValue="" />;
+                return <input name={name} type="text" defaultValue="" onChange={} />;
             case "Boolean" :
-                return <input name={name} type="checkbox" defaultChecked="false" />
+                return <input name={name} type="checkbox" defaultChecked="false" onChange={} />
             default:
                 console.error("No such input type");
         }

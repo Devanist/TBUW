@@ -42,23 +42,26 @@ class LevelEditorMain extends Component{
         this.props.editorContext.updateStage("background", this.state.level);
 
         return <section id="Editor">
-            <LevelEditorMenu     level={this.state.level} 
-                            load={this.loadLevel} 
-                            reset={this.resetEditor} 
-                            update={this.update}
-                            triggerMusic={this.triggerMusic}
-                            add={this.addToScene} 
-                            musicPlaying={this.state.musicPlaying}
-                            select={this.selectEntity}
-                            remove={this.removeFromScene}
-                            moveDown={this.moveDown}
-                            moveUp={this.moveUp}
-                            clear={this.clearSelection}
-                            contain={this.contain}
-                            />
-            <LevelEditorProps    selection={this.state.level.entities.find(item => item.id === this.state.selection)} 
-                            update={this.update} 
-                            clear={this.clearSelection} />
+            <LevelEditorMenu
+                level={this.state.level} 
+                load={this.loadLevel} 
+                reset={this.resetEditor} 
+                update={this.update}
+                triggerMusic={this.triggerMusic}
+                add={this.addToScene} 
+                musicPlaying={this.state.musicPlaying}
+                select={this.selectEntity}
+                remove={this.removeFromScene}
+                moveDown={this.moveDown}
+                moveUp={this.moveUp}
+                clear={this.clearSelection}
+                contain={this.contain}
+            />
+            <LevelEditorProps
+                selection={this.state.level.entities.find(item => item.id === this.state.selection)}
+                update={this.update}
+                clear={this.clearSelection}
+            />
         </section>
     }
 
@@ -184,6 +187,9 @@ class LevelEditorMain extends Component{
             level : {
                 ...this.state.level,
                 name : document.querySelector("#level_title").value,
+                winConditions: [
+                    
+                ],
                 background : [
                     {
                         factor : 0,

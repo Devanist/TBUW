@@ -38,6 +38,7 @@ class LevelEditorMain extends Component{
         this.contain = this.contain.bind(this);
         this.updateWinConditions = this.updateWinConditions.bind(this);
         this.toggleWinCondition = this.toggleWinCondition.bind(this);
+        this.isConditionTurnedOff = this.isConditionTurnedOff.bind(this);
     }
 
     render(){
@@ -61,6 +62,7 @@ class LevelEditorMain extends Component{
                 contain={this.contain}
                 updateWinConditions={this.updateWinConditions}
                 toggleWinCondition={this.toggleWinCondition}
+                isConditionTurnedOff={this.isConditionTurnedOff}
             />
             <LevelEditorProps
                 selection={this.state.level.entities.find(item => item.id === this.state.selection)}
@@ -296,42 +298,83 @@ class LevelEditorMain extends Component{
     }
 
     updateWinConditions(name, event){
-        let winCon = winConditions[Object.keys(winConditions).find(key => key === name)] || 
-            (() => {
-                for(let key in winConditions){
-                    if(winConditions.hasOwnProperty(key) && Array.isArray(winConditions[key].type)){
-                        if(winConditions[key].type.find(sub => sub.name === name)) return sub;
-                    }
+        
+        let changedCondition = "";
+        let changedIndex = -1;
+        let type = "";
+        Object.keys(winConditions).forEach((wc, index) => {
+            wc = winConditions[wc];
+            if(typeof wc.value === "object"){
+                let searchResult = Object.keys(wc.value).find(sub => sub === name);
+                if(searchResult){
+                    changedCondition = wc.name;
+                    changedIndex = index;
+                    type = sub.type;
+                    return;
                 }
-                throw 'Win condition not found';
-            })();
-        const type = winCon.type;
+            }
+            if(wc.name === name){
+                changedCondition = wc.name;
+                console.log(wc);
+                type = wc.type;
+                changedIndex = index;
+                return;
+            }
+        });
+        if(changedIndex === -1) throw `Win condition '${name}' not found`;
+
         let value;
         switch(type){
-            case 'Number':
-                value = parseInt(event.target.value);
-            case 'String':
-                value = event.target.value;
-            case 'Boolean':
-                value = event.target.checked;
+            case 'Number': value = parseInt(event.target.value); break;
+            case 'String': value = event.target.value; break;
+            case 'Boolean': value = event.target.checked; break;
+            default: throw `Type not found: '${type}'`;
         }
-        winCon = Object.assign({}, winCon, {value});
-    }
 
-    toggleWinCondition(event, winCondition){
-        let toggledIndex = this.state.level.winConditions.findIndex(w => w.name === winCondition);
-        if(toggledIndex > -1){
+        if(name === changedCondition){
             this.setState({
                 level: {
                     ...this.state.level,
-                    winConditions : [
-                        ...this.state.level.winConditions.splice(0, toggledIndex),
-                        ...this.state.level.winConditions.splice(toggledIndex + 1)
+                    winConditions: [
+                        ...this.state.level.winConditions.splice(0, changedIndex),
+                        Object.assign({}, this.state.level.winConditions[changedIndex], {value}),
+                        ...this.state.level.winConditions.splice(changedIndex + 1)
                     ]
                 }
-            })
+            });
         }
         else{
+            this.setState({
+                level: {
+                    ...this.state.level,
+                    winConditions: [
+                        ...this.state.level.winConditions.splice(0, changedIndex),
+                        Object.assign({}, this.state.level.winConditions[changedIndex], 
+                            {
+                                value: {
+                                    ...this.state.level.winConditions[changedIndex].value,
+                                    [name]: {
+                                        ...this.state.level.winConditions[changedIndex].value[name],
+                                        value
+                                    }
+                                }
+                            }),
+                        ...this.state.level.winConditions.splice(changedIndex + 1)
+                    ]
+                }
+            });
+        }
+        
+    }
+
+    isConditionTurnedOff(conditionName){
+        let toggledIndex = this.state.level.winConditions.findIndex(w => w.name === conditionName);
+        return {result: toggledIndex === -1, value: toggledIndex};
+    }
+
+    toggleWinCondition(event, winCondition){
+        const {result: isConTurnedOff, value: toggledIndex} = this.isConditionTurnedOff(winCondition);
+        if(isConTurnedOff){
             this.setState({
                 level: {
                     ...this.state.level,
@@ -343,7 +386,18 @@ class LevelEditorMain extends Component{
                         }
                     ]
                 }
-            })
+            });
+        }
+        else{
+            this.setState({
+                level: {
+                    ...this.state.level,
+                    winConditions : [
+                        ...this.state.level.winConditions.splice(0, toggledIndex),
+                        ...this.state.level.winConditions.splice(toggledIndex + 1)
+                    ]
+                }
+            });
         }
     }
 }

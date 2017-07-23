@@ -136,16 +136,20 @@ class LevelEditorMenu extends Component{
                                 <td>
                                     {typeof WinConditions[wc].type !== "string" &&
                                         <table><tbody>
-                                            {WinConditions[wc].type.map(sub => {
-                                                return <tr key={`${wc}_${sub.name}`}>
-                                                    <td>{sub.label}</td>
-                                                    <td>{
-                                                        this.typeToElement(sub, sub.name)
-                                                    }</td>
-                                                </tr>}
-                                            )}
+                                            {
+                                                WinConditions[wc].type.map(sub => {
+                                                    return (
+                                                        <tr key={`${wc}_${sub.name}`}>
+                                                            <td>{sub.label}</td>
+                                                            <td>{
+                                                                this.typeToElement(sub, sub.name, (this.props.isConditionTurnedOff(wc)).result)
+                                                            }</td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            }
                                         </tbody></table> ||
-                                        this.typeToElement(WinConditions[wc], wc)
+                                        this.typeToElement(WinConditions[wc], wc, (this.props.isConditionTurnedOff(wc)).result)
                                     }
                                 </td>
                             </tr>
@@ -200,14 +204,14 @@ class LevelEditorMenu extends Component{
         });
     }
 
-    typeToElement(condition, name){
+    typeToElement(condition, name, isDisabled){
         switch(condition.type){
             case "Number" : 
-                return <input name={name} type="number" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
+                return <input name={name} disabled={isDisabled} type="number" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
             case "Text" : 
-                return <input name={name} type="text" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
+                return <input name={name} disabled={isDisabled} type="text" defaultValue={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />;
             case "Boolean" :
-                return <input name={name} type="checkbox" defaultChecked={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />
+                return <input name={name} disabled={isDisabled} type="checkbox" defaultChecked={condition.defaultValue} onChange={(e) => {this.props.updateWinConditions(name, e)}} />
             default:
                 console.error("No such input type");
         }

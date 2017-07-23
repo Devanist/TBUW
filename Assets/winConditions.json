@@ -1,5 +1,5 @@
 {
-    "blockcoins" : {
+    "BlockCoin" : {
         "label" : "Amount of BlockCoins",
         "type" : "Number",
         "defaultValue": 1

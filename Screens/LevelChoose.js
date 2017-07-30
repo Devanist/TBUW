@@ -7,10 +7,9 @@ class LevelChoose extends Screen{
 
     constructor(params){
         super();
+
         this._levels = params.cfg;
-
         this._buttonPressedDown = false;
-
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
         this._displacementmap.g = 1;
@@ -22,52 +21,37 @@ class LevelChoose extends Screen{
             y: 0
         };
 
-        this._small = 1;
-        if(window.innerWidth <= 640){
-            this._small = 2;
-        }
+        this._small = window.innerWidth <= 640 ? 2 : 1;
+
         this._sounds = [{name: "home_beforethenight"}];
         this._sameMusic = false;
 
-        var temp;
-        var num;
-        var that = this;
-        for(let i = 0; i < this._levels.length; i++){
-            num = i.toString();
-            if(i < 10){
-                num = '0' + num;
-            }
-            if(this._levels[i].type === "cinematic"){
-                temp = new GUI.Button("cinem_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), num, 
-                {size_override: true, bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"},cinematicCallback);
-            }
-            else{
-                temp = new GUI.Button("level_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), num, 
-                {bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
-            }
-            if(i === 0){
-                temp._data.active = true;
-            }
+        this._levels.forEach((level, index) => {
+            let frame = level.type === 'cinematic' ? 'cinematic_frame' : 'frame';
+            let num = index < 10 ? `0${index}` : index.toString();
+            let temp = new GUI.Button(
+                `${level.type}_${level.name}`, 
+                {x: 300 * (index % 3 + 1), y: 200 * ((index / 3 | 0) + 1)},
+                PIXI.loader.resources.sprites.textures[frame],
+                num,
+                {size_override: true, bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"},
+                () => {
+                    changeScreen.call(this, level.name, level.type === 'cinematic' ? 'cinematic' : 'game')
+                }
+            );
+            if(index === 0) temp._data.active = true;
             this._guiStage.add(temp);
-        }
+        });
 
-        function cinematicCallback(){
-            that._onUpdateAction = "CHANGE";
-            that._nextScreen = "cinematic";
-            that._nextScreenParams = {
-                cfg: this._id.substr(6),
-                back: that._levels
+        function changeScreen(name, screen){
+            this._onUpdateAction = "CHANGE";
+            this._nextScreen = screen;
+            this._nextScreenParams = {
+                cfg: name,
+                back: this._levels
             };
         }
 
-        function levelCallback(){
-            that._onUpdateAction = "CHANGE";
-            that._nextScreen = "game";
-            that._nextScreenParams = {
-                cfg: this._id.substr(6),
-                back: that._levels
-            };
-        }
         this._stage.add(this._guiStage);
     }
 
@@ -138,53 +122,44 @@ class LevelChoose extends Screen{
         }
         
         if(keysState.ENTER){
-            for(let i = 0; i < this._guiStage._elements.length; i+=1){
-                temp = this._guiStage._elements[i];
-                if(temp !== null && temp !== undefined && temp.isActive()){
-                    temp.triggerCallback();
-                }
-            }
+            this._guiStage._elements.forEach(element => {
+                if(element && element.isActive()) element.triggerCallback()
+            });
         }
         
         if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
             this._buttonPressedDown = false;
         }
-        
-        //Mouse clicks handling
-        for(let j = 0; j < clicks.length; j += 1){
-            for(let i = 0; i < this._guiStage._elements.length; i += 1){
-                temp = this._guiStage._elements[i];
-                if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
+
+        clicks.forEach(click => {
+            this._guiStage._elements.forEach(element => {
+                if(element.triggerCallback && element._sprite.containsPoint({x: click.clientX, y: click.clientY}))
                     temp.triggerCallback();
-                }
-            }
-        }
+            });
+        });
         
         //Touch handling
-        if(Utils.isTouchDevice()){           
-            for(j = 0; j < touches.length; j += 1){
-                for(i = 0; i < this._guiStage._elements.length; i += 1){
-                    temp = this._guiStage._elements[i];
-                    if(temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                        temp.triggerCallback();
-                    }                     
-                }                    
-            }
+        if(Utils.isTouchDevice()){
+            touches.forEach(touch => {
+                this._guiStage._elements.forEach(element => {
+                    if(element.triggerCallback && element._sprite.containsPoint({x: touch.pageX, y: touch.pageY}))
+                        element.triggerCallback();
+                });
+            });
         }
 
-        for(i = 0; i < this._guiStage._elements.length; i+=1){
-            temp = this._guiStage._elements[i];
-            if(temp.isEnabled() && temp.isActive()){
+        this._guiStage._elements.forEach(element => {
+            if(element.isEnabled() && element.isActive()){
                 if(this._displacement.scale.y < 6){
                     this._displacement.scale.y += 0.1;
                 }
                 else{
                     this._displacement.scale.y = 1;
                 }
-                temp._sprite.filters = [this._displacement];
+                element._sprite.filters = [this._displacement];
             }
-        }
-        
+        });
+
         return  {
             action: this._onUpdateAction,
             changeTo: this._nextScreen,

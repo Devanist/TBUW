@@ -39,6 +39,7 @@ class LevelEditorMain extends Component{
         this.updateWinConditions = this.updateWinConditions.bind(this);
         this.toggleWinCondition = this.toggleWinCondition.bind(this);
         this.isConditionTurnedOff = this.isConditionTurnedOff.bind(this);
+        this.findType = this.findType.bind(this);
     }
 
     render(){
@@ -299,77 +300,80 @@ class LevelEditorMain extends Component{
 
     updateWinConditions(name, event){
         
-        let changedCondition = "";
-        let changedIndex = -1;
-        let type = "";
-        Object.keys(winConditions).forEach((wc, index) => {
-            wc = winConditions[wc];
-            if(typeof wc.value === "object"){
-                let searchResult = Object.keys(wc.value).find(sub => sub === name);
-                if(searchResult){
-                    changedCondition = wc.name;
-                    changedIndex = index;
-                    type = sub.type;
-                    return;
-                }
-            }
-            if(wc.name === name){
-                changedCondition = wc.name;
-                console.log(wc);
-                type = wc.type;
-                changedIndex = index;
-                return;
-            }
-        });
-        if(changedIndex === -1) throw `Win condition '${name}' not found`;
-
         let value;
+        let type = this.findType(name);
         switch(type){
             case 'Number': value = parseInt(event.target.value); break;
             case 'String': value = event.target.value; break;
             case 'Boolean': value = event.target.checked; break;
             default: throw `Type not found: '${type}'`;
         }
-
-        if(name === changedCondition){
-            this.setState({
-                level: {
-                    ...this.state.level,
-                    winConditions: [
-                        ...this.state.level.winConditions.splice(0, changedIndex),
-                        Object.assign({}, this.state.level.winConditions[changedIndex], {value}),
-                        ...this.state.level.winConditions.splice(changedIndex + 1)
-                    ]
-                }
-            });
-        }
-        else{
-            this.setState({
-                level: {
-                    ...this.state.level,
-                    winConditions: [
-                        ...this.state.level.winConditions.splice(0, changedIndex),
-                        Object.assign({}, this.state.level.winConditions[changedIndex], 
-                            {
-                                value: {
-                                    ...this.state.level.winConditions[changedIndex].value,
-                                    [name]: {
-                                        ...this.state.level.winConditions[changedIndex].value[name],
-                                        value
-                                    }
-                                }
-                            }),
-                        ...this.state.level.winConditions.splice(changedIndex + 1)
-                    ]
-                }
-            });
-        }
         
+        this.state.level.winConditions.forEach((wc, index) => {
+            if(wc.name === name){
+                this.setState({
+                    level: {
+                        ...this.state.level,
+                        winConditions: [
+                            ...this.state.level.winConditions.slice(0, index),
+                            Object.assign({}, this.state.level.winConditions[index], {value}),
+                            ...this.state.level.winConditions.slice(index + 1)
+                        ]
+                    }
+                });
+                return;
+            }
+            else if(typeof wc.value === "object"){
+                Object.keys(wc.value).forEach(sub => {
+                    if(sub === name){
+                        this.setState({
+                            level: {
+                                ...this.state.level,
+                                winConditions: [
+                                    ...this.state.level.winConditions.slice(0, index),
+                                    Object.assign({}, this.state.level.winConditions[index], 
+                                        {
+                                            value: {
+                                                ...this.state.level.winConditions[index].value,
+                                                [sub]: value
+                                            }
+                                        }
+                                    ),
+                                    ...this.state.level.winConditions.slice(index + 1)
+                                ]
+                            }
+                        });
+                        return;
+                    }
+                });
+            }
+        });
+
     }
 
     isConditionTurnedOff(conditionName){
         let toggledIndex = this.state.level.winConditions.findIndex(w => w.name === conditionName);
         return {result: toggledIndex === -1, value: toggledIndex};
+    }
+
+    findType(conditionName){
+        let type;
+        Object.keys(winConditions).forEach(key => {
+            if(conditionName === key) {
+                type = winConditions[key].type;
+                return;
+            }
+            else if(Array.isArray(winConditions[key].type)){
+                winConditions[key].type.forEach(sub => {
+                    if(sub.name === conditionName) {
+                        type = sub.type;
+                        return;
+                    }
+                });
+            }
+        });
+        if(!type) throw `Condition '${conditionName}' not found`;
+        return type;
     }
 
     toggleWinCondition(event, winCondition){

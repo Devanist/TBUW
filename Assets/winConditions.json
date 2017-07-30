@@ -20,27 +20,23 @@
                 "defaultValue": 0
             },
             {
-                "name" : "rlx",
+                "name" : "rdx",
                 "label" : "Right lower X",
                 "type" : "Number",
                 "defaultValue": 0
             },
             {
-                "name" : "rly",
+                "name" : "rdy",
                 "label" : "Right lower Y",
                 "type" : "Number",
                 "defaultValue": 0
             }
         ],
         "defaultValue": {
-            "lu": {
-                "x": 0,
-                "y": 0
-            },
-            "rd": {
-                "x": 0,
-                "y": 0
-            }
+            "lux": 0,
+            "luy": 0,
+            "rdx": 0,
+            "rdy": 0
         }
     }
 }

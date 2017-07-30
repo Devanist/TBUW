@@ -134,7 +134,7 @@ class LevelChoose extends Screen{
         clicks.forEach(click => {
             this._guiStage._elements.forEach(element => {
                 if(element.triggerCallback && element._sprite.containsPoint({x: click.clientX, y: click.clientY}))
-                    temp.triggerCallback();
+                    element.triggerCallback();
             });
         });
         

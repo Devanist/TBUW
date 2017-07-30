@@ -14,13 +14,8 @@ class ChapterChoose extends Screen{
     constructor(){
         super();
 
-        this._small = 1;
-        if(window.innerWidth <= 640){
-            this._small = 2;
-        }
-
+        this._small = window.innerWidth <= 640 ? 2 : 1;
         this._buttonPressedDown = false;
-
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
         this._displacementmap.g = 1;
@@ -40,30 +35,35 @@ class ChapterChoose extends Screen{
             }
         }
 
-        var that = this;
-        var levels;
-        for(let i = 0; i < this._chapters.length; i++){
-            levels = this._chapters[i].levels;
-            this._guiStage.add(new GUI.Button(this._chapters[i].name, this._chaptersPositions[i], PIXI.Texture.fromFrame(this._chapters[i].sprite), "", 
-            (() => {if(i === 0){ return {active: true};} else { return {};}})(), 
-                ()=> {
-                    that._onUpdateAction = "CHANGE";
-                    that._nextScreen = "level_choose";
-                    that._nextScreenParams = {
-                        cfg: levels
-                    };
-                }
-            ));
-            this._guiStage.add(new GUI.Label(this._chapters[i].name + "_label", 
-                {
-                    x: (this._chaptersPositions[i].x - 158),
-                    y: (this._chaptersPositions[i].y + 120)
-                },
-                this._chapters[i].name,
-                {bitmap: true, fontSize: 20 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}
-            ));
-        }
-
+        this._chapters.forEach((chapter, index) => {
+            this._guiStage.add(
+                new GUI.Button(
+                    chapter.name,
+                    this._chaptersPositions[index],
+                    PIXI.loader.resources.sprites.textures[chapter.sprite],
+                    "",
+                    index === 0 ? {active: true} : {},
+                    () => {
+                        this._onUpdateAction = "CHANGE";
+                        this._nextScreen = "level_choose";
+                        this._nextScreenParams = {
+                            cfg: chapter.levels
+                        };
+                    }
+                )
+            );
+            this._guiStage.add(
+                new GUI.Label(
+                    chapter.name + '_label',
+                    {
+                        x: this._chaptersPositions[index].x - 158,
+                        y: this._chaptersPositions[index].y + 120
+                    },
+                    chapter.name,
+                    {bitmap: true, fontSize: 20 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}
+                )
+            )
+        });
         this._stage.add(this._guiStage);
         this._stage.add(this._background);
     }
@@ -137,52 +137,42 @@ class ChapterChoose extends Screen{
         }
         
         if(keysState.ENTER){
-            for(i = 0; i < this._guiStage._elements.length; i+=1){
-                temp = this._guiStage._elements[i];
-                if(temp !== null && temp !== undefined && temp.isActive()){
-                    temp.triggerCallback();
-                }
-            }
+            this._guiStage._elements.forEach(element => {
+                if(element && element.isActive()) element.triggerCallback();
+            });
         }
         
         if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
             this._buttonPressedDown = false;
         }
         
-        //Mouse clicks handling
-        for(let j = 0; j < clicks.length; j += 1){
-            for(let i = 0; i < this._guiStage._elements.length; i += 1){
-                temp = this._guiStage._elements[i];
-                if(temp.triggerCallback !== undefined && temp._sprite.containsPoint({x: clicks[j].clientX, y: clicks[j].clientY})){
-                    temp.triggerCallback();
-                }
-            }
-        }
+        clicks.forEach(click => {
+            this._guiStage._elements.forEach(element => {
+                if(element.triggerCallback && element._sprite.containsPoint({x: click.clientX, y: click.clientY}))
+                    element.triggerCallback();
+            });
+        });
         
-        //Touch handling
-        if(Utils.isTouchDevice()){           
-            for(let j = 0; j < touches.length; j += 1){
-                for(let i = 0; i < this._guiStage._elements.length; i += 1){
-                    temp = this._guiStage._elements[i];
-                    if(typeof temp.triggerCallback === "function" && temp._sprite.containsPoint({x: touches[j].pageX, y: touches[j].pageY})){
-                        temp.triggerCallback();
-                    }                     
-                }                    
-            }
+        if(Utils.isTouchDevice()){
+            touches.forEach(touch => {
+                this._guiStage._elements.forEach(element => {
+                    if(element.triggerCallback && element._sprite.containsPoint({x: touch.pageX, y: touch.pageY}))
+                        element.triggerCallback();
+                });
+            });
         }
 
-        for(let i = 0; i < this._guiStage._elements.length; i+=1){
-            temp = this._guiStage._elements[i];
-            if(temp.isEnabled() && temp.isActive()){
+        this._guiStage._elements.forEach(element => {
+            if(element.isEnabled() && element.isActive()){
                 if(this._displacement.scale.y < 6){
                     this._displacement.scale.y += 0.1;
                 }
                 else{
                     this._displacement.scale.y = 1;
                 }
-                temp._sprite.filters = [this._displacement];
+                element._sprite.filters = [this._displacement];
             }
-        }
+        });
         
         return  {
             action: this._onUpdateAction,

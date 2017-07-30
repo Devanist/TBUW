@@ -9,7 +9,9 @@ class Label extends BaseElement{
             style.font = {
 				size : style.fontSize,
 				name : style.fontFamily
-			};
+            };
+            console.log(text);
+            console.log(style);
             this._sprite = new PIXI.extras.BitmapText(text, style);
             this._sprite.containsPoint = function(pos){
                 if( pos.x >= this.position.x &&

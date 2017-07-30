@@ -60,7 +60,7 @@ class ChapterChoose extends Screen{
                     y: (this._chaptersPositions[i].y + 120)
                 },
                 this._chapters[i].name,
-                {bitmap: true, font: 20 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}
+                {bitmap: true, fontSize: 20 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}
             ));
         }
 

@@ -39,11 +39,11 @@ class LevelChoose extends Screen{
             }
             if(this._levels[i].type === "cinematic"){
                 temp = new GUI.Button("cinem_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("cinematic_frame"), num, 
-                {size_override: true, bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"},cinematicCallback);
+                {size_override: true, bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"},cinematicCallback);
             }
             else{
                 temp = new GUI.Button("level_"+this._levels[i].name, {x: 300 * (i%3 + 1), y: 200 * ((i/3 | 0) + 1)}, PIXI.Texture.fromFrame("frame"), num, 
-                {bitmap: true, font: 60 / this._small + "px Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
+                {bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}, levelCallback);
             }
             if(i === 0){
                 temp._data.active = true;

@@ -250,10 +250,10 @@ self.onmessage = function(e){
             conditionsMet++;
         }
         else if(condition.name === "position"){
-            if( PLAYER.position.x >= condition.value.lu.x / world.SMALL && 
-                PLAYER.position.x <= condition.value.rd.x / world.SMALL &&
-                PLAYER.position.y >= condition.value.lu.y / world.SMALL &&
-                PLAYER.position.y <= condition.value.rd.y / world.SMALL
+            if( PLAYER.position.x >= condition.value.lux / world.SMALL && 
+                PLAYER.position.x <= condition.value.rdx / world.SMALL &&
+                PLAYER.position.y >= condition.value.luy / world.SMALL &&
+                PLAYER.position.y <= condition.value.rdy / world.SMALL
             ){
                 if(playerInFinalPosition === false){
                     playerInFinalPosition = true;

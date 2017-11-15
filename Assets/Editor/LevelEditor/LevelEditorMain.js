@@ -75,39 +75,37 @@ class LevelEditorMain extends Component{
 
     loadLevel(e){
         const file = e.target.files[0];
-        if(!file){
-            return;
-        }
-        const editorthis = this;
+        if (!file) return;
+        const editorContext = this;
 
         let reader = new FileReader();
         reader.onload = function(e){
             const content = e.target.result;
-            editorthis.setState({
+            editorContext.setState({
                 level : JSON.parse(content)
             });
-            editorthis.props.editorContext.updateStage("background", editorthis.state.level);
-            editorthis.props.editorContext.updateStage("game", editorthis.state.level);
+            editorContext.props.editorContext.updateStage("background", editorContext.state.level);
+            editorContext.props.editorContext.updateStage("game", editorContext.state.level);
         };
         reader.readAsText(file);
     }
 
     addToScene(element){
-
         element.position = {
             x: 0,
             y: 0
         };
-
-        Object.keys(Entities[element.type].Properties).forEach(prop => {
-            if(Entities[element.type].Properties[prop].subFields){
+        
+        const entityProperties = Entities[element.type].Properties;
+        Object.keys(entityProperties).forEach(prop => {
+            if(entityProperties[prop].subFields){
                 element[prop] = {};
-                Entities[element.type].Properties[prop].subFields.forEach(sub => {
+                entityProperties[prop].subFields.forEach(sub => {
                     element[prop][sub.name] = sub.defaultValue;
                 });
             }
             else{
-                element[prop] = Entities[element.type].Properties[prop].defaultValue;
+                element[prop] = entityProperties[prop].defaultValue;
             }
         });
 
@@ -148,8 +146,8 @@ class LevelEditorMain extends Component{
     }
 
     update(){
-
         let entities = this.state.level.entities;
+
         if(this.state.selection !== null){
             const index = this.state.level.entities.findIndex(e => e.id === this.state.selection);
             let modifiedEntity = {
@@ -221,25 +219,21 @@ class LevelEditorMain extends Component{
     }
 
     triggerMusic(stop){
+        if(this.state.level.music === "") return;
         
-        if(this.state.level.music !== ""){
-            if(stop){
-                this.props.editorContext._sounds = [{
-                    name : this.state.level.music,
-                    stop : true
-                }];
-            }
-            else{
-                this.props.editorContext._sounds = [{
-                    name : this.state.level.music,
-                    stop : this.state.musicPlaying
-                }];
-                
-            }
-            this.setState({
-                musicPlaying : !this.state.musicPlaying
-            });
-        }
+        this.props.editorContext._sounds = stop
+            ? [{
+                name : this.state.level.music,
+                stop : true
+            }]
+            : [{
+                name : this.state.level.music,
+                stop : this.state.musicPlaying
+            }];
+
+        this.setState({
+            musicPlaying : !this.state.musicPlaying
+        });
     }
 
     selectEntity(id){
@@ -249,46 +243,49 @@ class LevelEditorMain extends Component{
     }
 
     removeFromScene(id){
-        const index = this.state.level.entities.findIndex(ent => ent.id === id);
+        const entities = this.state.level.entities;
+        const index = entities.findIndex(ent => ent.id === id);
 
         this.setState({
             level : {
                 ...this.state.level,
                 entities : [
-                    ...this.state.level.entities.slice(0, index),
-                    ...this.state.level.entities.slice(index + 1)
+                    ...entities.slice(0, index),
+                    ...entities.slice(index + 1)
                 ]
             }
         });
     }
 
     moveUp(id){
-        const index = this.state.level.entities.findIndex(ent => ent.id === id);
+        const entities = this.state.level.entities;
+        const index = entities.findIndex(ent => ent.id === id);
 
         this.setState({
             level : {
                 ...this.state.level,
                 entities : [
-                    ...this.state.level.entities.slice(0, index - 1),
-                    this.state.level.entities[index],
-                    this.state.level.entities[index - 1],
-                    ...this.state.level.entities.slice(index + 1)
+                    ...entities.slice(0, index - 1),
+                    entities[index],
+                    entities[index - 1],
+                    ...entities.slice(index + 1)
                 ]
             }
         });
     }
 
     moveDown(id){
-        const index = this.state.level.entities.findIndex(ent => ent.id === id);
+        const entities = this.state.level.entities;
+        const index = entities.findIndex(ent => ent.id === id);
 
         this.setState({
             level : {
                 ...this.state.level,
                 entities : [
-                    ...this.state.level.entities.slice(0, index),
-                    this.state.level.entities[index + 1],
-                    this.state.level.entities[index],
-                    ...this.state.level.entities.slice(index + 2)
+                    ...entities.slice(0, index),
+                    entities[index + 1],
+                    entities[index],
+                    ...entities.slice(index + 2)
                 ]
             }
         });
@@ -299,9 +296,9 @@ class LevelEditorMain extends Component{
     }
 
     updateWinConditions(name, event){
-        
+        const type = this.findType(name);
+        const levelWinConditions = this.state.level.winConditions;
         let value;
-        let type = this.findType(name);
         switch(type){
             case 'Number': value = parseInt(event.target.value); break;
             case 'String': value = event.target.value; break;
@@ -309,15 +306,15 @@ class LevelEditorMain extends Component{
             default: throw `Type not found: '${type}'`;
         }
         
-        this.state.level.winConditions.forEach((wc, index) => {
+        levelWinConditions.forEach((wc, index) => {
             if(wc.name === name){
                 this.setState({
                     level: {
                         ...this.state.level,
                         winConditions: [
-                            ...this.state.level.winConditions.slice(0, index),
-                            Object.assign({}, this.state.level.winConditions[index], {value}),
-                            ...this.state.level.winConditions.slice(index + 1)
+                            ...levelWinConditions.slice(0, index),
+                            Object.assign({}, levelWinConditions[index], {value}),
+                            ...levelWinConditions.slice(index + 1)
                         ]
                     }
                 });
@@ -330,16 +327,16 @@ class LevelEditorMain extends Component{
                             level: {
                                 ...this.state.level,
                                 winConditions: [
-                                    ...this.state.level.winConditions.slice(0, index),
-                                    Object.assign({}, this.state.level.winConditions[index], 
+                                    ...levelWinConditions.slice(0, index),
+                                    Object.assign({}, levelWinConditions[index], 
                                         {
                                             value: {
-                                                ...this.state.level.winConditions[index].value,
+                                                ...levelWinConditions[index].value,
                                                 [sub]: value
                                             }
                                         }
                                     ),
-                                    ...this.state.level.winConditions.slice(index + 1)
+                                    ...levelWinConditions.slice(index + 1)
                                 ]
                             }
                         });
@@ -352,7 +349,7 @@ class LevelEditorMain extends Component{
     }
 
     isConditionTurnedOff(conditionName){
-        let toggledIndex = this.state.level.winConditions.findIndex(w => w.name === conditionName);
+        const toggledIndex = this.state.level.winConditions.findIndex(w => w.name === conditionName);
         return {result: toggledIndex === -1, value: toggledIndex};
     }
 
@@ -372,18 +369,20 @@ class LevelEditorMain extends Component{
                 });
             }
         });
-        if(!type) throw `Condition '${conditionName}' not found`;
+        if (!type) throw `Condition '${conditionName}' not found`;
         return type;
     }
 
     toggleWinCondition(event, winCondition){
         const {result: isConTurnedOff, value: toggledIndex} = this.isConditionTurnedOff(winCondition);
-        if(isConTurnedOff){
+        const levelWinConditions = this.state.level.winConditions;
+
+        if(isConTurnedOff) {
             this.setState({
                 level: {
                     ...this.state.level,
                     winConditions: [
-                        ...this.state.level.winConditions,
+                        ...levelWinConditions,
                         {
                             name: winCondition,
                             value: winConditions[winCondition].defaultValue
@@ -392,13 +391,13 @@ class LevelEditorMain extends Component{
                 }
             });
         }
-        else{
+        else {
             this.setState({
                 level: {
                     ...this.state.level,
                     winConditions : [
-                        ...this.state.level.winConditions.splice(0, toggledIndex),
-                        ...this.state.level.winConditions.splice(toggledIndex + 1)
+                        ...levelWinConditions.splice(0, toggledIndex),
+                        ...levelWinConditions.splice(toggledIndex + 1)
                     ]
                 }
             });

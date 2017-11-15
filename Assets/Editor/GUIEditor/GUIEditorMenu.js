@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import Spritesheet from '../../Gfx/sprites.json';
-import GUI from '../../../GUI/GUI';
+import SaveLink from '../common/SaveLink';
+import CreationPopup from '../common/CreationPopup';
 
 class GUIEditorMenu extends Component{
 
@@ -9,91 +9,64 @@ class GUIEditorMenu extends Component{
         this.state = {
             url : "",
             expanded : "",
-            inserting : false,
+            creation : false,
             warning : ""
         };
         this.expand = this.expand.bind(this);
         this.saveFile = this.saveFile.bind(this);
         this.decorateWithProperties = this.decorateWithProperties.bind(this);
+        this.addNewElementToScene = this.addNewElementToScene.bind(this);
+        this.cancelCreation = this.cancelCreation.bind(this);
+    }
+
+    addNewElementToScene () {
+        const id = document.querySelector("#idSelection").value;
+        const layer = document.querySelector("#layerSelection").value;
+
+        if(id === "" || this.props.contain(layer, id)){
+            this.setState({
+                warning : "ID can't be null or duplicate"
+            });
+        }
+        else{
+
+            let newElement = {
+                id,
+                type : document.querySelector("#typeSelection").value,
+                texture : document.querySelector("#textureSelection").value
+            };
+            this.decorateWithProperties(newElement);
+            this.props.add(newElement, layer);
+            this.setState({inserting : false, warning : ""});
+        }
+    }
+
+    cancelCreation () {
+        this.setState({creation : false, warning : ""});
     }
 
     render(){
 
         return <section id="EditorMenu">
-            {this.state.inserting &&
-                <section id="creationWindow">
-                    <p style={{color : "red"}}>{this.state.warning}</p>
-                    <table><tbody>
-                        <tr>
-                            <td>Identifier</td>
-                            <td><input id="idSelection" type="text" /></td>
-                        </tr>
-                        <tr>
-                            <td>Layer</td>
-                            <td>
-                                <select id="layerSelection">
-                                    <option value="GUI">GUI</option>
-                                    <option value="Background">Background</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Type</td>
-                            <td><select id="typeSelection">
-                                {Object.keys(GUI).map(entity => <option key={entity} value={entity}>{entity}</option>)}
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td>Texture</td>
-                            <td><select id="textureSelection">
-                                <option value="">none</option>
-                                {Object.keys(Spritesheet.frames).map(frame => <option key={frame} value={frame}>{frame}</option>)}
-                            </select></td>
-                        </tr>
-                        <tr>
-                            <td><input type="button" onClick={() => {
-
-                                const id = document.querySelector("#idSelection").value;
-                                const layer = document.querySelector("#layerSelection").value;
-
-                                if(id === "" || this.props.contain(layer, id)){
-                                    this.setState({
-                                        warning : "ID can't be null or duplicate"
-                                    });
-                                }
-                                else{
-
-                                    let newElement = {
-                                        id,
-                                        type : document.querySelector("#typeSelection").value,
-                                        texture : document.querySelector("#textureSelection").value
-                                    };
-                                    this.decorateWithProperties(newElement);
-                                    this.props.add(newElement, layer);
-                                    this.setState({inserting : false, warning : ""});
-                                }
-                            }} value="Add"/></td>
-                            <td><input type="button" onClick={() => {this.setState({creation : false, warning : ""})}} value="Cancel" /></td>
-                        </tr>
-                    </tbody></table>
-                </section>
-            }
+            <CreationPopup
+                creationStarted={this.state.creation}
+                warning={this.state.warning}
+                onAdd={this.addNewElementToScene}
+                onCancel={this.cancelCreation}
+                GUI
+            />
             <header>
                 <input id="loadFile" type="file" onChange={this.props.load}/>
-                {
-                    this.state.url &&
-                        <p><a href={this.state.url}>Right click here and select 'Save as'</a></p>
-                }
+                <SaveLink url={this.state.url} />
                 <table>
                     <tbody>
                         <tr>
-                            <td><input type="button" value="Save" onClick={this.saveFile}/></td>
-                            <td><input type="button" value="New project" onClick={this.props.reset}/></td>
+                            <td><button value="Save" onClick={this.saveFile}/></td>
+                            <td><button value="New project" onClick={this.props.reset}/></td>
                         </tr>
                     </tbody>
                 </table>
-                <input 
-                    type="button" 
+                <button
                     value="Add new element" 
                     onClick={() => {this.setState({inserting : true})}}
                 />
@@ -111,9 +84,9 @@ class GUIEditorMenu extends Component{
                     <tbody>
                         {this.props.bgList.map(elem => 
                             <tr key={`gui_${elem.id}`}>
-                                <td><input type="button" value="X" /></td>
-                                <td><input type="button" value="&#8593;" title="Move higher" /></td>
-                                <td><input type="button" value="&#8595;" title="Move lower" /></td>
+                                <td><button value="X" /></td>
+                                <td><button value="&#8593;" title="Move higher" /></td>
+                                <td><button value="&#8595;" title="Move lower" /></td>
                                 <td className="entityIDcell" onClick={() => {this.props.select("Background", elem.id)}}>{elem.id}</td>
                                 <td>{elem.type}</td>
                                 <td>{elem.texture}</td>
@@ -136,9 +109,9 @@ class GUIEditorMenu extends Component{
                     <tbody>
                         {this.props.guiList.map(elem => 
                             <tr key={`gui_${elem.id}`}>
-                                <td><input type="button" value="X" /></td>
-                                <td><input type="button" value="&#8593;" title="Move higher" /></td>
-                                <td><input type="button" value="&#8595;" title="Move lower" /></td>
+                                <td><button value="X" /></td>
+                                <td><button value="&#8593;" title="Move higher" /></td>
+                                <td><button value="&#8595;" title="Move lower" /></td>
                                 <td className="entityIDcell" onClick={() => {this.props.select("GUI", elem.id)}}>{elem.id}</td>
                                 <td>{elem.type}</td>
                                 <td>{elem.texture}</td>
@@ -157,9 +130,7 @@ class GUIEditorMenu extends Component{
     }
 
     expand(list){
-        if(this.state.expanded === list){
-            list = "";
-        }
+        if ( this.state.expanded === list ) list = "";
 
         this.setState({
             expanded : list
@@ -167,14 +138,12 @@ class GUIEditorMenu extends Component{
     }
 
     saveFile(){
-
         this.setState({
             url : this.props.generate()
         });
     }
 
     decorateWithProperties(element){
-
         const props = GUI[element.type].Properties;
 
         Object.keys(props).forEach(prop => {

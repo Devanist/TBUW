@@ -35,12 +35,12 @@ class GUIEditorMain extends Component{
 
     render(){
 
-        let selected;
+        let selectedElement;
         if(this.state.selected.layer === "GUI"){
-            selected = this.state.project.GUI.children.find(element => element.id === this.state.selected.id);
+            selectedElement = this.state.project.GUI.children.find(element => element.id === this.state.selected.id);
         }
         else if(this.state.selected.layer === "Background"){
-            selected = this.state.project.Background.children.find(element => element.id === this.state.selected.id);
+            selectedElement = this.state.project.Background.children.find(element => element.id === this.state.selected.id);
         }
 
         return <section id="GUIEditorMain">
@@ -55,7 +55,7 @@ class GUIEditorMain extends Component{
                 contain={this.contain}
             />
             <GUIEditorProps 
-                selection={selected}
+                selection={selectedElement}
                 selectedLayer={this.state.selected.layer}
                 clear={this.clearSelection}
                 positionChange={this.positionChange}
@@ -91,10 +91,9 @@ class GUIEditorMain extends Component{
 
     loadFromFile(e){
         let files = e.target;
-        let file = e.target.files[0];
-        if(!file){
-            return;
-        }
+        const file = e.target.files[0];
+        if (!file) return;
+        
         const editorThis = this;
 
         let reader = new FileReader();
@@ -143,22 +142,21 @@ class GUIEditorMain extends Component{
             ...this.state.project
         };
 
-        const index = this.state.project[this.state.selected.layer].children.findIndex(e => e.id === this.state.selected.id);
+        const layer = this.state.selected.layer;
+        const index = this.state.project[layer].children.findIndex(e => e.id === this.state.selected.id);
+        const children = this.state.project[layer].children;
 
-        if(typeof this.state.project[this.state.selected.layer].children[index].position === "object"){
-            modifiedProject[this.state.selected.layer].children = [
-                ...this.state.project[this.state.selected.layer].children.slice(0, index),
-                Object.assign({}, this.state.project[this.state.selected.layer].children[index], {position : "center"}),
-                ...this.state.project[this.state.selected.layer].children.slice(index + 1)
+        modifiedProject[layer].children = typeof children[index].position === "object" ?
+            [
+                ...children.slice(0, index),
+                Object.assign({}, children[index], {position : "center"}),
+                ...children.slice(index + 1)
+            ] 
+            : [
+                ...children.slice(0, index),
+                Object.assign({}, children[index], {position : {x: 0, y: 0}}),
+                ...children.slice(index + 1)
             ];
-        }
-        else{
-            modifiedProject[this.state.selected.layer].children = [
-                ...this.state.project[this.state.selected.layer].children.slice(0, index),
-                Object.assign({}, this.state.project[this.state.selected.layer].children[index], {position : {x: 0, y: 0}}),
-                ...this.state.project[this.state.selected.layer].children.slice(index + 1)
-            ];
-        }
 
         this.setState({
             project : modifiedProject
@@ -183,21 +181,20 @@ class GUIEditorMain extends Component{
             visible : document.querySelector("#props_visible").checked
         };
 
-        if(document.querySelector("#positionChange").value === "true"){
-            modifiedEntity.position = document.querySelector("#positionString").value;
-        }
-        else{
-            modifiedEntity.position = {
+        modifiedEntity.position = document.querySelector("#positionChange").value === "true" 
+            ? document.querySelector("#positionString").value
+            : {
                 x : parseInt(document.querySelector("#props_position_x").value),
                 y : parseInt(document.querySelector("#props_position_y").value)
             };
-        }
 
-        if(GUI[modifiedEntity.type].Properties){
-            Object.keys(GUI[modifiedEntity.type].Properties).forEach(prop => {
-                if(GUI[modifiedEntity.type].Properties[prop].subFields){
+        const type = modifiedEntity.type;
+
+        if ( GUI[type].Properties ) {
+            Object.keys(GUI[type].Properties).forEach(prop => {
+                if(GUI[type].Properties[prop].subFields){
                     modifiedEntity[prop] = {};
-                    GUI[modifiedEntity.type].Properties[prop].subFields.forEach(sub => {
+                    GUI[type].Properties[prop].subFields.forEach(sub => {
                         modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).value;
                         if(sub.type === "Boolean"){
                             modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).checked;
@@ -217,17 +214,17 @@ class GUIEditorMain extends Component{
             ...this.state.project
         };
 
-        const index = modifiedProject[this.state.selected.layer].children.findIndex(e => e.id === this.state.selected.id);
+        const selectedLayer = this.state.selected.layer;
+        const index = modifiedProject[selectedLayer].children.findIndex(e => e.id === this.state.selected.id);
 
-        modifiedProject[this.state.selected.layer].children = [
-            ...modifiedProject[this.state.selected.layer].children.slice(0, index),
-            Object.assign({}, modifiedProject[this.state.selected.layer].children[index], modifiedEntity),
-            ...modifiedProject[this.state.selected.layer].children.slice(index + 1)
+        modifiedProject[selectedLayer].children = [
+            ...modifiedProject[selectedLayer].children.slice(0, index),
+            Object.assign({}, modifiedProject[selectedLayer].children[index], modifiedEntity),
+            ...modifiedProject[selectedLayer].children.slice(index + 1)
         ];
 
-        if(this.state.selected.layer !== layer){
-            console.log(this.state.selected.layer !== layer);
-            let removedElement = modifiedProject[this.state.selected.layer].children.splice(index, 1)[0];
+        if(selectedLayer !== layer){
+            let removedElement = modifiedProject[selectedLayer].children.splice(index, 1)[0];
             modifiedProject[layer].children.push(removedElement);
         }
 

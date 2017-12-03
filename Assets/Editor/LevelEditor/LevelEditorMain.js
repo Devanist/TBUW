@@ -73,9 +73,10 @@ class LevelEditorMain extends Component{
         </section>
     }
 
-    loadLevel(e){
+    loadLevel (e) {
         const file = e.target.files[0];
         if (!file) return;
+        
         const editorContext = this;
 
         let reader = new FileReader();

@@ -1,0 +1,56 @@
+{
+    "plugins": [
+        "react"
+    ],
+    "extends": [
+        "plugin:react/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "globals": {
+        "FileReader": true
+    },
+    "rules": {
+        "no-cond-assign": "error",
+        "no-empty": "error",
+        "no-unreachable": "error",
+        "default-case": "error",
+        "dot-location": ["error", "property"],
+        "no-alert": "error",
+        "no-eval": "error",
+        "no-extra-bind": "error",
+        "no-loop-func": "error",
+        "no-magic-numbers": "error",
+        "no-multi-spaces": "error",
+        "no-param-reassign": "error",
+        "no-throw-literal": "error",
+        "no-unused-expressions": "error",
+        "no-catch-shadow": "error",
+        "no-shadow": "error",
+        "no-undef": "error",
+        "no-unused-vars": "error",
+        "block-spacing": "error",
+        "comma-spacing": ["error", {"before": false, "after": true}],
+        "eol-last": "error",
+        "func-call-spacing": ["error", "never"],
+        "indent": ["error", 4],
+        "jsx-quotes": ["error", "prefer-double"],
+        "key-spacing": ["error", {"beforeColon": false, "afterColon": true}],
+        "keyword-spacing": ["error", {"before": true, "after": true}],
+        "no-trailing-spaces": "error",
+        "space-before-blocks": "error",
+        "space-before-function-paren": "error",
+        "constructor-super": "error",
+        "arrow-parens": "error",
+        "no-const-assign": "error",
+        "no-duplicate-imports": "error",
+        "no-this-before-super": "error",
+        "no-useless-constructor": "error",
+        "prefer-const": "error"       
+    }
+}

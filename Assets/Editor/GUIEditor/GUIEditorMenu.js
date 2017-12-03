@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+
 import SaveLink from '../common/SaveLink';
-import CreationPopup from '../common/CreationPopup';
+import EditorMenu from '../common/EditorMenu';
+import ElementsList from '../common/ElementsList';
 
 class GUIEditorMenu extends Component{
 
@@ -47,86 +49,56 @@ class GUIEditorMenu extends Component{
 
     render(){
 
-        return <section id="EditorMenu">
-            <CreationPopup
+        return (
+            <EditorMenu
                 creationStarted={this.state.creation}
                 warning={this.state.warning}
                 onAdd={this.addNewElementToScene}
                 onCancel={this.cancelCreation}
                 GUI
-            />
-            <header>
-                <input id="loadFile" type="file" onChange={this.props.load}/>
-                <SaveLink url={this.state.url} />
-                <table>
-                    <tbody>
-                        <tr>
-                            <td><button value="Save" onClick={this.saveFile}/></td>
-                            <td><button value="New project" onClick={this.props.reset}/></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button
-                    value="Add new element" 
-                    onClick={() => {this.setState({inserting : true})}}
-                />
-                <h3 onClick={() => {this.expand("bglist")}}>Background</h3>
-                <table className={this.state.expanded !== "bglist" && "hidden"}>
-                    <thead>
-                        <tr>
-                            <td colSpan="3">Actions</td>
-                            <td>ID</td>
-                            <td>Type</td>
-                            <td>Texture</td>
-                            <td>Position</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.props.bgList.map(elem => 
-                            <tr key={`gui_${elem.id}`}>
-                                <td><button value="X" /></td>
-                                <td><button value="&#8593;" title="Move higher" /></td>
-                                <td><button value="&#8595;" title="Move lower" /></td>
-                                <td className="entityIDcell" onClick={() => {this.props.select("Background", elem.id)}}>{elem.id}</td>
-                                <td>{elem.type}</td>
-                                <td>{elem.texture}</td>
-                                <td>{`${elem.position.x}:${elem.position.y}`}</td>
+            >
+                <header>
+                    <input id="loadFile" type="file" onChange={this.props.load}/>
+                    <SaveLink url={this.state.url} />
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td><button value="Save" onClick={this.saveFile}/></td>
+                                <td><button value="New project" onClick={this.props.reset}/></td>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-                <h3 onClick={() => {this.expand("guilist")}}>GUI</h3>
-                <table id="guiList" className={this.state.expanded !== "guilist" && "hidden"}>
-                    <thead>
-                        <tr>
-                            <td colSpan="3">Actions</td>
-                            <td>ID</td>
-                            <td>Type</td>
-                            <td>Texture</td>
-                            <td>Position</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.props.guiList.map(elem => 
-                            <tr key={`gui_${elem.id}`}>
-                                <td><button value="X" /></td>
-                                <td><button value="&#8593;" title="Move higher" /></td>
-                                <td><button value="&#8595;" title="Move lower" /></td>
-                                <td className="entityIDcell" onClick={() => {this.props.select("GUI", elem.id)}}>{elem.id}</td>
-                                <td>{elem.type}</td>
-                                <td>{elem.texture}</td>
-                                <td>{
-                                    typeof elem.position === "string" &&
-                                    elem.position ||
-                                    `${elem.position.x}:${elem.position.y}`
-                                }</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </header>
-        </section>
-
+                        </tbody>
+                    </table>
+                    <button
+                        value="Add new element" 
+                        onClick={() => {this.setState({inserting : true})}}
+                    />
+                    <h3 onClick={() => {this.expand("bglist")}}>Background</h3>
+                    <ElementsList
+                        expanded={this.state.expanded}
+                        id="bg"
+                        collection={this.props.bgList}
+                        itemKey="bg"
+                        select={(id) => {this.props.select("Background", id)}}
+                    >
+                        <button key="bg_firstButton" value="X" />
+                        <button key="bg_secondButton" value="&#8593;" title="Move higher" />
+                        <button key="bg_thirdButton" value="&#8595;" title="Move lower" />
+                    </ElementsList>
+                    <h3 onClick={() => {this.expand("guilist")}}>GUI</h3>
+                    <ElementsList
+                        expanded={this.state.expanded}
+                        id="gui"
+                        collection={this.props.guiList}
+                        itemKey="gui"
+                        select={(id) => {this.props.select("GUI", id)}}
+                    >
+                        <button key="gui_firstButton" value="X" />
+                        <button key="gui_secondButton" value="&#8593;" title="Move higher" />
+                        <button key="gui_thirdButton" value="&#8595;" title="Move lower" />
+                    </ElementsList>
+                </header>
+            </EditorMenu>
+        );
     }
 
     expand(list){

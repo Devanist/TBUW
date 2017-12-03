@@ -13,13 +13,13 @@ var w = window.innerWidth;
 
 var scale;
 
-if(w <= 640){
+if (w <= 640) {
     scale = {
-        y : h / 360,
-        x : w / 640
+        y: h / 360,
+        x: w / 640
     };
 }
-else{
+else {
     scale = {
         y : h / 800,
         x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.

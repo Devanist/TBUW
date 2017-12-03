@@ -1,75 +1,81 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import Assets from '../../assets.json';
+import Spritesheet from '../../Gfx/sprites.json';
 import WinConditions from '../../winConditions.json';
+
 import SaveLink from '../common/SaveLink';
 import CreationPopup from '../common/CreationPopup';
 import InputElement from '../common/InputElement';
+import ElementsList from '../common/ElementsList';
+import LoadFileButton from '../common/LoadFileButton';
+import { dataToCSV } from '../common/Utils';
 
 function WinConditionsTable (props) {
-    const changeHandler = (e) => { props.updateWinConditions(name, e) };
+    const changeHandler = (e, name) => { props.updateWinConditions(name, e) };
 
     return (
         <table className={props.expanded !== "winconditions" && "hidden"}>
             <tbody>
-                {
-                    Object.keys(WinConditions).
-                        map(wc => 
-                            <tr key={wc}>
-                                <td>
-                                    {WinConditions[wc].label}
-                                    <input 
-                                        type="checkbox" 
-                                        name={`${wc}_isActive`} 
-                                        defaultChecked={false} 
-                                        onChange={(e) => {props.toggleWinCondition(e, wc)}} 
+                {Object.keys(WinConditions).map((conditionName) => {
+                    const winCondition = WinConditions[conditionName];
+                    return (
+                        <tr key={conditionName}>
+                            <td>
+                                {winCondition.label}
+                                <input
+                                    type="checkbox"
+                                    name={`${conditionName}_isActive`}
+                                    defaultChecked={false}
+                                    onChange={(e) => { props.toggleWinCondition(e, conditionName) }}
+                                />
+                            </td>
+                            <td>
+                                {typeof winCondition.type !== "string"
+                                    ? <table><tbody>
+                                        {winCondition.type.map((sub) => {
+                                            return (
+                                                <tr key={`${conditionName}_${sub.name}`}>
+                                                    <td>{sub.label}</td>
+                                                    <td>{
+                                                        <InputElement
+                                                            type={sub.type}
+                                                            defaultValue={sub.defaultValue}
+                                                            name={sub.name}
+                                                            isDisabled={props.isConditionTurnedOff(conditionName).result}
+                                                            changeHandler={(e) => { changeHandler(e, sub.name) }}
+                                                        />
+                                                    }</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody></table>
+                                    : <InputElement
+                                        type={winCondition.type}
+                                        defaultValue={winCondition.defaultValue}
+                                        name={conditionName}
+                                        isDisabled={props.isConditionTurnedOff(conditionName).result}
+                                        changeHandler={(e) => { changeHandler(e, conditionName) }}
                                     />
-                                </td>
-                                <td>
-                                    {typeof WinConditions[wc].type !== "string"
-                                        ? <table><tbody>
-                                            {WinConditions[wc].type.map(sub => {
-                                                return (
-                                                    <tr key={`${wc}_${sub.name}`}>
-                                                        <td>{sub.label}</td>
-                                                        <td>{
-                                                            <InputElement
-                                                                type={sub.type}
-                                                                defaultValue={sub.defaultValue}
-                                                                name={sub.name}
-                                                                isDisabled={props.isConditionTurnedOff(wc).result}
-                                                                changeHandler={changeHandler}
-                                                            />
-                                                        }</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody></table>
-                                        : <InputElement
-                                            type={WinConditions[wc].type}
-                                            defaultValue={WinConditions[wc].defaultValue}
-                                            name={wc}
-                                            isDisabled={props.isConditionTurnedOff(wc).result}
-                                            changeHandler={changeHandler}
-                                        />
-                                    }
-                                </td>
-                            </tr>
-                        )
-                }
+                                }
+                            </td>
+                        </tr>
+                    )
+                })}
             </tbody>
         </table>
     );
 }
 
 class LevelEditorMenu extends Component {
-    constructor(){
+    constructor () {
         super();
         this.state = {
-            expanded : "scene",
-            creation : false,
-            url : null,
-            warning : ""
+            expanded: "scene",
+            creation: false,
+            url: null,
+            warning: ""
         }
         this.expand = this.expand.bind(this);
         this.saveToFile = this.saveToFile.bind(this);
@@ -78,31 +84,29 @@ class LevelEditorMenu extends Component {
         this.cancelCreation = this.cancelCreation.bind(this);
     }
 
-    saveToFile(){
-        const data = JSON.stringify(this.props.level);
-        const linkData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(data);
+    saveToFile () {
         this.setState({
-            url : linkData
+            url: dataToCSV(this.props.level)
         });
     }
 
     addNewElementToScene () {
         const id = document.querySelector("#idSelection").value;
-        if(id === "" || this.props.contain(id)){
-            this.setState({warning : "ID cannot be null or duplicate"});
+        if (id === "" || this.props.contain(id)) {
+            this.setState({warning: "ID cannot be null or duplicate"});
         }
-        else{
+        else {
             this.props.add({
-                id : document.querySelector("#idSelection").value,
-                type : document.querySelector("#typeSelection").value,
-                texture : document.querySelector("#textureSelection").value
+                id: document.querySelector("#idSelection").value,
+                type: document.querySelector("#typeSelection").value,
+                texture: document.querySelector("#textureSelection").value
             });
-            this.setState({creation : false, warning : ""});
+            this.setState({creation: false, warning: ""});
         }
     }
 
     cancelCreation () {
-        this.setState({creation : false, warning : false});
+        this.setState({creation: false, warning: ""});
     }
 
     render () {
@@ -114,7 +118,7 @@ class LevelEditorMenu extends Component {
                 onCancel={this.cancelCreation}
             />
             <header>
-                <input id="loadFile" type="file" onChange={this.props.load}/>
+                <LoadFileButton onChange={this.props.load} />
                 <SaveLink url={this.props.url} />
                 <table>
                     <tbody>
@@ -129,14 +133,14 @@ class LevelEditorMenu extends Component {
                         <tr>
                             <td>Level background</td>
                             <td>
-                                <select 
-                                    id="level_background" 
-                                    defaultValue="" 
-                                    size="1" 
+                                <select
+                                    id="level_background"
+                                    defaultValue=""
+                                    size="1"
                                     onChange={this.props.update}
                                 >
                                     <option value="">Select background</option>
-                                    {Object.keys(Spritesheet.frames).map(asset => <option key={`bg_${asset}`} value={asset}>{asset}</option>)}
+                                    {Object.keys(Spritesheet.frames).map((asset) => <option key={`bg_${asset}`} value={asset}>{asset}</option>)}
                                 </select>
                             </td>
                         </tr>
@@ -145,7 +149,7 @@ class LevelEditorMenu extends Component {
                             <td>
                                 <select id="level_music" size="1" value={this.props.level.music} onChange={this.props.update}>
                                     <option value="none">Select music</option>
-                                    {Assets.sounds.map(asset => <option key={`sound_${asset.name}`} value={asset.name}>{asset.name}</option>)}
+                                    {Assets.sounds.map((asset) => <option key={`sound_${asset.name}`} value={asset.name}>{asset.name}</option>)}
                                 </select>
                             </td>
                             <td>
@@ -158,58 +162,71 @@ class LevelEditorMenu extends Component {
                     </tbody>
                 </table>
             </header>
-            <h3 onClick={() => {this.expand("winconditions")}}>Win conditions</h3>
+            <h3 onClick={() => { this.expand("winconditions") }}>Win conditions</h3>
             <WinConditionsTable
                 expanded={this.state.expanded}
                 toggleWinCondition={this.props.toggleWinCondition}
                 isConditionTurnedOff={this.props.isConditionTurnedOff}
                 updateWinConditions={this.props.updateWinConditions}
             />
-            <h3 onClick={() => {this.expand("scene")}}>Scene</h3>
+            <h3 onClick={() => { this.expand("scene") }}>Scene</h3>
             <button
                 value="Add new element to scene"
                 onClick={() => {
-                        this.props.clear();
-                        this.setState({creation : true});
-                    }
-                } 
+                    this.props.clear();
+                    this.setState({creation: true});
+                }}
             />
             <section id="sceneElements">
-                <table className={this.state.expanded !== "scene" && "hidden"}>
-                    <thead>
-                        <tr>
-                            <td colSpan="3">Actions</td>
-                            <td>ID</td>
-                            <td>Type</td>
-                            <td>Texture</td>
-                            <td>Position</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.props.level.entities.length === 0 && <tr><td>Scene is empty</td></tr> || this.props.level.entities.map((entity, index) => 
-                            <tr key={`entity_${index}`} >
-                                <td><button value="X" title="Remove from scene" onClick={() => {this.props.remove(entity.id)}} /></td>
-                                <td><button value="&#8593;" title="Move higher" onClick={() => {this.props.moveUp(entity.id)}} /></td>
-                                <td><button value="&#8595;" title="Move lower" onClick={() => {this.props.moveDown(entity.id)}} /></td>
-                                <td className="entityIDcell" onClick={() => {this.props.select(entity.id)}}>{entity.id}</td>
-                                <td>{entity.type}</td>
-                                <td>{entity.texture}</td>
-                                <td>{`${entity.position.x}:${entity.position.y}`}</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                <ElementsList
+                    expanded={this.state.expanded}
+                    id="scene"
+                    collection={this.props.level.entities}
+                    itemKey="entity"
+                    select={this.props.select}
+                >
+                    <button
+                        value="X"
+                        title="Remove from scene"
+                        onClick={this.props.remove}
+                        key="scene_firstButton"
+                    />
+                    <button
+                        value="&#8593;"
+                        title="Move higher"
+                        onClick={this.props.moveUp}
+                        key="scene_secondButton"
+                    />
+                    <button
+                        value="&#8595;"
+                        title="Move lower"
+                        onClick={this.props.moveDown}
+                        key="scene_secondButton"
+                    />
+                </ElementsList>
             </section>
         </section>
     }
 
-    expand(list){
-        if ( this.state.expanded === list ) list = "";
-
+    expand (list) {
         this.setState({
-            expanded : list
+            expanded: this.state.expanded === list ? "" : list
         });
     }
 }
+
+LevelEditorMenu.propTypes = {
+    moveDown: PropTypes.func.isRequired,
+    moveUp: PropTypes.func.isRequired,
+    remove: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
+    level: PropTypes.shape({
+        entities: PropTypes.array
+    }).isRequired,
+    clear: PropTypes.func.isRequired,
+    toggleWinCondition: PropTypes.func.isRequired,
+    isConditionTurnedOff: PropTypes.func.isRequired,
+    updateWinConditions: PropTypes.func.isRequired
+};
 
 export default LevelEditorMenu;

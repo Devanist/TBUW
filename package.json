@@ -5,6 +5,7 @@
   },
   "dependencies": {
     "pixi.js": "4.5.0",
+    "prop-types": "15.6.0",
     "resource-loader": "2.0.7",
     "react": "15.5.4",
     "react-dom": "15.5.4",
@@ -20,6 +21,9 @@
     "babel-plugin-transform-object-rest-spread": "6.16.0",
     "babel-plugin-transform-regenerator": "6.22.0",
     "css-loader": "0.28.0",
+    "eslint": "4.11.0",
+    "eslint-loader": "1.9.0",
+    "eslint-plugin-react": "7.5.1",
     "json-loader": "^0.5.4",
     "node-sass": "^4.5.2",
     "sass-loader": "6.0.3",

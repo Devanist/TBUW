@@ -22,5 +22,12 @@ module.exports = {
             {test: /\.json$/, loader: "json-loader"},
         ]
     },
+    rules: [
+        {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "eslint-loader"
+        }
+    ],
     node : { fs : "empty"}
 };

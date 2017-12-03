@@ -5,9 +5,8 @@ import Spritesheet from '../Assets/Gfx/sprites.json';
 import $ from 'jquery';
 import Assets from '../Assets/assets.json';
 
-class CinematicEditor extends Screen{
-
-    constructor(){
+class CinematicEditor extends Screen {
+    constructor () {
         super();
 
         this._config = {

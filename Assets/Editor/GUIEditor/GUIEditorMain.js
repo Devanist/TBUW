@@ -1,25 +1,28 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import GUI from '../../../GUI/GUI';
 
 import GUIEditorMenu from './GUIEditorMenu';
 import GUIEditorProps from './GUIEditorProps';
+import { dataToCSV } from '../common/Utils';
 
-class GUIEditorMain extends Component{
+const FILE = 0;
 
-    constructor(){
+export default class GUIEditorMain extends Component {
+    constructor () {
         super();
         this.state = {
-            project : {
-                GUI : {
-                    children : []
+            project: {
+                GUI: {
+                    children: []
                 },
-                Background : {
-                    children : []
+                Background: {
+                    children: []
                 },
             },
-            selected : {
-                layer : "",
-                id : ""
+            selected: {
+                layer: "",
+                id: ""
             }
         };
         this.addToScene = this.addToScene.bind(this);
@@ -33,45 +36,40 @@ class GUIEditorMain extends Component{
         this.contain = this.contain.bind(this);
     }
 
-    render(){
+    render () {
+        const selectedElement = this.state.project[this.state.selected.layer].children.find((element) => element.id === this.state.selected.id);
 
-        let selectedElement;
-        if(this.state.selected.layer === "GUI"){
-            selectedElement = this.state.project.GUI.children.find(element => element.id === this.state.selected.id);
-        }
-        else if(this.state.selected.layer === "Background"){
-            selectedElement = this.state.project.Background.children.find(element => element.id === this.state.selected.id);
-        }
-
-        return <section id="GUIEditorMain">
-            <GUIEditorMenu 
-                guiList={this.state.project.GUI.children}
-                bgList={this.state.project.Background.children}
-                load={this.loadFromFile}
-                add={this.addToScene}
-                select={this.select}
-                generate={this.generateFile}
-                reset={this.resetScene}
-                contain={this.contain}
-            />
-            <GUIEditorProps 
-                selection={selectedElement}
-                selectedLayer={this.state.selected.layer}
-                clear={this.clearSelection}
-                positionChange={this.positionChange}
-                update={this.updateElement}
-            />
-        </section>
+        return (
+            <section id="GUIEditorMain">
+                <GUIEditorMenu
+                    guiList={this.state.project.GUI.children}
+                    bgList={this.state.project.Background.children}
+                    load={this.loadFromFile}
+                    add={this.addToScene}
+                    select={this.select}
+                    generate={this.generateFile}
+                    reset={this.resetScene}
+                    contain={this.contain}
+                />
+                <GUIEditorProps
+                    selection={selectedElement}
+                    selectedLayer={this.state.selected.layer}
+                    clear={this.clearSelection}
+                    positionChange={this.positionChange}
+                    update={this.updateElement}
+                />
+            </section>
+        )
     }
 
-    addToScene(element, layer){
-        
+    addToScene (element, layer) {
+
         element.position = {
-            x : 0,
-            y : 0
+            x: 0,
+            y: 0
         };
 
-        let modifiedProject = {
+        const modifiedProject = {
             ...this.state.project
         };
 
@@ -81,26 +79,26 @@ class GUIEditorMain extends Component{
         ];
 
         this.setState({
-            project : modifiedProject,
-            selected : {
+            project: modifiedProject,
+            selected: {
                 layer,
-                id : element.id
+                id: element.id
             }
         });
     }
 
-    loadFromFile(e){
-        let files = e.target;
-        const file = e.target.files[0];
+    loadFromFile (e) {
+        const files = e.target;
+        const file = e.target.files[FILE];
         if (!file) return;
-        
+
         const editorThis = this;
 
-        let reader = new FileReader();
-        reader.onload = function(e){
-            const content = e.target.result;
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const content = event.target.result;
             editorThis.setState({
-                project : JSON.parse(content)
+                project: JSON.parse(content)
             });
             editorThis.props.editorContext.updateStage("background", editorThis.state.project.Background.children);
             editorThis.props.editorContext.updateStage("GUI", editorThis.state.project.GUI.children);
@@ -109,160 +107,154 @@ class GUIEditorMain extends Component{
         reader.readAsText(file);
     }
 
-    generateFile(){
-        return 'data:application/csv;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.state.project));
+    generateFile () {
+        return dataToCSV(this.state.project);
     }
 
-    select(layer, id){
-
+    select (layer, id) {
         this.clearSelection();
 
         setTimeout(() => {
             this.setState({
-                selected : {
+                selected: {
                     layer,
                     id
                 }
             });
-        }, 1);
+        }, 1); // eslint-disable-line no-magic-numbers
     }
 
-    clearSelection(){
+    clearSelection () {
         this.setState({
-            selected : {
-                layer : "",
-                id : ""
+            selected: {
+                layer: "",
+                id: ""
             }
         });
     }
 
-    positionChange(){
-
-        let modifiedProject = {
+    positionChange () {
+        const modifiedProject = {
             ...this.state.project
         };
 
         const layer = this.state.selected.layer;
-        const index = this.state.project[layer].children.findIndex(e => e.id === this.state.selected.id);
+        const index = this.state.project[layer].children.findIndex((child) => child.id === this.state.selected.id);
         const children = this.state.project[layer].children;
 
-        modifiedProject[layer].children = typeof children[index].position === "object" ?
-            [
-                ...children.slice(0, index),
-                Object.assign({}, children[index], {position : "center"}),
-                ...children.slice(index + 1)
-            ] 
-            : [
-                ...children.slice(0, index),
-                Object.assign({}, children[index], {position : {x: 0, y: 0}}),
-                ...children.slice(index + 1)
-            ];
+        const position = typeof children[index].position === "object" ? "center" : { x: 0, y: 0 };
+        modifiedProject[layer].children = [
+            ...children.slice(0, index), //eslint-disable-line no-magic-numbers
+            Object.assign({}, children[index], {position}),
+            ...children.slice(index + 1) //eslint-disable-line no-magic-numbers
+        ];
 
         this.setState({
-            project : modifiedProject
+            project: modifiedProject
         });
 
         this.props.editorContext.updateStage("background", this.state.project.Background.children);
         this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
     }
 
-    updateElement(){
-
+    updateElement () {
         const layer = document.querySelector("#props_layer").value;
 
-        let modifiedEntity = {
-            id : document.querySelector("#props_id").value,
-            type : document.querySelector("#props_type").value,
-            texture : document.querySelector("#props_texture").value,
-            move : {
-                x : parseInt(document.querySelector("#props_move_x").value),
-                y : parseInt(document.querySelector("#props_move_y").value)
+        const modifiedEntity = {
+            id: document.querySelector("#props_id").value,
+            type: document.querySelector("#props_type").value,
+            texture: document.querySelector("#props_texture").value,
+            move: {
+                x: parseInt(document.querySelector("#props_move_x").value),
+                y: parseInt(document.querySelector("#props_move_y").value)
             },
-            visible : document.querySelector("#props_visible").checked
+            visible: document.querySelector("#props_visible").checked
         };
 
-        modifiedEntity.position = document.querySelector("#positionChange").value === "true" 
+        modifiedEntity.position = document.querySelector("#positionChange").value === "true"
             ? document.querySelector("#positionString").value
             : {
-                x : parseInt(document.querySelector("#props_position_x").value),
-                y : parseInt(document.querySelector("#props_position_y").value)
+                x: parseInt(document.querySelector("#props_position_x").value),
+                y: parseInt(document.querySelector("#props_position_y").value)
             };
 
         const type = modifiedEntity.type;
+        const properties = GUI[type].Properties;
 
-        if ( GUI[type].Properties ) {
-            Object.keys(GUI[type].Properties).forEach(prop => {
-                if(GUI[type].Properties[prop].subFields){
+        if ( properties ) {
+            Object.keys(properties).forEach((prop) => {
+                if (properties[prop].subFields) {
                     modifiedEntity[prop] = {};
-                    GUI[type].Properties[prop].subFields.forEach(sub => {
+                    properties[prop].subFields.forEach((sub) => {
                         modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).value;
-                        if(sub.type === "Boolean"){
+                        if (sub.type === "Boolean") {
                             modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}_${sub.name}`).checked;
                         }
-                        else if(sub.type === "Number"){
+                        else if (sub.type === "Number") {
                             modifiedEntity[prop][sub.name] = parseInt(modifiedEntity[prop][sub.name]);
                         }
                     });
                 }
-                else{
+                else {
                     modifiedEntity[prop] = document.querySelector(`#additionalProps input[name=${prop}]`).value
                 }
             });
         }
 
-        let modifiedProject = {
+        const modifiedProject = {
             ...this.state.project
         };
 
         const selectedLayer = this.state.selected.layer;
-        const index = modifiedProject[selectedLayer].children.findIndex(e => e.id === this.state.selected.id);
+        const index = modifiedProject[selectedLayer].children.findIndex((child) => child.id === this.state.selected.id);
 
         modifiedProject[selectedLayer].children = [
-            ...modifiedProject[selectedLayer].children.slice(0, index),
+            ...modifiedProject[selectedLayer].children.slice(0, index), //eslint-disable-line no-magic-numbers
             Object.assign({}, modifiedProject[selectedLayer].children[index], modifiedEntity),
-            ...modifiedProject[selectedLayer].children.slice(index + 1)
+            ...modifiedProject[selectedLayer].children.slice(index + 1) //eslint-disable-line no-magic-numbers
         ];
 
-        if(selectedLayer !== layer){
-            let removedElement = modifiedProject[selectedLayer].children.splice(index, 1)[0];
+        if (selectedLayer !== layer) {
+            const removedElement = modifiedProject[selectedLayer].children.splice(index, 1)[0]; //eslint-disable-line no-magic-numbers
             modifiedProject[layer].children.push(removedElement);
         }
 
         this.setState({
-            project : modifiedProject
+            project: modifiedProject
         });
 
         this.props.editorContext.updateStage("background", this.state.project.Background.children);
         this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
-        
     }
 
-    resetScene(){
+    resetScene () {
         this.setState({
-            project : {
-                GUI : {
-                    children : []
+            project: {
+                GUI: {
+                    children: []
                 },
-                Background : {
-                    children : []
+                Background: {
+                    children: []
                 },
             },
-            selected : {
-                layer : "",
-                id : ""
+            selected: {
+                layer: "",
+                id: ""
             }
         });
 
         setTimeout(() => {
             this.props.editorContext.updateStage("background", this.state.project.Background.children);
             this.props.editorContext.updateStage("GUI", this.state.project.GUI.children);
-        }, 1);
+        }, 1); //eslint-disable-line no-magic-numbers
     }
 
-    contain(scene, id){
-        return this.state.project[scene].children.find( element => element.id === id) !== undefined;
+    contain (scene, id) {
+        return this.state.project[scene].children.find( (element) => element.id === id) !== undefined;
     }
 
 }
 
-export default GUIEditorMain;
+GUIEditorMain.propTypes = {
+    editorContext: PropTypes.shape()
+};

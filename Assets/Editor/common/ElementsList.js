@@ -1,75 +1,68 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-export default class ElementsList extends Component {
+function getComponent (list, key) {
+    return list.find((child) => child.key === key);
+}
 
-    constructor () {
-        super();
-        this.getElement = this.getElement.bind(this);
-    }
+export default function ElementsList (props) {
+    const { children } = props;
+    const firstButton = getComponent(children, `${props.id}_firstButton`);
+    const secondButton = getComponent(children, `${props.id}_secondButton`);
+    const thirdButton = getComponent(children, `${props.id}_thirdButton`);
 
-    getElement (key) {
-        return this.props.children.find(child => child.key === key);
-    }
-
-    render () {
-        const firstButton = this.getComponent(`${props.id}_firstButton`);
-        const secondButton =  this.getComponent(`${props.id}_secondButton`);
-        const thirdButton = this.getComponent(`${props.id}_thirdButton`);
-
-        return (
-            <table className={props.expanded !== props.id && "hidden"}>
-                <thead>
-                    <tr>
-                        <td colSpan="3">Actions</td>
-                        <td>ID</td>
-                        <td>Type</td>
-                        <td>Texture</td>
-                        <td>Position</td>
+    return (
+        <table className={props.expanded !== props.id && "hidden"}>
+            <thead>
+                <tr>
+                    <td colSpan="3">Actions</td>
+                    <td>ID</td>
+                    <td>Type</td>
+                    <td>Texture</td>
+                    <td>Position</td>
+                </tr>
+            </thead>
+            <tbody>
+                {!props.collection.length
+                    ? <tr>
+                        <td>Scene is empty</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {props.collection.length === 0
-                        && <tr>
-                            <td>Scene is empty</td>
-                        </tr> 
-                        || props.collection.map((item, index) => (
-                            <tr key={`${props.itemKey}_${index}`} >
-                                <td>
-                                    {React.cloneElement(firstButton, {
-                                        onClick: () => {firstButton.props.onClick(item.id)}
-                                    })}
-                                </td>
-                                <td>
-                                    {React.cloneElement(secondButton, {
-                                        onClick: () => {secondButton.props.onClick(item.id)}
-                                    })}
-                                </td>
-                                <td>
-                                    {React.cloneElement(thirdButton, {
-                                        onClick: () => {thirdButton.props.onClick(item.id)}
-                                    })}
-                                </td>
-                                <td className="entityIDcell"
-                                    onClick={() => {props.select(item.id)}}
-                                >
-                                    {item.id}
-                                </td>
-                                <td>{item.type}</td>
-                                <td>{item.texture}</td>
-                                <td>{
-                                    typeof elem.position === "string" &&
-                                    elem.position ||
-                                    `${elem.position.x}:${elem.position.y}`
+                    : props.collection.map((item, index) => (
+                        <tr key={`${props.itemKey}_${index}`} >
+                            <td>
+                                {React.cloneElement(firstButton, {
+                                    onClick: () => { firstButton.props.onClick(item.id) }
+                                })}
+                            </td>
+                            <td>
+                                {React.cloneElement(secondButton, {
+                                    onClick: () => { secondButton.props.onClick(item.id) }
+                                })}
+                            </td>
+                            <td>
+                                {React.cloneElement(thirdButton, {
+                                    onClick: () => { thirdButton.props.onClick(item.id) }
+                                })}
+                            </td>
+                            <td className="entityIDcell"
+                                onClick={() => { props.select(item.id) }}
+                            >
+                                {item.id}
+                            </td>
+                            <td>{item.type}</td>
+                            <td>{item.texture}</td>
+                            <td>
+                                {typeof item.position === "string"
+                                    ? item.position
+                                    : `${item.position.x}:${item.position.y}`
                                 }
-                                </td>
-                            </tr>
-                        )
-                    )}
-                </tbody>
-            </table>
-        );
-    }
+                            </td>
+                        </tr>
+                    ))
+                }
+            </tbody>
+        </table>
+    );
 }
 
 ElementsList.propTypes = {
@@ -77,4 +70,8 @@ ElementsList.propTypes = {
     id: PropTypes.string.isRequired,
     collection: PropTypes.arrayOf(PropTypes.shape()),
     itemKey: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.arrayOf(PropTypes.node)
+    ])
 };

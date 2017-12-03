@@ -1,3 +1,7 @@
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import OptionsList from './OptionsList';
 import Entities from '../../../Entities/Entities';
 import Spritesheet from '../../Gfx/sprites.json';
 import GUI from '../../../GUI/GUI';
@@ -7,13 +11,13 @@ export default function CreationPopup (props) {
 
     return (
         <section id="creationWindow">
-            <p style={{color : "red"}}>{props.warning}</p>
+            <p style={{ color: "red"}}>{props.warning}</p>
             <table><tbody>
                 <tr>
                     <td>Identifier</td>
                     <td><input id="idSelection" type="text" /></td>
                 </tr>
-                {props.GUI && 
+                {props.GUI &&
                     <tr>
                         <td>Layer</td>
                         <td>
@@ -27,36 +31,22 @@ export default function CreationPopup (props) {
                 <tr>
                     <td>Type</td>
                     <td>
-                        <select id="typeSelection">
-                            {Object.keys(props.GUI ? GUI : Entities).
-                                map(entity => (
-                                    <option 
-                                        key={entity}
-                                        value={entity}
-                                    >
-                                        {entity}
-                                    </option>
-                                ))
-                            }
-                        </select>
+                        <OptionsList
+                            id="typeSelection"
+                            list={props.GUI ? GUI : Entities}
+                        />
                     </td>
                 </tr>
                 <tr>
                     <td>Texture</td>
                     <td>
-                        <select id="textureSelection">
+                        <OptionsList
+                            id="textureSelection"
+                            list={Spritesheet.frames}
+                        >
                             <option value="">none</option>
-                            {Object.keys(Spritesheet.frames).
-                                map(frame => (
-                                    <option
-                                        key={frame}
-                                        value={frame}
-                                    >
-                                        {frame}
-                                    </option>
-                                )
-                            )}
-                    </select></td>
+                        </OptionsList>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -76,3 +66,11 @@ export default function CreationPopup (props) {
         </section>
     );
 }
+
+CreationPopup.propTypes = {
+    onCancel: PropTypes.func,
+    onAdd: PropTypes.func,
+    GUI: PropTypes.bool,
+    warning: PropTypes.string,
+    creationStarted: PropTypes.bool
+};

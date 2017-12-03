@@ -68,6 +68,12 @@ function WinConditionsTable (props) {
     );
 }
 
+WinConditionsTable.propTypes = {
+    isConditionTurnedOff: PropTypes.func.isRequired,
+    updateWinConditions: PropTypes.func.isRequired,
+    expanded: PropTypes.string
+};
+
 class LevelEditorMenu extends Component {
     constructor () {
         super();
@@ -119,7 +125,7 @@ class LevelEditorMenu extends Component {
             />
             <header>
                 <LoadFileButton onChange={this.props.load} />
-                <SaveLink url={this.props.url} />
+                <SaveLink url={this.state.url} />
                 <table>
                     <tbody>
                         <tr>
@@ -154,8 +160,8 @@ class LevelEditorMenu extends Component {
                             </td>
                             <td>
                                 <button
-                                    value={this.props.musicPlaying && "Stop" || "Play"} 
-                                    onClick={() => this.props.triggerMusic(this.props.musicPlaying)} 
+                                    value={this.props.musicPlaying ? "Stop" : "Play"}
+                                    onClick={() => this.props.triggerMusic(this.props.musicPlaying)}
                                 />
                             </td>
                         </tr>
@@ -220,13 +226,22 @@ LevelEditorMenu.propTypes = {
     moveUp: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
     select: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
+    contain: PropTypes.func.isRequired,
+    add: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
+    load: PropTypes.func.isRequired,
     level: PropTypes.shape({
-        entities: PropTypes.array
+        entities: PropTypes.array,
+        name: PropTypes.string,
+        music: PropTypes.string
     }).isRequired,
     clear: PropTypes.func.isRequired,
     toggleWinCondition: PropTypes.func.isRequired,
     isConditionTurnedOff: PropTypes.func.isRequired,
-    updateWinConditions: PropTypes.func.isRequired
+    updateWinConditions: PropTypes.func.isRequired,
+    musicPlaying: PropTypes.bool,
+    triggerMusic: PropTypes.func.isRequired
 };
 
 export default LevelEditorMenu;

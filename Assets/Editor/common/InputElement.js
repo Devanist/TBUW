@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
-export default function InputElement(props){
+export default function InputElement (props) {
     const {
         type,
         defaultValue,
@@ -9,8 +10,8 @@ export default function InputElement(props){
         changeHandler
     } = props;
 
-    switch(type){
-        case "Number" : 
+    switch (type) {
+        case "Number":
             return (
                 <input
                     type="number"
@@ -20,7 +21,7 @@ export default function InputElement(props){
                     onChange={changeHandler}
                 />
             );
-        case "Text" : 
+        case "Text":
             return (
                 <input
                     name={name}
@@ -30,7 +31,7 @@ export default function InputElement(props){
                     onChange={changeHandler}
                 />
             );
-        case "Boolean" :
+        case "Boolean":
             return (
                 <input
                     name={name}
@@ -44,3 +45,15 @@ export default function InputElement(props){
             throw new Error("No such input type");
     }
 }
+
+InputElement.propTypes = {
+    type: PropTypes.string.isRequired,
+    defaultValue: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.bool
+    ]),
+    name: PropTypes.string.isRequired,
+    isDisabled: PropTypes.bool,
+    changeHandler: PropTypes.func
+};

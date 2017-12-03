@@ -1,11 +1,15 @@
-import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Entities from '../../../Entities/Entities';
 import Spritesheet from '../../Gfx/sprites.json';
 import InputElement from '../common/InputElement';
+import OptionsList from '../common/OptionsList';
 
 function MainProps (props) {
     if (!props.selection) return null;
-    
+
+    const { id, type, texture, position } = props.selection;
+
     return (
         <section>
             <button value="Clear selection" onClick={props.clear} />
@@ -17,7 +21,7 @@ function MainProps (props) {
                             id="props_id"
                             type="text"
                             name="props_id"
-                            defaultValue={props.selection.id}
+                            defaultValue={id}
                             onChange={props.update}
                         />
                     </td>
@@ -25,25 +29,23 @@ function MainProps (props) {
                 <tr>
                     <td>Type</td>
                     <td>
-                        <select
+                        <OptionsList
                             id="props_type"
-                            defaultValue={props.selection.type}
+                            defaultValue={type}
                             onChange={props.update}
-                        >
-                            {Object.keys(Entities).map(entity => <option key={entity} value={entity}>{entity}</option>)}
-                        </select>
+                            list={Entities}
+                        />
                     </td>
                 </tr>
                 <tr>
                     <td>Texture</td>
                     <td>
-                        <select
+                        <OptionsList
                             id="props_texture"
-                            defaultValue={props.selection.texture}
+                            defaultValue={texture}
                             onChange={props.update}
-                        >
-                            {Object.keys(Spritesheet.frames).map(frame => <option key={frame} value={frame}>{frame}</option>)}
-                        </select>
+                            list={Spritesheet.frames}
+                        />
                     </td>
                 </tr>
                 <tr>
@@ -53,16 +55,15 @@ function MainProps (props) {
                         <input
                             id="props_position_x"
                             type="number"
-                            defaultValue={props.selection.position.x}
+                            defaultValue={position.x}
                             onChange={props.update}
                         />
                         <br/>
-                        
                         <label>Y : </label>
                         <input
                             id="props_position_y"
                             type="number"
-                            defaultValue={props.selection.position.x}
+                            defaultValue={position.x}
                             onChange={props.update}
                         />
                     </td>
@@ -72,22 +73,43 @@ function MainProps (props) {
     );
 }
 
+MainProps.propTypes = {
+    selection: PropTypes.shape({
+        id: PropTypes.string,
+        type: PropTypes.string,
+        texture: PropTypes.string,
+        position: PropTypes.shape({
+            x: PropTypes.number,
+            y: PropTypes.number
+        })
+    }),
+    clear: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired
+};
+
 function AdditionalProps (props) {
-    if (!props.selection || !Entities[props.selection.type].Properties ) return null;
-    
+    const selectedEntityProps = Entities[props.selection.type].Properties;
+    if (!props.selection || !selectedEntityProps ) return null;
+
     return (
         <section id="additionalProps">
             <table><tbody>
-                {Object.keys(Entities[props.selection.type].Properties).map(prop => {
-                    let entity = Entities[props.selection.type].Properties[prop];
-                    entity.subFields
-                        ? renderInputWithSubfields(entity, prop, props.update)
-                        : renderInput(entity, prop, props.update);
+                {Object.keys(selectedEntityProps).map((prop) => {
+                    const entity = selectedEntityProps[prop];
+                    if (entity.subFields) renderInputWithSubfields(entity, prop, props.update)
+                    else renderInput(entity, prop, props.update);
                 })}
             </tbody></table>
         </section>
     );
 }
+
+AdditionalProps.propTypes = {
+    selection: PropTypes.shape({
+        type: PropTypes.string
+    }),
+    update: PropTypes.func.isRequired
+};
 
 function renderInput (entity, name, onChange) {
     return (
@@ -111,14 +133,14 @@ function renderInputWithSubfields (entity, name, onChange) {
             <td>{entity.name}</td>
             <td>
                 <table><tbody>
-                    {entity.subFields.map(sub => (
+                    {entity.subFields.map((sub) => (
                         <tr key={`${name}_${sub.name}`}>
                             <td>{sub.name}:</td>
                             <td>
                                 <InputElement
-                                    name={`${name}_${sub.name}`} 
+                                    name={`${name}_${sub.name}`}
                                     type={sub.type}
-                                    defaultValue={sub.defaultValue} 
+                                    defaultValue={sub.defaultValue}
                                     onChange={onChange}
                                 />
                             </td>

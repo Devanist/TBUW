@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
 import CreationPopup from '../common/CreationPopup';
@@ -34,3 +35,8 @@ class CinematicEditorMenu extends Component {
         );
     }
 }
+
+CinematicEditorMenu.propTypes = {
+    loadConfig: PropTypes.func,
+    url: PropTypes.string
+};

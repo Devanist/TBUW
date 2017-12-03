@@ -1,28 +1,27 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import LevelEditorMenu from './LevelEditorMenu';
 import LevelEditorProps from './LevelEditorProps';
 import Entities from '../../../Entities/Entities';
 import winConditions from '../../winConditions.json';
 
-class LevelEditorMain extends Component{
-
-    constructor(){
+export default class LevelEditorMain extends Component {
+    constructor () {
         super();
         this.state = {
-            level : {
-                name : "",
+            level: {
+                name: "",
                 music: "",
                 background: [{}],
                 winConditions: [
-                    
                 ],
                 entities: []
             },
-            selection : null,
-            musicPlaying : false,
-            mouse : {
-                x : 0,
-                y : 0
+            selection: null,
+            musicPlaying: false,
+            mouse: {
+                x: 0,
+                y: 0
             }
         };
         this.loadLevel = this.loadLevel.bind(this);
@@ -42,18 +41,18 @@ class LevelEditorMain extends Component{
         this.findType = this.findType.bind(this);
     }
 
-    render(){
+    render () {
         this.props.editorContext.updateStage("game", this.state.level);
         this.props.editorContext.updateStage("background", this.state.level);
 
         return <section id="Editor">
             <LevelEditorMenu
-                level={this.state.level} 
-                load={this.loadLevel} 
-                reset={this.resetEditor} 
+                level={this.state.level}
+                load={this.loadLevel}
+                reset={this.resetEditor}
                 update={this.update}
                 triggerMusic={this.triggerMusic}
-                add={this.addToScene} 
+                add={this.addToScene}
                 musicPlaying={this.state.musicPlaying}
                 select={this.selectEntity}
                 remove={this.removeFromScene}
@@ -66,7 +65,7 @@ class LevelEditorMain extends Component{
                 isConditionTurnedOff={this.isConditionTurnedOff}
             />
             <LevelEditorProps
-                selection={this.state.level.entities.find(item => item.id === this.state.selection)}
+                selection={this.state.level.entities.find((item) => item.id === this.state.selection)}
                 update={this.update}
                 clear={this.clearSelection}
             />
@@ -74,16 +73,15 @@ class LevelEditorMain extends Component{
     }
 
     loadLevel (e) {
-        const file = e.target.files[0];
+        const file = e.target.files[0]; //eslint-disable-line no-magic-numbers
         if (!file) return;
-        
         const editorContext = this;
 
-        let reader = new FileReader();
-        reader.onload = function(e){
-            const content = e.target.result;
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const content = event.target.result;
             editorContext.setState({
-                level : JSON.parse(content)
+                level: JSON.parse(content)
             });
             editorContext.props.editorContext.updateStage("background", editorContext.state.level);
             editorContext.props.editorContext.updateStage("game", editorContext.state.level);
@@ -91,125 +89,124 @@ class LevelEditorMain extends Component{
         reader.readAsText(file);
     }
 
-    addToScene(element){
+    addToScene (element) {
         element.position = {
             x: 0,
             y: 0
         };
-        
+
         const entityProperties = Entities[element.type].Properties;
-        Object.keys(entityProperties).forEach(prop => {
-            if(entityProperties[prop].subFields){
+        Object.keys(entityProperties).forEach((prop) => {
+            if (entityProperties[prop].subFields) {
                 element[prop] = {};
-                entityProperties[prop].subFields.forEach(sub => {
+                entityProperties[prop].subFields.forEach((sub) => {
                     element[prop][sub.name] = sub.defaultValue;
                 });
             }
-            else{
+            else {
                 element[prop] = entityProperties[prop].defaultValue;
             }
         });
 
         this.setState({
-            level : {
+            level: {
                 ...this.state.level,
-                entities : [
+                entities: [
                     ...this.state.level.entities,
                     element
                 ]
             },
-            selection : element.id
+            selection: element.id
         });
     }
 
-    resetEditor(){
+    resetEditor () {
         document.querySelector("#loadFile").value = null;
         document.querySelector("#level_background").value = "";
 
         this.setState({
-            level : {
-                name : "",
+            level: {
+                name: "",
                 music: "",
                 background: [{}],
                 winConditions: [
-                    
                 ],
                 entities: []
             },
-            selection : null
+            selection: null
         });
     }
 
-    clearSelection(){
+    clearSelection () {
         this.setState({
-            selection : null
+            selection: null
         });
     }
 
-    update(){
+    update () {
         let entities = this.state.level.entities;
 
-        if(this.state.selection !== null){
-            const index = this.state.level.entities.findIndex(e => e.id === this.state.selection);
-            let modifiedEntity = {
-                id : document.querySelector("#props_id").value,
-                type : document.querySelector("#props_type").value,
-                texture : document.querySelector("#props_texture").value,
-                position : {
-                    x : document.querySelector("#props_position_x").value,
-                    y : document.querySelector("#props_position_y").value
+        if (this.state.selection !== null) {
+            const index = this.state.level.entities.findIndex((item) => item.id === this.state.selection);
+            const modifiedEntity = {
+                id: document.querySelector("#props_id").value,
+                type: document.querySelector("#props_type").value,
+                texture: document.querySelector("#props_texture").value,
+                position: {
+                    x: document.querySelector("#props_position_x").value,
+                    y: document.querySelector("#props_position_y").value
                 }
             };
 
-            if(Entities[modifiedEntity.type].Properties){
-                Object.keys(Entities[modifiedEntity.type].Properties).forEach(prop => {
-                    if(Array.isArray(Entities[modifiedEntity.type].Properties[prop])){
+            const entityProperties = Entities[modifiedEntity.type].Properties;
+            if (entityProperties) {
+                Object.keys(entityProperties).forEach((prop) => {
+                    if (Array.isArray(entityProperties[prop])) {
                         modifiedEntity[prop] = {};
-                        Entities[modifiedEntity.type].Properties[prop].forEach(sub => {
+                        entityProperties[prop].forEach((sub) => {
                             modifiedEntity[prop][sub.name] = document.querySelector(`#additionalProps input[name=${prop}]`).value;
                         });
                     }
-                    else{
+                    else {
                         modifiedEntity[prop] = document.querySelector(`#additionalProps input[name=${prop}]`).value;
                     }
                 });
             }
 
             entities = [
-                ...this.state.level.entities.slice(0, index),
+                ...this.state.level.entities.slice(0, index), //eslint-disable-line no-magic-numbers
                 Object.assign(
-                    {}, 
-                    this.state.level.entities[index], 
+                    {},
+                    this.state.level.entities[index],
                     modifiedEntity
                 ),
-                ...this.state.level.entities.slice(index + 1)
+                ...this.state.level.entities.slice(index + 1) //eslint-disable-line no-magic-numbers
             ]
         }
 
-        if(this.state.level.music !== document.querySelector("#level_music").value){
+        if (this.state.level.music !== document.querySelector("#level_music").value) {
             this.triggerMusic(true);
         }
 
         this.setState({
-            level : {
+            level: {
                 ...this.state.level,
-                name : document.querySelector("#level_title").value,
+                name: document.querySelector("#level_title").value,
                 winConditions: [
-                    
                 ],
-                background : [
+                background: [
                     {
-                        factor : 0,
-                        id : 0,
-                        position : {
+                        factor: 0,
+                        id: 0,
+                        position: {
                             x: 0,
                             y: 0
                         },
-                        type : "Background",
-                        texture : document.querySelector("#level_background").value !== "" && document.querySelector("#level_background").value || null
+                        type: "Background",
+                        texture: document.querySelector("#level_background").value !== "" && document.querySelector("#level_background").value || null
                     }
                 ],
-                music : document.querySelector("#level_music").value,
+                music: document.querySelector("#level_music").value,
                 entities
             }
         });
@@ -219,117 +216,112 @@ class LevelEditorMain extends Component{
 
     }
 
-    triggerMusic(stop){
-        if(this.state.level.music === "") return;
-        
-        this.props.editorContext._sounds = stop
-            ? [{
-                name : this.state.level.music,
-                stop : true
-            }]
-            : [{
-                name : this.state.level.music,
-                stop : this.state.musicPlaying
-            }];
+    triggerMusic (stop) {
+        if (this.state.level.music === "") return;
+
+        this.props.editorContext._sounds = [{
+            name: this.state.level.music,
+            stop: stop ? true : this.state.musicPlaying
+        }]
 
         this.setState({
-            musicPlaying : !this.state.musicPlaying
+            musicPlaying: !this.state.musicPlaying
         });
     }
 
-    selectEntity(id){
+    selectEntity (id) {
         this.setState({
-            selection : id
+            selection: id
         });
     }
 
-    removeFromScene(id){
+    removeFromScene (id) {
         const entities = this.state.level.entities;
-        const index = entities.findIndex(ent => ent.id === id);
+        const index = entities.findIndex((entity) => entity.id === id);
 
         this.setState({
-            level : {
+            level: {
                 ...this.state.level,
-                entities : [
-                    ...entities.slice(0, index),
-                    ...entities.slice(index + 1)
+                entities: [
+                    ...entities.slice(0, index), //eslint-disable-line no-magic-numbers
+                    ...entities.slice(index + 1) //eslint-disable-line no-magic-numbers
                 ]
             }
         });
     }
 
-    moveUp(id){
+    moveUp (id) {
         const entities = this.state.level.entities;
-        const index = entities.findIndex(ent => ent.id === id);
+        const index = entities.findIndex((entity) => entity.id === id);
 
         this.setState({
-            level : {
+            level: {
                 ...this.state.level,
-                entities : [
-                    ...entities.slice(0, index - 1),
+                entities: [
+                    ...entities.slice(0, index - 1), //eslint-disable-line no-magic-numbers
                     entities[index],
-                    entities[index - 1],
-                    ...entities.slice(index + 1)
+                    entities[index - 1], //eslint-disable-line no-magic-numbers
+                    ...entities.slice(index + 1) //eslint-disable-line no-magic-numbers
                 ]
             }
         });
     }
 
-    moveDown(id){
+    moveDown (id) {
         const entities = this.state.level.entities;
-        const index = entities.findIndex(ent => ent.id === id);
+        const index = entities.findIndex((entity) => entity.id === id);
 
         this.setState({
-            level : {
+            level: {
                 ...this.state.level,
-                entities : [
-                    ...entities.slice(0, index),
-                    entities[index + 1],
+                entities: [
+                    ...entities.slice(0, index), //eslint-disable-line no-magic-numbers
+                    entities[index + 1], //eslint-disable-line no-magic-numbers
                     entities[index],
-                    ...entities.slice(index + 2)
+                    ...entities.slice(index + 2) //eslint-disable-line no-magic-numbers
                 ]
             }
         });
     }
 
-    contain(id){
-        return this.state.level.entities.find(e => e.id === id) !== undefined;
+    contain (id) {
+        return this.state.level.entities.find((entity) => entity.id === id) !== undefined;
     }
 
-    updateWinConditions(name, event){
+    updateWinConditions (name, event) {
         const type = this.findType(name);
         const levelWinConditions = this.state.level.winConditions;
         let value;
-        switch(type){
+        switch (type) {
             case 'Number': value = parseInt(event.target.value); break;
             case 'String': value = event.target.value; break;
             case 'Boolean': value = event.target.checked; break;
-            default: throw `Type not found: '${type}'`;
+            default: throw new Error(`Type not found: '${type}'`);
         }
-        
-        levelWinConditions.forEach((wc, index) => {
-            if(wc.name === name){
+
+        levelWinConditions.forEach((winCondition, index) => {
+            if (winCondition.name === name) {
                 this.setState({
                     level: {
                         ...this.state.level,
                         winConditions: [
-                            ...levelWinConditions.slice(0, index),
+                            ...levelWinConditions.slice(0, index), //eslint-disable-line no-magic-numbers
                             Object.assign({}, levelWinConditions[index], {value}),
-                            ...levelWinConditions.slice(index + 1)
+                            ...levelWinConditions.slice(index + 1) //eslint-disable-line no-magic-numbers
                         ]
                     }
                 });
                 return;
             }
-            else if(typeof wc.value === "object"){
-                Object.keys(wc.value).forEach(sub => {
-                    if(sub === name){
+            else if (typeof winCondition.value === "object") {
+                Object.keys(winCondition.value).forEach((sub) => {
+                    if (sub === name) {
                         this.setState({
                             level: {
                                 ...this.state.level,
                                 winConditions: [
-                                    ...levelWinConditions.slice(0, index),
-                                    Object.assign({}, levelWinConditions[index], 
+                                    ...levelWinConditions.slice(0, index), //eslint-disable-line no-magic-numbers
+                                    Object.assign({}, levelWinConditions[index],
                                         {
                                             value: {
                                                 ...levelWinConditions[index].value,
@@ -337,7 +329,7 @@ class LevelEditorMain extends Component{
                                             }
                                         }
                                     ),
-                                    ...levelWinConditions.slice(index + 1)
+                                    ...levelWinConditions.slice(index + 1) //eslint-disable-line no-magic-numbers
                                 ]
                             }
                         });
@@ -349,36 +341,36 @@ class LevelEditorMain extends Component{
 
     }
 
-    isConditionTurnedOff(conditionName){
-        const toggledIndex = this.state.level.winConditions.findIndex(w => w.name === conditionName);
-        return {result: toggledIndex === -1, value: toggledIndex};
+    isConditionTurnedOff (conditionName) {
+        const toggledIndex = this.state.level.winConditions.findIndex((winCondition) => winCondition.name === conditionName);
+        return {result: toggledIndex === -1, value: toggledIndex}; //eslint-disable-line no-magic-numbers
     }
 
-    findType(conditionName){
+    findType (conditionName) {
         let type;
-        Object.keys(winConditions).forEach(key => {
-            if(conditionName === key) {
-                type = winConditions[key].type;
+        Object.keys(winConditions).forEach((winCondition) => {
+            if (conditionName === winCondition) {
+                type = winConditions[winCondition].type;
                 return;
             }
-            else if(Array.isArray(winConditions[key].type)){
-                winConditions[key].type.forEach(sub => {
-                    if(sub.name === conditionName) {
+            else if (Array.isArray(winConditions[winCondition].type)) {
+                winConditions[winCondition].type.forEach((sub) => {
+                    if (sub.name === conditionName) {
                         type = sub.type;
                         return;
                     }
                 });
             }
         });
-        if (!type) throw `Condition '${conditionName}' not found`;
+        if (!type) throw new Error(`Condition '${conditionName}' not found`);
         return type;
     }
 
-    toggleWinCondition(event, winCondition){
+    toggleWinCondition (event, winCondition) {
         const {result: isConTurnedOff, value: toggledIndex} = this.isConditionTurnedOff(winCondition);
         const levelWinConditions = this.state.level.winConditions;
 
-        if(isConTurnedOff) {
+        if (isConTurnedOff) {
             this.setState({
                 level: {
                     ...this.state.level,
@@ -396,9 +388,9 @@ class LevelEditorMain extends Component{
             this.setState({
                 level: {
                     ...this.state.level,
-                    winConditions : [
-                        ...levelWinConditions.splice(0, toggledIndex),
-                        ...levelWinConditions.splice(toggledIndex + 1)
+                    winConditions: [
+                        ...levelWinConditions.splice(0, toggledIndex), //eslint-disable-line no-magic-numbers
+                        ...levelWinConditions.splice(toggledIndex + 1) //eslint-disable-line no-magic-numbers
                     ]
                 }
             });
@@ -406,4 +398,12 @@ class LevelEditorMain extends Component{
     }
 }
 
-export default LevelEditorMain;
+LevelEditorMain.propTypes = {
+    editorContext: PropTypes.shape({
+        _sounds: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            stop: PropTypes.bool
+        })),
+        updateStage: PropTypes.func.isRequired
+    })
+}

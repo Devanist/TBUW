@@ -1,18 +1,19 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import GUI from '../../../GUI/GUI';
 
 import SaveLink from '../common/SaveLink';
 import EditorMenu from '../common/EditorMenu';
 import ElementsList from '../common/ElementsList';
 
-class GUIEditorMenu extends Component{
-
-    constructor(){
+export default class GUIEditorMenu extends Component {
+    constructor () {
         super();
         this.state = {
-            url : "",
-            expanded : "",
-            creation : false,
-            warning : ""
+            url: "",
+            expanded: "",
+            creation: false,
+            warning: ""
         };
         this.expand = this.expand.bind(this);
         this.saveFile = this.saveFile.bind(this);
@@ -25,30 +26,28 @@ class GUIEditorMenu extends Component{
         const id = document.querySelector("#idSelection").value;
         const layer = document.querySelector("#layerSelection").value;
 
-        if(id === "" || this.props.contain(layer, id)){
+        if (id === "" || this.props.contain(layer, id)) {
             this.setState({
-                warning : "ID can't be null or duplicate"
+                warning: "ID can't be null or duplicate"
             });
         }
-        else{
-
-            let newElement = {
+        else {
+            const newElement = {
                 id,
-                type : document.querySelector("#typeSelection").value,
-                texture : document.querySelector("#textureSelection").value
+                type: document.querySelector("#typeSelection").value,
+                texture: document.querySelector("#textureSelection").value
             };
             this.decorateWithProperties(newElement);
             this.props.add(newElement, layer);
-            this.setState({inserting : false, warning : ""});
+            this.setState({ inserting: false, warning: "" });
         }
     }
 
     cancelCreation () {
-        this.setState({creation : false, warning : ""});
+        this.setState({ creation: false, warning: "" });
     }
 
-    render(){
-
+    render () {
         return (
             <EditorMenu
                 creationStarted={this.state.creation}
@@ -69,28 +68,28 @@ class GUIEditorMenu extends Component{
                         </tbody>
                     </table>
                     <button
-                        value="Add new element" 
-                        onClick={() => {this.setState({inserting : true})}}
+                        value="Add new element"
+                        onClick={() => { this.setState({ inserting: true} ) }}
                     />
-                    <h3 onClick={() => {this.expand("bglist")}}>Background</h3>
+                    <h3 onClick={() => { this.expand("bglist") }}>Background</h3>
                     <ElementsList
                         expanded={this.state.expanded}
                         id="bg"
                         collection={this.props.bgList}
                         itemKey="bg"
-                        select={(id) => {this.props.select("Background", id)}}
+                        select={(id) => { this.props.select("Background", id) }}
                     >
                         <button key="bg_firstButton" value="X" />
                         <button key="bg_secondButton" value="&#8593;" title="Move higher" />
                         <button key="bg_thirdButton" value="&#8595;" title="Move lower" />
                     </ElementsList>
-                    <h3 onClick={() => {this.expand("guilist")}}>GUI</h3>
+                    <h3 onClick={() => { this.expand("guilist") }}>GUI</h3>
                     <ElementsList
                         expanded={this.state.expanded}
                         id="gui"
                         collection={this.props.guiList}
                         itemKey="gui"
-                        select={(id) => {this.props.select("GUI", id)}}
+                        select={(id) => { this.props.select("GUI", id) }}
                     >
                         <button key="gui_firstButton" value="X" />
                         <button key="gui_secondButton" value="&#8593;" title="Move higher" />
@@ -101,36 +100,42 @@ class GUIEditorMenu extends Component{
         );
     }
 
-    expand(list){
-        if ( this.state.expanded === list ) list = "";
-
+    expand (list) {
         this.setState({
-            expanded : list
+            expanded: this.state.expanded === list ? "" : list
         });
     }
 
-    saveFile(){
+    saveFile () {
         this.setState({
-            url : this.props.generate()
+            url: this.props.generate()
         });
     }
 
-    decorateWithProperties(element){
+    decorateWithProperties (element) {
         const props = GUI[element.type].Properties;
 
-        Object.keys(props).forEach(prop => {
-            if(props[prop].subFields === undefined){
+        Object.keys(props).forEach((prop) => {
+            if (props[prop].subFields === undefined) {
                 element[prop] = props[prop].defaultValue;
             }
-            else{
+            else {
                 element[prop] = {};
-                props[prop].subFields.forEach(subProp => {
+                props[prop].subFields.forEach((subProp) => {
                     element[prop][subProp.name] = subProp.defaultValue;
                 });
             }
         });
     }
-
 }
 
-export default GUIEditorMenu;
+GUIEditorMenu.propTypes = {
+    guiList: PropTypes.array,
+    bgList: PropTypes.array,
+    generate: PropTypes.func.isRequired,
+    select: PropTypes.func.isRequired,
+    reset: PropTypes.func.isRequired,
+    load: PropTypes.func.isRequired,
+    contain: PropTypes.func.isRequired,
+    add: PropTypes.func.isRequired
+};

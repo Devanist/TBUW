@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import CreationPopup from './CreationPopup';
+
 export default function EditorMenu (props) {
     return (
         <section id="EditorMenu">
@@ -11,11 +13,5 @@ export default function EditorMenu (props) {
 }
 
 EditorMenu.propTypes = {
-    GUI: PropTypes.bool,
-    Cinematic: PropTypes.bool,
-    creationStarted: PropTypes.bool,
-    warning: PropTypes.string,
-    onAdd: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
     children: PropTypes.arrayOf(PropTypes.shape())
 };

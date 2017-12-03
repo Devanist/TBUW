@@ -6,6 +6,11 @@ import BoundaryBox from '../Debug/BoundaryBox';
 import Stage from './Stage';
 import GUI from '../GUI/GUI';
 
+const MOBILE_WIDTH = 640;
+const GRAPHIC_NAME_OFFSET = -5;
+const MOBILE_FACTOR = 2;
+const DESKTOP_FACTOR = 1;
+const ARE_ASSETS_LOADED_CHECK_INTERVAL = 100;
 
 /**
  * @class
@@ -13,9 +18,8 @@ import GUI from '../GUI/GUI';
  * @extends PIXI.loader
  * Wrapper for PIXI.loader
  */
-class Loader{
-
-    constructor(){
+export default class Loader {
+    constructor () {
         this._cfg = cfg;
         this._preloaded = false;
         this._progressCb = null;
@@ -25,11 +29,10 @@ class Loader{
         this._audioAssets = this._cfg.sounds.length;
     }
 
-    preload(){
-        var that = this;
+    preload () {
         PIXI.loader.add(this._cfg.preload.name, this._cfg.preload.path);
-        PIXI.loader.once('complete', function(){
-            that._preloaded = true;
+        PIXI.loader.once('complete', () => {
+            this._preloaded = true;
         });
         PIXI.loader.load();
     }
@@ -38,305 +41,271 @@ class Loader{
      * Method loading all assets given in config. When they all are loaded it triggers given callback function.
      * @param {function} callback Callback method
      */
-    loadAssets(callback, speaker, rootStage){
-        var that = this;
-        
-        if(this._preloaded){
+    loadAssets (callback, speaker, rootStage) {
+        const that = this;
+
+        if (this._preloaded) {
             //Show loading screen
-            var con = new Stage();
-            var ls = new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off"));
-            con.add(ls);
+            const Container = new Stage();
+            Container.add(new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off")));
             var progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
             progressbar.move({x: -255, y: 50});
-            con.add(progressbar);
+            Container.add(progressbar);
             var blurFilter = new PIXI.filters.BlurFilter();
             progressbar._sprite.filters = [blurFilter];
-            rootStage.add(con);
-            
+            rootStage.add(Container);
+
             //Load assets
-            var t = null;
-            
-            for(var i = 0; i < this._cfg.graphics.length; i++){
-                t = this._cfg.graphics[i];
-                if(window.innerWidth <= 640){
-                    if(t.name.substr(t.name.length - 5) === "small"){
-                        this._graphicAssets += 1;
-                        PIXI.loader.add(t.name, t.path);
+            this._cfg.graphics.forEach((graphic) => {
+                if (window.innerWidth <= MOBILE_WIDTH) {
+                    if (graphic.name.substr(GRAPHIC_NAME_OFFSET) === "small") {
+                        this._graphicAssets++;
+                        PIXI.loader.add(graphic.name, graphic.path);
                     }
                 }
-                else{
-                    if(t.name.substr(t.name.length - 5) !== "small"){
-                        this._graphicAssets += 1;
-                        PIXI.loader.add(t.name, t.path);
+                else {
+                    if (graphic.name.substr(GRAPHIC_NAME_OFFSET) !== "small") {
+                        this._graphicAssets++;
+                        PIXI.loader.add(graphic.name, graphic.path);
                     }
                 }
-                this._allAssets = this._graphicAssets*2 + this._cfg.sounds.length;
-            }
-            
-            for(i = 0; i < this._cfg.fonts.length; i+=1){
-                t = this._cfg.fonts[i];
+                this._allAssets = this._graphicAssets + this._cfg.sounds.length;
+            });
+
+            this._cfg.fonts.forEach((font) => {
                 this._graphicAssets += 1;
-                PIXI.loader.add(t.name, t.path);
-            }
+                PIXI.loader.add(font.name, font.path);
+            });
 
             this.loadSounds(cfg.sounds, speaker);
-            
-            PIXI.loader.once('complete', function cb(){
-                if(that._areSoundsLoaded){
+
+            PIXI.loader.once('complete', function cb () {
+                if (that._areSoundsLoaded) {
                     rootStage.remove("loadingScreen");
                     rootStage.remove("progressbar");
-                    rootStage.getStage().removeChild(con.getStage());
-                    con.getStage().destroy();
+                    rootStage.getStage().removeChild(Container.getStage());
+                    Container.getStage().destroy();
                     callback();
                 }
-                else{
-                    setTimeout(function(){
+                else {
+                    setTimeout(() => {
                         cb();
-                    }.bind(this), 100);
+                    }, ARE_ASSETS_LOADED_CHECK_INTERVAL);
                 }
             });
-            
-            if(this._progressCb !== null){
-                PIXI.loader.on('progress', function(){
-                    progressbar._sprite.filters[0].blur = 20 * Math.sin(that._loadedAssets);
-                    progressbar._sprite.width = 517 / that._allAssets * that._loadedAssets | 0;
-                    that._progressCb();
+
+            if (this._progressCb) {
+                PIXI.loader.on('progress', () => {
+                    progressbar._sprite.filters[0].blur = 20 * Math.sin(this._loadedAssets); //eslint-disable-line no-magic-numbers
+                    progressbar._sprite.width = 517 / this._allAssets * this._loadedAssets | 0; //eslint-disable-line no-magic-numbers
+                    this._progressCb();
                 });
             }
-            
+
             PIXI.loader.load();
         }
-        else{
-            setTimeout(function(){
-                that.loadAssets(callback, speaker, rootStage);
-            }, 100);
+        else {
+            setTimeout(() => {
+                this.loadAssets(callback, speaker, rootStage);
+            }, ARE_ASSETS_LOADED_CHECK_INTERVAL);
         }
     }
-    
+
     /**
      * Sets the onprogress callback function.
      * @param {function} cb Callback method
      */
-    setProgressCb(cb){
+    setProgressCb (cb) {
         this._progressCb = cb;
     }
-    
+
     /**
      * Method returns the quantity of already loaded assets.
      * @returns {int}
      */
-    assetsLoaded(){
+    assetsLoaded () {
         return this._loadedAssets;
     }
-    
+
     /**
      * Method returns the quantity of all assets that should be loaded.
      * @returns {int}
      */
-    allAssets(){
+    allAssets () {
         return this._allAssets;
     }
-    
+
     /**
      * Method increment the loaded assets counter.
      */
-    incrementLoadedAssets(){
+    incrementLoadedAssets () {
         this._loadedAssets += 1;
     }
-    
-    loadCinematicConfig(cfg, cinCfg, stage, cinematic){
-        var i;
-        var temp;
-        for(i = 0; i < cfg.frames.length; i+=1){
-            temp = new GUI.Image(cfg.frames[i], {x: -2000, y: 2000}, PIXI.Texture.fromFrame(cfg.frames[i]));
-            stage.add(temp);
-        }
-        
-        for(i = 0; i < cfg.animations.length; i+=1){
-            cinCfg.push(cfg.animations[i]);
-        }
-        
-        var music = null;
-        if(cfg.music_offset !== undefined){
-            music = {
-                name: cfg.music, 
+
+    loadCinematicConfig (config, cinematicConfig, stage, cinematic) {
+        config.frames.forEach((frame) => {
+            stage.add(
+                new GUI.Image(frame, {x: -2000, y: 2000}, PIXI.Texture.fromFrame(frame))
+            );
+        })
+
+        config.animations.forEach((animation) => {
+            cinematicConfig.push(animation);
+        })
+
+        const music = cfg.music_offset !== undefined
+            ? {
+                name: cfg.music,
                 offset: cfg.music_offset
-            };
-        }
-        else{
-            music = cfg.music;
-        }
+            }
+            : cfg.music;
+
         cinematic.setMusic(music);
         cinematic.hasLoaded();
-        
     }
-    
-    loadSounds(cfg, speaker){
-        var request = null;
-        var that = this;
-        var ls = 0;
-        var sp = speaker;
-        
-        var soundOnLoad = function(){
-            ls += 1;
-            sp.addSoundToLibrary(this.response, this.assetName);
-            that._progressCb();
-            if(ls === cfg.length){
-                console.log('Sounds are loaded');
-                that._areSoundsLoaded = true;
-            }
-        };
-        
-        if(cfg.length === 0){
-            that._areSoundsLoaded = true;
-            console.log('Sounds are loaded');
+
+    loadSounds (config, speaker) {
+        if (!config.length) {
+            this._areSoundsLoaded = true;
             return;
         }
-        for(var i = 0; i < cfg.length; i+=1){
-            request = new XMLHttpRequest();
-            request.open("GET", cfg[i].path, true);
+
+        const loaderContext = this;
+        var ls = 0;
+
+        function soundOnLoad () {
+            ls += 1; //eslint-disable-line no-magic-numbers
+            speaker.addSoundToLibrary(this.response, this.assetName);
+            loaderContext._progressCb();
+            if (ls === config.length) {
+                loaderContext._areSoundsLoaded = true;
+            }
+        };
+
+        config.forEach((sound) => {
+            const request = new XMLHttpRequest();
+            request.open("GET", sound.path, true);
             request.responseType = "arraybuffer";
-            request.assetName = cfg[i].name;
+            request.assetName = sound.name;
             request.onload = soundOnLoad;
-            
             request.send();
-        }
+        });
     }
-    
-    loadWinConditions(array, cfg){
-        for(var i = 0; i < cfg.length; i++){
-            array.push(cfg[i]);
-        }
+
+    loadWinConditions (array, config) {
+        config.forEach((winCondition) => {
+            array.push(winCondition);
+        })
     }
-    
+
     /**
      * Method creates the elements from given config and injects them into given stage.
      * @param {object} stage Stage that you want inject elements into
-     * @param {object} cfg Config file
+     * @param {object} config Config file
      * @param {boolean} debug If this is true, boundary boxes will be showed
      */
-    loadStageConfig(stage, cfg, debug){
-        
-        var l = cfg.length;
-        var e = null;
-        var temp = null;
-        var isDebug = debug || false;
-        
-        for(var i = 0; i < l; i++){
-            e = cfg[i];
-            if(e.type === "Background"){
-                temp = new Entities.Background(e.id, PIXI.loader.resources.sprites.textures[e.texture], e.factor);
+    loadStageConfig (stage, config, isDebug = false) {
+        const allTextures = PIXI.loader.resources.sprites.textures;
+        const PLAYER_FRAMES = 5;
+
+        config.forEach((entity) => {
+            let element;
+            switch (entity.type) {
+                case "Background":
+                    element = new Entities.Background(entity.id, allTextures[entity.texture], entity.factor);
+                    break;
+                case "Platform":
+                    element = new Entities.Platform(entity.id, allTextures[entity.texture]);
+                    break;
+                case "Player":
+                    const frames = [];
+                    for (let frameCounter = 0; frameCounter < PLAYER_FRAMES; frameCounter++) {
+                        frames.push(PIXI.loader.resources.walrus_atlas.textures['walrus_0000' + frameCounter]);
+                    }
+                    element = new Entities.Player(entity.id, frames);
+                    break;
+                case "BlockCoin":
+                    element = new Entities.BlockCoin(entity.id, entity.quantity);
+                    break;
+                case "PositionField":
+                    element = new Entities.PositionField(entity.id);
+                    break;
+                case "MovingPlatform":
+                    element = new Entities.MovingPlatform(entity.id, allTextures[entity.texture], entity.startPos, entity.endPos, entity.time);
+                    break;
+                case "LasersFromGround":
+                    element = new Entities.LasersFromGround(entity.id);
+                    break;
+                default: throw new Error(`No such type as: ${entity.type}`);
             }
-            else if(e.type === "Platform"){
-                temp = new Entities.Platform(e.id, PIXI.loader.resources.sprites.textures[e.texture]);
-            }
-            else if(e.type === "Player"){
-                var frames = [];
-                for(var j = 0; j < 5; j+=1){
-                    frames.push(PIXI.loader.resources.walrus_atlas.textures['walrus_0000' + j]);
-                }
-                temp = new Entities.Player(e.id, frames);
-            }
-            else if(e.type === "BlockCoin"){
-                temp = new Entities.BlockCoin(e.id, e.quantity);
-            }
-            else if(e.type === "PositionField"){
-                temp = new Entities.PositionField(e.id);
-            }
-            else if(e.type === "MovingPlatform"){
-                temp = new Entities.MovingPlatform(e.id, PIXI.loader.resources.sprites.textures[e.texture], e.startPos, e.endPos, e.time);
-            }
-            else if(e.type === "LasersFromGround"){
-                temp = new Entities.LasersFromGround(e.id);
-            }
-            var small = 1;
-            if(window.innerWidth <= 640){
-                small = 2;
-            }
-            if(e.rotation !== undefined && e.rotation !== null){
-                temp.setRotationAngle(e.rotation);
-            }
-            if(e.anchor !== undefined && e.anchor !== null){
-                temp.setAnchor(e.anchor);
-            }
-            temp.setPosition({x: e.position.x / small, y: e.position.y / small});
-            stage.add(temp);
+
+            const small = window.innerWidth <= MOBILE_WIDTH ? MOBILE_FACTOR : DESKTOP_FACTOR;
+
+            if (entity.rotation) element.setRotationAngle(entity.rotation);
+            if (entity.anchor) element.setAnchor(entity.anchor);
+
+            element.setPosition({
+                x: entity.position.x / small,
+                y: entity.position.y / small
+            });
+
+            stage.add(element);
 
             if (isDebug) {
-                if(temp._data.anchor === undefined || temp._data.anchor === null){
-                    temp.debug_addBoundaryBox(new BoundaryBox(temp.getPosition(), temp.getSize()));
-                }
-                else{
-                    var pos = temp.getPosition();
-                    var size = temp.getSize();
-                    pos.x = pos.x - size.w * temp._data.anchor.x;
-                    pos.y = pos.y - size.h * temp._data.anchor.y;
-                    temp.debug_addBoundaryBox(new BoundaryBox(pos, size, temp._data.anchor));
+                if (!element._data.anchor) element.debug_addBoundaryBox(new BoundaryBox(element.getPosition(), element.getSize()));
+                else {
+                    const pos = element.getPosition();
+                    const size = element.getSize();
+                    pos.x = pos.x - size.w * element._data.anchor.x;
+                    pos.y = pos.y - size.h * element._data.anchor.y;
+                    element.debug_addBoundaryBox(new BoundaryBox(pos, size, element._data.anchor));
                 }
             }
-            
-        }
-        
+        });
     }
 
-    loadGUILayer(GUI_stage, Background_stage, cfg){
+    loadGUILayer (GUI_stage, Background_stage, config) {
 
-        cfg.Background.children.map(configToElements).
-            forEach( (el) => {
+        config.Background.children
+            .map(configToElements)
+            .forEach( (el) => {
                 Background_stage.add(el);
             });
 
-        cfg.GUI.children.map(configToElements)
+        config.GUI.children
+            .map(configToElements)
             .forEach( (el) => {
                 GUI_stage.add(el);
             });
 
-        function configToElements( obj ){
+        function configToElements ( object ) {
+            let element;
+            const small = window.innerWidth <= MOBILE_WIDTH ? MOBILE_FACTOR : DESKTOP_FACTOR;
 
-            let temp;
-
-            let small = 1;
-            
-            if(window.innerWidth <= 640){
-                small = 2;
+            if (object.options && object.options.fontSize && object.options.fontFamily) {
+                object.options.font = `${parseInt(object.options.fontSize) / small}px ${object.options.fontFamily}`;
             }
 
-            if(obj.options && obj.options.fontSize && obj.options.fontFamily){
-                obj.options.font = `${parseInt(obj.options.fontSize) / small}px ${obj.options.fontFamily}`;
-            }
+            const texture = object.texture ? PIXI.loader.resources.sprites.textures[object.texture] : null;
 
-            let texture = null;
-            if(obj.texture !== null && obj.texture !== undefined){
-                texture = PIXI.Texture.fromFrame(obj.texture);
-            }
-
-            switch(obj.type){
+            switch (object.type) {
                 case "Image":
-                    temp = new GUI.Image(obj.id, obj.position, texture);
+                    element = new GUI.Image(object.id, object.position, texture);
                     break;
                 case "Label":
-                    temp = new GUI.Label(obj.id, obj.position, obj.text, obj.options);
+                    element = new GUI.Label(object.id, object.position, object.text, object.options);
                     break;
                 case "Button":
-                    temp = new GUI.Button(obj.id, obj.position, texture, obj.text, obj.options);
+                    element = new GUI.Button(object.id, object.position, texture, object.text, object.options);
                     break;
-                default: 
-                    console.error(`Bad type: ${obj.type}`);
-                    break;
+                default:
+                    throw new Error(`Bad type: ${object.type}`);
             }
 
-            if(obj.move){
-                temp.move(obj.move);
-            }
-            if(obj.visible !== undefined && obj.visible !== null){
-                temp.display(obj.visible);
-            }
-            return temp;
+            if (object.move) element.move(object.move);
+            if (object.visible) element.display(object.visible);
 
+            return element;
         }
-
     }
-
 }
-
-export default Loader;

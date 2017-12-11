@@ -1,5 +1,4 @@
 import Screen from '../Core/Screen';
-import Stage from '../Core/Stage';
 import GUI from '../GUI/GUI';
 import Spritesheet from '../Assets/Gfx/sprites.json';
 import $ from 'jquery';
@@ -26,7 +25,7 @@ class CinematicEditor extends Screen {
         this._currentTime = 0;
 
         this._finished = false;
-        this._currentPlayingAnimation = 0;
+        this._currentPlayingAnimationIndex = 0;
         this._stepCounter = 0;
         this._animationComplete = false;
         this._animatedObject = null;
@@ -92,7 +91,7 @@ class CinematicEditor extends Screen {
                 this._currentTime = 0;
 
                 this._finished = false;
-                this._currentPlayingAnimation = 0;
+                this._currentPlayingAnimationIndex = 0;
                 this._stepCounter = 0;
                 this._animationComplete = false;
                 this._animatedObject = null;
@@ -165,7 +164,7 @@ class CinematicEditor extends Screen {
                 this._startTime = Date.now();
 
                 this._finished = false;
-                this._currentPlayingAnimation = 0;
+                this._currentPlayingAnimationIndex = 0;
                 this._stepCounter = 0;
                 this._animationComplete = false;
                 this._animatedObject = null;
@@ -181,7 +180,7 @@ class CinematicEditor extends Screen {
                 this._currentTime = 0;
 
                 this._finished = false;
-                this._currentPlayingAnimation = 0;
+                this._currentPlayingAnimationIndex = 0;
                 this._stepCounter = 0;
                 this._animationComplete = false;
                 this._animatedObject = null;
@@ -267,56 +266,50 @@ class CinematicEditor extends Screen {
 
     };
 
-    updateStage(){
+    updateStage () {
         this._stage.removeAll();
-
         this._config.frames.forEach(addToStage.bind(this));
     };
 
-    play(start){
+    play () {
+        if (!this._finished) {
 
-        if(!this._finished){
-        
-            let diff = 0;
-            if(this._currentPlayingAnimation < this._config.animations.length){
-                
-                this._animatedObject = this._stage.getElement(this._config.animations[this._currentPlayingAnimation].id);
-                
-                if(this._animationComplete === false){
-                    if(this._config.animations[this._currentPlayingAnimation].moveTo.time === 0){
-                        this._animatedObject.setPosition({x: this._config.animations[this._currentPlayingAnimation].moveTo.x, y: this._config.animations[this._currentPlayingAnimation].moveTo.y});
+            if (this._currentPlayingAnimationIndex < this._config.animations.length) {
+                this._animatedObject = this._stage.getElement(this._config.animations[this._currentPlayingAnimationIndex].id);
+                if (this._animationComplete === false) {
+                    if (this._config.animations[this._currentPlayingAnimationIndex].moveTo.time === 0) {
+                        this._animatedObject.setPosition({x: this._config.animations[this._currentPlayingAnimationIndex].moveTo.x, y: this._config.animations[this._currentPlayingAnimationIndex].moveTo.y});
                         this._animationComplete = true;
                     }
-                    else{
-                        if(this._stepCounter === 0){
+                    else {
+                        if (this._stepCounter === 0) {
                             this._step = {
-                                x: -(this._animatedObject.getPosition().x - this._config.animations[this._currentPlayingAnimation].moveTo.x) / this._config.animations[this._currentPlayingAnimation].moveTo.time,
-                                y: -(this._animatedObject.getPosition().y - this._config.animations[this._currentPlayingAnimation].moveTo.y) / (this._config.animations[this._currentPlayingAnimation].moveTo.time / 16.666)
+                                x: -(this._animatedObject.getPosition().x - this._config.animations[this._currentPlayingAnimationIndex].moveTo.x) / this._config.animations[this._currentPlayingAnimationIndex].moveTo.time,
+                                y: -(this._animatedObject.getPosition().y - this._config.animations[this._currentPlayingAnimationIndex].moveTo.y) / (this._config.animations[this._currentPlayingAnimationIndex].moveTo.time / 16.666)
                             };
                         }
                         this._animatedObject.move(this._step);
                         this._stepCounter++;
-                        if(this._stepCounter >= this._config.animations[this._currentPlayingAnimation].moveTo.time / 16.666){
-                            this._animatedObject.setPosition({x: this._config.animations[this._currentPlayingAnimation].moveTo.x, y: this._config.animations[this._currentPlayingAnimation].moveTo.y});
+                        if (this._stepCounter >= this._config.animations[this._currentPlayingAnimationIndex].moveTo.time / 16.666) {
+                            this._animatedObject.setPosition({x: this._config.animations[this._currentPlayingAnimationIndex].moveTo.x, y: this._config.animations[this._currentPlayingAnimationIndex].moveTo.y});
                             this._animationComplete = true;
                             this._beginTime = 0;
                             this._stepCounter = 0;
                         }
                     }
                 }
-                
-                else{
-                    if(this._config.animations[this._currentPlayingAnimation].moveTo.wait === 0){
-                        this._currentPlayingAnimation++;
+                else {
+                    if (this._config.animations[this._currentPlayingAnimationIndex].moveTo.wait === 0) {
+                        this._currentPlayingAnimationIndex++;
                         this._animationComplete = false;
                     }
-                    else{
-                        if(this._beginTime === 0){
+                    else {
+                        if (this._beginTime === 0) {
                             this._beginTime = Date.now();
                         }
-                        let diff = Date.now() - this._beginTime;
-                        if(diff >= this._config.animations[this._currentPlayingAnimation].moveTo.wait){
-                            this._currentPlayingAnimation++;
+                        const diff = Date.now() - this._beginTime;
+                        if (diff >= this._config.animations[this._currentPlayingAnimationIndex].moveTo.wait) {
+                            this._currentPlayingAnimationIndex++;
                             this._animationComplete = false;
                             this._step = 0;
                         }
@@ -324,22 +317,22 @@ class CinematicEditor extends Screen {
                 }
                 
             }
-            else{
+            else {
                 this._finished = true;
             }
         }
-        else{
-            if(this._stage._stage.alpha > -1){
+        else {
+            if (this._stage._stage.alpha > -1) {
                 this._stage._stage.alpha -= 0.01;
             }
-            else{
+            else {
                 $("#play").val("Play");
                 $("#timeBar").val(0);
                 this._stage._elements.forEach(moveToInitialPosition);
                 this._currentTime = 0;
 
                 this._finished = false;
-                this._currentPlayingAnimation = 0;
+                this._currentPlayingAnimationIndex = 0;
                 this._stepCounter = 0;
                 this._animationComplete = false;
                 this._animatedObject = null;
@@ -355,22 +348,18 @@ class CinematicEditor extends Screen {
 
     };
 
-    update(){
-
-        let soundsToPlay = [].concat(this._sounds);
+    update () {
+        const soundsToPlay = [].concat(this._sounds);
         this._sounds = [];
 
-        if(this._play){
+        if (this._play) {
             this.play();
             $("#timeScreen").val();
         }
-        else{
-            //this._sounds = [];
-        }
 
-        if(this._musicPlaying){
+        if (this._musicPlaying) {
             let seconds = Date.now() - this._startTime;
-            let minutes = parseInt(seconds / 60000);
+            const minutes = parseInt(seconds / 60000);
             seconds = parseInt((seconds - 60000 * minutes) / 1000);
             $("#timeScreen").val(`${minutes}:${seconds}`);
         }

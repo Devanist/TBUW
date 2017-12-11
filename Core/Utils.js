@@ -1,9 +1,9 @@
 import isTouchDevice from './Utils/isTouchDevice';
 import copy from './Utils/copy';
-    
-const Utils = {
-    isTouchDevice: isTouchDevice,
-    copy: copy
-};
+import appendEditorRootSection from './Utils/appendEditorRootSection';
 
-export default Utils;
+export default {
+    isTouchDevice,
+    copy,
+    appendEditorRootSection
+};

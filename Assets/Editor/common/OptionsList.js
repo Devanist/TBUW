@@ -6,14 +6,18 @@ export default function OptionsList (props) {
 
     const options = Object
         .keys(list)
-        .map( (item) => (
-            <option
-                key={item}
-                value={item}
-            >
-                {item}
-            </option>
-        ));
+        .map( (item) => {
+            const valueToDisplay = item.name ? item.name : item;
+
+            return (
+                <option
+                    key={valueToDisplay}
+                    value={valueToDisplay}
+                >
+                    {valueToDisplay}
+                </option>
+            )
+        });
 
     return (
         <OptionsList {...rest}>

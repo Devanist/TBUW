@@ -8,77 +8,50 @@ import Mouse from './Core/Mouse';
 import Utils from './Core/Utils';
 import Speaker from './Core/Speaker';
 
-var h = window.innerHeight;
-var w = window.innerWidth;
-
-var scale;
-
-if (w <= 640) {
-    scale = {
-        y: h / 360,
-        x: w / 640
-    };
-}
-else {
-    scale = {
-        y : h / 800,
-        x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
-    };
-}
+const MOBILE_WIDTH = 640;
+const MOBILE_HEIGHT = 360;
 
 //Initialize PIXI and devices.
 const Application = new PIXI.Application({
-    width : window.innerWidth,
-    height : window.innerHeight
+    width: window.innerWidth,
+    height: window.innerHeight
 });
 const loader = new Loader();
 const rootStage = new Stage();
+rootStage.setScale(calculateScale());
 const keyboard = new Keyboard();
 const speaker = new Speaker();
 const touch = new TouchDevice();
 const mouse = new Mouse();
-rootStage.setScale({ x: scale.x, y: scale.y });
 var logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
 
 Application.backgroundColor = 0x000000;
 Application.autoResize = true;
 
-window.onresize = function(event){
-    h = window.innerHeight;
-    w = window.innerWidth;
-    if(w <= 640){
-        scale = {
-            y : h / 360,
-            x : w / 640
-        };
-    }
-    else{
-        scale = {
-            y : h / 800,
-            x : h * 1.6 / 1280 //Not using innerWidth so I can have always 16:10 ratio.
-        };
-    }
-    Application.view.style.width = w + "px";
-    Application.view.style.height = h + "px";
-    rootStage.setScale({ x: scale.x, y: scale.y });
-    Application.renderer.resize(w, h);
+window.onresize = function () {
+    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+    Application.view.style.width = windowWidth + "px";
+    Application.view.style.height = windowHeight + "px";
+    rootStage.setScale(calculateScale());
+    Application.renderer.resize(windowWidth, windowHeight);
 };
 
 document.body.appendChild(Application.view);
 animate();
 loader.preload();
+
 //Showing progress of loading assets.
-loader.setProgressCb(function(){
+loader.setProgressCb(function () {
     loader.incrementLoadedAssets();
     console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
 });
-loader.loadAssets(function(datloader, resources){    
-
-    //Here assets are loaded, init the game, set input listeners.
-    
+loader.loadAssets(function (datloader, resources) {
+    //Here assets are already loaded, init the game, set input listeners.
     window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
     window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
-    
+
+    window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
+
     if (Utils.isTouchDevice()) {
         if (window.PointerEvent) {
             window.addEventListener("pointerdown", touch.handleTouchStart.bind(touch), false);
@@ -93,14 +66,28 @@ loader.loadAssets(function(datloader, resources){
             window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
         }
     }
-    
-    window.addEventListener("click", mouse.handleLeftClick.bind(mouse), false);
-
     logic.run();
-    
 }, speaker, rootStage);
 
-function animate(){
+function animate () {
     Application.stage.addChild(rootStage.getStage());
     requestAnimationFrame(animate);
+}
+
+function calculateScale () {
+    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+    return isMobile()
+        ? {
+            x: windowWidth / MOBILE_WIDTH,
+            y: windowHeight / MOBILE_HEIGHT
+        }
+        : {
+            // Not using innerWidth so I can have always 16:10 ratio on desktop.
+            y: windowHeight / 800, // eslint-disable-line no-magic-numbers
+            x: windowHeight * 1.6 / 1280 // eslint-disable-line no-magic-numbers
+        };
+}
+
+function isMobile () {
+    return window.innerWidth <= MOBILE_WIDTH;
 }

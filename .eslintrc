@@ -19,7 +19,9 @@
         "document": true,
         "PIXI": true,
         "window": true,
-        "XMLHttpRequest": true
+        "XMLHttpRequest": true,
+        "requestAnimationFrame": true,
+        "console": true
     },
     "rules": {
         "no-cond-assign": "error",

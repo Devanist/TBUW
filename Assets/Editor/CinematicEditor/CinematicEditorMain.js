@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import CinematicEditorMenu from './CinematicEditorMenu';
 
@@ -11,7 +12,8 @@ export default class CinematicEditorMain extends Component {
                 music: "",
                 music_offset: 0,
                 animations: []
-            }
+            },
+            selectedAnimation: null
         };
     }
 
@@ -19,14 +21,16 @@ export default class CinematicEditorMain extends Component {
         const file = event.target.files[FILE_INDEX];
         if (!file) return;
 
-        const editorContext = this;
+        const editorMainContext = this;
         const reader = new FileReader();
         reader.onload = function (e) {
             const content = e.target.result;
-            editorContext.setState({
-                level: JSON.parse(content)
+            editorMainContext.setState({
+                cinematic: JSON.parse(content)
             });
-            editorContext.p
+
+            this.props.updateStage(this.state.cinematic);
+            this.props.countTotalTime();
         }
         reader.readAsText(file);
     }
@@ -35,8 +39,19 @@ export default class CinematicEditorMain extends Component {
         return (
             <section id="CinematicEditor">
                 <CinematicEditorMenu
+                    loadConfig={this.loadConfig}
+                    add={this.addToScene}
                 />
             </section>
         );
     }
+
+    addToScript () {
+
+    }
 }
+
+CinematicEditorMain.propTypes = {
+    countTotalTime: PropTypes.func.isRequired,
+    updateStage: PropTypes.func.isRequired
+};

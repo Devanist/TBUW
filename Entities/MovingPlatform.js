@@ -1,25 +1,22 @@
 import Platform from './Platform';
 
-class MovingPlatform extends Platform{
-
-    constructor(id, sprite, startPosition, endPosition, time){
+export default class MovingPlatform extends Platform {
+    constructor (id, sprite, startPosition, endPosition, time) {
         super(id, sprite);
-        this._small = 1;
-        if(window.innerWidth <= 640){
-            this._small = 2;
-        }
+        this._smallScreenFactor = window.innerWidth <= 640 ? 2 : 1;
         this._isStatic = false;
         this._data.type = "MovingPlatform";
         this._data.movingSpeedFactor = 1;
+        this._isPlatformMovingHorizontally = this._data.moveBy.x !== 0;
 
         this._startPosition = {
-            x: startPosition.x / this._small,
-            y: startPosition.y / this._small
+            x: startPosition.x / this._smallScreenFactor,
+            y: startPosition.y / this._smallScreenFactor
         };
 
         this._endPosition = {
-            x: endPosition.x / this._small,
-            y: endPosition.y / this._small
+            x: endPosition.x / this._smallScreenFactor,
+            y: endPosition.y / this._smallScreenFactor
         };
 
         this._timeToMove = time;
@@ -31,90 +28,76 @@ class MovingPlatform extends Platform{
 
     }
 
-    update(){
-        //Platforms moves horizontally
-        if(this._data.moveBy.x !== 0){
+    reverseMovementDirection () {
+        if (this._isPlatformMovingHorizontally) this._data.moveBy.x = - this._data.moveBy.x;
+        else this._data.moveBy.y = - this._data.moveBy.y;
+    }
+
+    update () {
+        if (this._isPlatformMovingHorizontally) {
             this._sprite.position.x += this._data.moveBy.x;
             this._data.position.x += this._data.moveBy.x;
 
-            if(this._startPosition.x < this._endPosition.x){
-
-                if(this._data.position.x < this._startPosition.x || this._data.position.x > this._endPosition.x){
-                    this._data.moveBy.x = - this._data.moveBy.x;
+            if (this._startPosition.x < this._endPosition.x) {
+                if (this._data.position.x < this._startPosition.x || this._data.position.x > this._endPosition.x) {
+                    this.reverseMovementDirection();
                 }
-
             }
-            else{
-
-                if(this._data.position.x < this._endPosition.x || this._data.position.x > this._startPosition.x){
-                    this._data.moveBy.x = - this._data.moveBy.x;
+            else {
+                if (this._data.position.x < this._endPosition.x || this._data.position.x > this._startPosition.x) {
+                    this.reverseMovementDirection();
                 }
-
             }
         }
-        //Platforms moves vertically
-        else{
-
+        else {
             this._sprite.position.y += this._data.moveBy.y;
             this._data.position.y += this._data.moveBy.y;
 
-            if(this._startPosition.y < this._endPosition.y){
-
-                if(this._data.position.y < this._startPosition.y || this._data.position.y > this._endPosition.y){
-                    this._data.moveBy.y = - this._data.moveBy.y;
+            if (this._startPosition.y < this._endPosition.y) {
+                if (this._data.position.y < this._startPosition.y || this._data.position.y > this._endPosition.y) {
+                    this.reverseMovementDirection();
                 }
-
             }
-            else{
-
-                if(this._data.position.y < this._endPosition.y || this._data.position.y > this._startPosition.y){
-                    this._data.moveBy.y = - this._data.moveBy.y;
+            else {
+                if (this._data.position.y < this._endPosition.y || this._data.position.y > this._startPosition.y) {
+                    this.reverseMovementDirection();
                 }
-
             }
-
         }
-
     }
 
-    static get Properties(){
-        
-        let props = {
-            startPos : {
-                subFields : [
+    static get Properties () {
+        return {
+            startPos: {
+                subFields: [
                     {
-                        name : "x",
-                        type : "Number",
-                        defaultValue : 0
+                        name: "x",
+                        type: "Number",
+                        defaultValue: 0
                     },
                     {
-                        name : "y",
-                        type : "Number",
-                        defaultValue : 0
+                        name: "y",
+                        type: "Number",
+                        defaultValue: 0
                     }
                 ],
-                name : "Start position"
+                name: "Start position"
             },
-            endPos : {
-                subFields : [
+            endPos: {
+                subFields: [
                     {
-                        name : "x",
-                        type : "Number",
-                        defaultValue : 0
+                        name: "x",
+                        type: "Number",
+                        defaultValue: 0
                     },
                     {
-                        name : "y",
-                        type : "Number",
-                        defaultValue : 0
+                        name: "y",
+                        type: "Number",
+                        defaultValue: 0
                     }
                 ],
-                name : "End position"
+                name: "End position"
             }
         };
-    
-        return props;
     }
-
 }
-
-export default MovingPlatform;

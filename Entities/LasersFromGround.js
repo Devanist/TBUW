@@ -7,25 +7,22 @@ import Obstacle from './Obstacle';
  * @extends Entities.Obstacle
  * @param {Number} id Unique identifier of element
  */
-class LasersFromGround extends Obstacle{
+export default class LasersFromGround extends Obstacle {
+    constructor (id) {
+        const smallScreenFactor = window.innerWidth <= 640 ? 2 : 1;
 
-    constructor(id){
-        let small = 1;
-        if(window.innerWidth <= 640){
-            small = 2;
-        }
-        let firstGround = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_00000"]);
-        let lazorOne = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
-        lazorOne.position.x += 24 / small;
-        let lazorTwo = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
-        lazorTwo.position.x += 45 / small;
-        let lazorThree = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
-        lazorThree.position.x += 80 / small;
-        let ground = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_up"]);
+        const firstGround = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_00000"]);
+        const lazorOne = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorOne.position.x += 24 / smallScreenFactor;
+        const lazorTwo = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorTwo.position.x += 45 / smallScreenFactor;
+        const lazorThree = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor"]);
+        lazorThree.position.x += 80 / smallScreenFactor;
+        const ground = new PIXI.Sprite(PIXI.loader.resources.sprites.textures["lazor_up"]);
 
-        lazorOne.position.y += 26 / small;
-        lazorTwo.position.y += 60 / small;
-        lazorThree.position.y += 40 / small;
+        lazorOne.position.y += 26 / smallScreenFactor;
+        lazorTwo.position.y += 60 / smallScreenFactor;
+        lazorThree.position.y += 40 / smallScreenFactor;
 
         super(id, [
             firstGround,
@@ -42,10 +39,10 @@ class LasersFromGround extends Obstacle{
         this._ground = ground;
 
         this._lazors = [this._lazorOne, this._lazorTwo, this._lazorThree];
-        this._data.maxHeight = 380 / small;
+        this._data.maxHeight = 380 / smallScreenFactor;
         this._data.type = "LasersFromGround";
         this._data.inheritedTypes.push(this._data.type);
-        this._data.animationSpeed = -10 / small;
+        this._data.animationSpeed = -10 / smallScreenFactor;
         this._data.state.collisionItems = [
             {
                 initialPosition: {
@@ -68,7 +65,7 @@ class LasersFromGround extends Obstacle{
                     ex: this._lazorTwo.position.x + this._lazorTwo.width,
                     ey: this._lazorTwo.position.y + this._lazorTwo.height
                 },
-                currentPosition:{
+                currentPosition: {
                     x: this._lazorTwo.position.x,
                     y: this._lazorTwo.position.y,
                     ex: this._lazorTwo.position.x + this._lazorTwo.width,
@@ -76,13 +73,13 @@ class LasersFromGround extends Obstacle{
                 }
             },
             {
-                initialPosition:{
+                initialPosition: {
                     x: this._lazorThree.position.x,
                     y: this._lazorThree.position.y,
                     ex: this._lazorThree.position.x + this._lazorThree.width,
                     ey: this._lazorThree.position.y + this._lazorThree.height
                 },
-                currentPosition:{
+                currentPosition: {
                     x: this._lazorThree.position.x,
                     y: this._lazorThree.position.y,
                     ex: this._lazorThree.position.x + this._lazorThree.width,
@@ -97,19 +94,12 @@ class LasersFromGround extends Obstacle{
      * @function
      * @memberOf Entities.LasersFromGround
      */
-    update(){
+    update () {
+        this._data.state.collisionItems.forEach((collisionItem, index) => {
+            const { position: lazorPosition} = this._lazors[index];
 
-        for(let i = 0; i < this._data.state.collisionItems.length; i++){
-            this._lazors[i].position.x = this._data.state.collisionItems[i].currentPosition.x;
-            this._lazors[i].position.y = this._data.state.collisionItems[i].currentPosition.y;
-        }
-
+            lazorPosition.x = collisionItem.currentPosition.x;
+            lazorPosition.y = collisionItem.currentPosition.y;
+        });
     }
-
-    setAnchor(anchor){
-
-    };
-
 }
-
-export default LasersFromGround;

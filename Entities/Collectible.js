@@ -1,8 +1,8 @@
 import Entity from './Entity';
 
-class Collectible extends Entity{
+export default class Collectible extends Entity {
 
-    constructor(id, sprite){
+    constructor (id, sprite) {
         super(id, sprite);
         this._sprite.anchor.x = 0.5;
         this._sprite.anchor.y = 0.5;
@@ -13,8 +13,8 @@ class Collectible extends Entity{
         this._currency = null;
     };
 
-    collect(){
-        var q = {
+    collect () {
+        const q = {
             quantity: this._currency.getQuantity(),
             name: this._currency.getName()
         };
@@ -23,6 +23,3 @@ class Collectible extends Entity{
     };
 
 }
-
-
-export default Collectible;

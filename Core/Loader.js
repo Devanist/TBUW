@@ -256,8 +256,8 @@ export default class Loader {
                 else {
                     const pos = element.getPosition();
                     const size = element.getSize();
-                    pos.x = pos.x - size.w * element._data.anchor.x;
-                    pos.y = pos.y - size.h * element._data.anchor.y;
+                    pos.x = pos.x - size.width * element._data.anchor.x;
+                    pos.y = pos.y - size.height * element._data.anchor.y;
                     element.debug_addBoundaryBox(new BoundaryBox(pos, size, element._data.anchor));
                 }
             }

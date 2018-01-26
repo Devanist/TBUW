@@ -1,8 +1,7 @@
 import Entity from './Entity';
-    
-class Creature extends Entity{
 
-    constructor(id, sprite){
+export default class Creature extends Entity {
+    constructor (id, sprite) {
         super(id, sprite);
         this._isStatic = false;
         this._data.velocity = {
@@ -11,15 +10,12 @@ class Creature extends Entity{
         };
     };
 
-    getId() { 
+    getId () {
         return this._id;
     };
 
-    getVelocity() {
+    getVelocity () {
         return this._velocity;
     }
 
 }
-
-
-export default Creature;

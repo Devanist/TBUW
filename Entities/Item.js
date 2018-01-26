@@ -1,8 +1,7 @@
 import Entity from './Entity';
-    
-class Item extends Entity{
 
-    constructor(id, sprite) {
+export default class Item extends Entity {
+    constructor (id, sprite) {
         super(id, sprite);
         this._data.type = "Item";
         this._data.inheritedTypes.push(this._data.type);
@@ -10,5 +9,3 @@ class Item extends Entity{
     }
 
 }
-
-export default Item;

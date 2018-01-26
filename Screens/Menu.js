@@ -1,17 +1,13 @@
 import Screen from '../Core/Screen';
-import Stage from '../Core/Stage';
-import GUI from '../GUI/GUI';
-import Entities from '../Entities/Entities';
 import Utils from '../Core/Utils';
 import * as PIXI from 'pixi.js';
-    
-class MenuScreen extends Screen{
 
-    constructor(){
+class MenuScreen extends Screen {
+    constructor () {
         super();
-        
+
         this._small = 1;
-        if(window.innerWidth <= 640){
+        if (window.innerWidth <= 640) {
             this._small = 2;
         }
         this._sounds = [{name: "home_beforethenight"}];
@@ -27,7 +23,7 @@ class MenuScreen extends Screen{
             x: 0,
             y: 0
         };
-        
+
         this._stage.add(this._background);
         this._stage.add(this._guiStage);
     }

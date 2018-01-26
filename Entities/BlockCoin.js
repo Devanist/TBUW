@@ -1,9 +1,8 @@
 import BlockCoinCurrency from '../Currencies/BlockCoin';
 import Collectible from './Collectible';
-    
-class BlockCoin extends Collectible{
 
-    constructor(id, quantity, position) {
+export default class BlockCoin extends Collectible {
+    constructor (id, quantity, position) {
         super(id, PIXI.loader.resources.sprites.textures["blockcoin"], position);
         this._currency = new BlockCoinCurrency();
         this._currency.setQuantity(quantity);
@@ -12,9 +11,9 @@ class BlockCoin extends Collectible{
         this._data.collected = false;
     }
 
-    collect(){
-        if(!this._data.collected){
-            var q = Collectible.prototype.collect.call(this);
+    collect () {
+        if (!this._data.collected) {
+            const q = Collectible.prototype.collect.call(this);
             this._data.collected = true;
             this._data.originPosition = {
                 x: this._sprite.position.x,
@@ -25,40 +24,37 @@ class BlockCoin extends Collectible{
         return {quantity: 0, name: "BlockCoin"};
     }
 
-    update(){
-        if(this._data.collected){
-            var dest = {};
+    update () {
+        if (this._data.collected) {
+            const dest = {};
             dest.x = -this._sprite.parent.position.x + 140;
             dest.y = -this._sprite.parent.position.y + 40;
-            
-            var step ={
+
+            var step = {
                 x: (dest.x - this._data.originPosition.x) / 15,
                 y: (dest.y - this._data.originPosition.y) / 15
             };
-            
+
             this._data.position.x += step.x;
             this._data.position.y += step.y;
-            if(this._data.position.x < dest.x && this._data.position.y < dest.y){
+            if (this._data.position.x < dest.x && this._data.position.y < dest.y) {
                 this._data.toBeRemoved = true;
             }
-            else{
+            else {
                 this._sprite.position.x = this._data.position.x;
                 this._sprite.position.y = this._data.position.y;
             }
-            
-        }        
+        }
     }
 
-    static get Properties(){
+    static get Properties () {
         return {
-            quantity : {
-                name : "Quantity",
-                type : "Number",
-                defaultValue : 1
+            quantity: {
+                name: "Quantity",
+                type: "Number",
+                defaultValue: 1
             }
         }
     }
 
 }
-
-export default BlockCoin;

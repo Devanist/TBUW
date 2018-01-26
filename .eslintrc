@@ -21,7 +21,10 @@
         "window": true,
         "XMLHttpRequest": true,
         "requestAnimationFrame": true,
-        "console": true
+        "console": true,
+        "self": true,
+        "postMessage": true,
+        "Worker": true
     },
     "rules": {
         "no-cond-assign": "error",

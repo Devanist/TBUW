@@ -1,18 +1,17 @@
 /**
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
-class Entity{
-
-    constructor(id, texture){
+export default class Entity {
+    constructor (id, texture) {
         this._id = id;
         this._isStatic = null;
         this._sprite = new PIXI.Sprite(texture);
         this._data = {
-            id : id,
+            id,
             direction: 1,
             size: {
-                w: this._sprite.width,
-                h: this._sprite.height
+                width: this._sprite.width,
+                height: this._sprite.height
             },
             position: {
                 x: 0,
@@ -36,81 +35,77 @@ class Entity{
     /**
      * Metoda zwraca informację, czy obiekt może się poruszać.
      */
-    isStatic(){
+    isStatic () {
         return this._isStatic;
     }
-    
-    getId(){
+
+    getId () {
         return this._data.id;
     }
-    
-    setPosition(pos){
+
+    setPosition (pos) {
         this._sprite.position.x = pos.x;
         this._sprite.position.y = pos.y;
         this._data.position.x = pos.x;
         this._data.position.y = pos.y;
-        this._data.position.endX = pos.x + this._data.size.w;
-        this._data.position.endY = pos.y + this._data.size.h;
+        this._data.position.endX = pos.x + this._data.size.width;
+        this._data.position.endY = pos.y + this._data.size.height;
     }
 
-    setAnchor(anchor){
+    setAnchor (anchor) {
         this._sprite.anchor.x = anchor.x;
         this._sprite.anchor.y = anchor.y;
     }
-    
-    getPosition(){
+
+    getPosition () {
         return this._sprite.position;
     }
-    
-    getSize(){
+
+    getSize () {
         return this._data.size;
     }
-    
-    updatePostion(pos){
+
+    updatePostion (pos) {
         this._sprite.position.x += pos.x;
         this._sprite.position.y += pos.y;
     }
-    
-    update(){
-        if(this._sprite.scale.x > 0 && this._data.direction === -1){
+
+    update () {
+        if (this._sprite.scale.x > 0 && this._data.direction === -1) {
             this._sprite.scale.x *= this._data.direction;
             this._sprite.anchor.x = 1;
         }
-        if(this._sprite.scale.x < 0 && this._data.direction === 1){
+        else if (this._sprite.scale.x < 0 && this._data.direction === 1) {
             this._sprite.scale.x *= -this._data.direction;
             this._sprite.anchor.x = 0;
         }
         this._sprite.position.x = this._data.position.x;
         this._sprite.position.y = this._data.position.y;
-        if(this.d_BBox !== undefined && this.d_BBox !== null){
+        if (this.d_BBox) {
             this.d_BBox.update(this._data.position, this._data.size);
             this.d_BBox.draw();
         }
-        
     }
-    
-    getSprite(){
+
+    getSprite () {
         return this._sprite;
     }
-    
-    debug_addBoundaryBox(bbox){
+
+    debug_addBoundaryBox (bbox) {
         this.d_BBox = bbox;
-        this._sprite.parent.addChild(this.d_BBox.getBox());
+        this._sprite.parent.addChild(bbox.getBox());
     }
-    
-    setRotationAngle(val){
-        this._data.rotation = val;
+
+    setRotationAngle (angle) {
+        this._data.rotation = angle;
     }
-    
-    rotate(angle){
+
+    rotate (angle) {
         this._data.currentRotationAngle = angle;
         this._sprite.rotation = angle;
     }
-    
-    getType(){
+
+    getType () {
         return this._data.type;
     }
-
 }
-
-export default Entity;

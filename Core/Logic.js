@@ -4,6 +4,8 @@ import Cinematics from '../Assets/Cinematics/Cinematics';
 import cfg from '../game_cfg.json';
 import GUILayers from '../Assets/GUI_Layers';
 
+const TICK_RATE = 16;
+
 /**
  * Class handling all not-game involved logic like changing screens, updating gfx
  * @param {Loader} loader Loader object
@@ -58,7 +60,7 @@ export default class Logic {
         }
         setTimeout(function () {
             this.update();
-        }.bind(this), 16);
+        }.bind(this), TICK_RATE);
     }
 
     /**
@@ -86,7 +88,7 @@ export default class Logic {
             this._loader.loadStageConfig(this._currentScreen.screen.getMainStage(), Levels[params.cfg].entities, cfg.showBorderLines);
             this._loader.loadWinConditions(this._currentScreen.screen.getWinConditions(), Levels[params.cfg].winConditions);
         }
-        if (screen === "cinematic") {
+        else if (screen === "cinematic") {
             this._loader.loadCinematicConfig(Cinematics[params.cfg], this._currentScreen.screen.getConfig(), this._currentScreen.screen.getStage(), this._currentScreen.screen);
         }
 

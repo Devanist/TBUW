@@ -24,7 +24,10 @@
         "console": true,
         "self": true,
         "postMessage": true,
-        "Worker": true
+        "Worker": true,
+        "navigator": true,
+        "AudioContext": true,
+        "webkitAudioContext": true
     },
     "rules": {
         "no-cond-assign": "error",

@@ -3,9 +3,8 @@ import GUI from '../GUI/GUI';
 import Utils from '../Core/Utils';
 import * as PIXI from 'pixi.js';
 
-class LevelChoose extends Screen{
-
-    constructor(params){
+export default class LevelChoose extends Screen {
+    constructor (params) {
         super();
 
         this._levels = params.cfg;
@@ -26,24 +25,7 @@ class LevelChoose extends Screen{
         this._sounds = [{name: "home_beforethenight"}];
         this._sameMusic = false;
 
-        this._levels.forEach((level, index) => {
-            let frame = level.type === 'cinematic' ? 'cinematic_frame' : 'frame';
-            let num = index < 10 ? `0${index}` : index.toString();
-            let temp = new GUI.Button(
-                `${level.type}_${level.name}`, 
-                {x: 300 * (index % 3 + 1), y: 200 * ((index / 3 | 0) + 1)},
-                PIXI.loader.resources.sprites.textures[frame],
-                num,
-                {size_override: true, bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"},
-                () => {
-                    changeScreen.call(this, level.name, level.type === 'cinematic' ? 'cinematic' : 'game')
-                }
-            );
-            if(index === 0) temp._data.active = true;
-            this._guiStage.add(temp);
-        });
-
-        function changeScreen(name, screen){
+        function changeScreen (name, screen) {
             this._onUpdateAction = "CHANGE";
             this._nextScreen = screen;
             this._nextScreenParams = {
@@ -52,10 +34,28 @@ class LevelChoose extends Screen{
             };
         }
 
+        this._levels.forEach((level, index) => {
+            const FIRST_ELEMENT = 0;
+            const frame = level.type === 'cinematic' ? 'cinematic_frame' : 'frame';
+            const num = index < 10 ? `0${index}` : index.toString();
+            const temp = new GUI.Button(
+                `${level.type}_${level.name}`,
+                {x: 300 * (index % 3 + 1), y: 200 * ((index / 3 | 0) + 1)},
+                PIXI.loader.resources.sprites.textures[frame],
+                num,
+                {size_override: true, bitmap: true, fontSize: 60 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"},
+                () => {
+                    changeScreen.call(this, level.name, level.type === 'cinematic' ? 'cinematic' : 'game')
+                }
+            );
+            if (index === FIRST_ELEMENT) temp._data.active = true;
+            this._guiStage.add(temp);
+        });
+
         this._stage.add(this._guiStage);
     }
 
-    everythingLoaded(){
+    everythingLoaded () {
         this._guiStage.getElement("RETURN").setCallback(
             () => {
                 this._onUpdateAction = "CHANGE";
@@ -65,102 +65,103 @@ class LevelChoose extends Screen{
         );
     }
 
-    update(keysState, clicks, touches){
-        var i = 0, j = 0, temp;
+    handleKeyboardInput (keysState) {
+        let element, i, j;
+        if ((keysState.ARROW_DOWN || keysState.S) && !this._buttonPressedDown) {
+            this._buttonPressedDown = true;
+            while (i !== 2) {
+                if (j === this._guiStage._elements.length) j = 0;
 
-        //Keyboard handling
-        if(keysState.ARROW_DOWN || keysState.S){
-            if(this._buttonPressedDown === false){
-                this._buttonPressedDown = true;
-                while(i !== 2){
-                    if(j === this._guiStage._elements.length){
-                        j = 0;
-                    }
-                    temp = this._guiStage._elements[j];
-                    if(temp !== null && temp !== undefined && temp.isEnabled() && temp.isActive()){
-                        temp._data.active = false;
-                        temp._sprite.filters = null;
-                        i = 1;
-                        j+=1;
-                        continue;
-                    }
-                    if(i === 1 && temp !== null && temp !== undefined && temp.isEnabled()){
-                        temp._data.active = true;
-                        i = 2;
-                    }
-                    else{
-                        j+=1;
-                    }
+                element = this._guiStage._elements[j];
+                if (element && element.isEnabled() && element.isActive()) {
+                    element._data.active = false;
+                    element._sprite.filters = null;
+                    i = 1;
+                    j+=1;
+                    continue;
+                }
+                if (i === 1 && element && element.isEnabled()) {
+                    element._data.active = true;
+                    i = 2;
+                }
+                else {
+                    j+=1;
                 }
             }
         }
-        
-        if(keysState.ARROW_UP || keysState.W){
-            if(this._buttonPressedDown === false){
-                this._buttonPressedDown = true;
-                while(i !== 2){
-                    if(j === -1){
-                        j = this._guiStage._elements.length - 1;
-                    }
-                    temp = this._guiStage._elements[j];
-                    if(temp !== null && temp !== undefined && temp.isEnabled() && temp.isActive()){
-                        temp._data.active = false;
-                        temp._sprite.filters = null;
-                        i = 1;
-                        j-=1;
-                        continue;
-                    }
-                    if(i === 1 && temp !== null && temp !== undefined && temp.isEnabled()){
-                        temp._data.active = true;
-                        i = 2;
-                    }
-                    else{
-                        j-=1;
-                    }
+
+        if ((keysState.ARROW_UP || keysState.W) && this._buttonPressedDown === false) {
+            this._buttonPressedDown = true;
+            while (i !== 2) {
+                if (j === -1) {
+                    j = this._guiStage._elements.length - 1;
+                }
+                element = this._guiStage._elements[j];
+                if (element && element.isEnabled() && element.isActive()) {
+                    element._data.active = false;
+                    element._sprite.filters = null;
+                    i = 1;
+                    j-=1;
+                    continue;
+                }
+                if (i === 1 && element && element.isEnabled()) {
+                    element._data.active = true;
+                    i = 2;
+                }
+                else {
+                    j-=1;
                 }
             }
         }
-        
-        if(keysState.ENTER){
-            this._guiStage._elements.forEach(element => {
-                if(element && element.isActive()) element.triggerCallback()
+
+        if (keysState.ENTER) {
+            this._guiStage._elements.forEach((guiElement) => {
+                if (guiElement && guiElement.isActive()) guiElement.triggerCallback()
             });
         }
-        
-        if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
+
+        if (!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W) {
             this._buttonPressedDown = false;
         }
+    }
 
-        clicks.forEach(click => {
-            this._guiStage._elements.forEach(element => {
-                if(element.triggerCallback && element._sprite.containsPoint({x: click.clientX, y: click.clientY}))
+    handleMouseInput (clicks) {
+        clicks.forEach((click) => {
+            const { clientX: x, clientY: y } = click;
+            this._guiStage._elements.forEach((element) => {
+                if (element.triggerCallback && element._sprite.containsPoint({x, y}))
                     element.triggerCallback();
             });
         });
-        
-        //Touch handling
-        if(Utils.isTouchDevice()){
-            touches.forEach(touch => {
-                this._guiStage._elements.forEach(element => {
-                    if(element.triggerCallback && element._sprite.containsPoint({x: touch.pageX, y: touch.pageY}))
-                        element.triggerCallback();
-                });
-            });
-        }
+    }
 
-        this._guiStage._elements.forEach(element => {
-            if(element.isEnabled() && element.isActive()){
-                if(this._displacement.scale.y < 6){
-                    this._displacement.scale.y += 0.1;
-                }
-                else{
-                    this._displacement.scale.y = 1;
-                }
+    handleTouchInput (touches) {
+        if (!Utils.isTouchDevice()) return;
+
+        touches.forEach((touch) => {
+            const { pageX: x, pageY: y } = touch;
+            this._guiStage._elements.forEach((element) => {
+                if (element.triggerCallback && element._sprite.containsPoint({x, y}))
+                    element.triggerCallback();
+            });
+        });
+    }
+
+    update (keysState, clicks, touches) {
+        this.handleKeyboardInput(keysState);
+        this.handleMouseInput(clicks);
+        this.handleTouchInput(touches);
+
+        this._guiStage._elements.forEach((element) => {
+            if (element.isEnabled() && element.isActive()) {
+                this._displacement.scale.y = this._displacement.scale.y < 6
+                    ? this._displacement.scale.y += 0.1
+                    : 1;
                 element._sprite.filters = [this._displacement];
             }
         });
 
-        return  {
+        return {
             action: this._onUpdateAction,
             changeTo: this._nextScreen,
             params: this._nextScreenParams,
@@ -170,5 +171,3 @@ class LevelChoose extends Screen{
     }
 
 }
-
-export default LevelChoose;

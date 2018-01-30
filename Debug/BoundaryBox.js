@@ -1,10 +1,13 @@
+const BOUNDARY_LINE_WIDTH_IN_PIXELS = 1;
+const BOUNDARY_LINE_COLOR = 0x00F600;
+
 /**
  * Showing boundary boxes of sprites.
  */
 export default class BoundaryBox {
     constructor (position, size, anchor) {
         this._box = new PIXI.Graphics();
-        this._box.lineStyle(1, 0x00F600);
+        this._box.lineStyle(BOUNDARY_LINE_WIDTH_IN_PIXELS, BOUNDARY_LINE_COLOR);
         this._data = {
             position: {
                 x: position.x,
@@ -39,7 +42,7 @@ export default class BoundaryBox {
 
     draw () {
         this._box.clear();
-        this._box.lineStyle(1, 0x00F600);
+        this._box.lineStyle(BOUNDARY_LINE_WIDTH_IN_PIXELS, BOUNDARY_LINE_COLOR);
         this._box.drawRect(this._data.position.x, this._data.position.y, this._data.size.width, this._data.size.height);
     }
 

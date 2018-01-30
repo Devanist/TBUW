@@ -1,11 +1,7 @@
 import Currency from './Currency';
-    
-class BlockCoinCurrency extends Currency{
 
-    constructor(){
+export default class BlockCoinCurrency extends Currency {
+    constructor () {
         super("BlockCoin");
     }
-
 }
-
-export default BlockCoinCurrency;

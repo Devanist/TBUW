@@ -1,8 +1,8 @@
 /**
  * Class representing the keyboard state.
  */
-class Keyboard{
-    constructor(){
+export default class Keyboard {
+    constructor () {
 
         //List of keys and their codes.
         this.KEYS = {
@@ -27,7 +27,7 @@ class Keyboard{
             ARROW_RIGHT: false,
             ENTER: false,
             ESCAPE: false,
-            CTRL : false,
+            CTRL: false,
             W: false,
             S: false,
             A: false,
@@ -40,52 +40,47 @@ class Keyboard{
      * Method returns the keyboard's state.
      * @returns {Object}
      */
-    getKeysState(){
+    getKeysState () {
         return this._state;
     }
-    
+
     /**
      * Method changes the given key state.
      * @param {String} key Name or code of key
-     * @param {Boolean} val Key's new state
+     * @param {Boolean} value Key's new state
      */
-    setKeyState(key, val) {
-        if(typeof key === "string") {
-            this._state[key] = val;
+    setKeyState (key, value) {
+        if (typeof key === "string") {
+            this._state[key] = value;
         }
-        else if(typeof key === "number"){
-            for(var k in this.KEYS){
-                if(this.KEYS.hasOwnProperty(k) && this.KEYS[k] === key){
-                    this._state[k] = val;
+        else if (typeof key === "number") {
+            for (var keyName in this.KEYS) {
+                if (this.KEYS.hasOwnProperty(keyName) && this.KEYS[keyName] === key) {
+                    this._state[keyName] = value;
                 }
             }
         }
     }
-    
+
     /**
      * Setting the key state to true
      * @param {object} event Keyboard event
      */
-    handleKeyDown(event){
+    handleKeyDown (event) {
         this.setKeyState(event.keyCode, true);
     }
-    
+
     /**
      * Setting the key state to false
      * @param {object} event Keyboard event
      */
-    handleKeyUp(event){
+    handleKeyUp (event) {
         this.setKeyState(event.keyCode, false);
     }
-    
-    reset(){
-        for(var k in this._state){
-            if(this._state.hasOwnProperty(k)){
-                this._state[k] = false;
-            }
+
+    reset () {
+        for (var k in this._state) {
+            if (this._state.hasOwnProperty(k)) this._state[k] = false;
         }
     }
-
 }
-
-export default Keyboard;

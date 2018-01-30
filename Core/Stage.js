@@ -31,20 +31,16 @@ export default class Stage {
      * @param {string} id Identyfikator elementu
      */
     remove (id) {
-        for (let i = 0; i < this._elements.length; i++) {
-            if (this._elements[i].getId() === id) {
-                var erasedElement = this._elements.splice(i, 1)[0];
-                this._stage.removeChild(erasedElement.getSprite());
-                break;
-            }
-        }
+        const ONLY_ITEM = 0;
+
+        const erasedElementIndex = this._elements.findIndex((element) => element.getId() === id);
+        const erasedElement = this._elements.splice(erasedElementIndex, 1)[ONLY_ITEM];
+        this._stage.removeChild(erasedElement.getSprite());
     }
 
     removeAll () {
-        for (let i = this._elements.length - 1; i >= 0 ; i--) {
-            this._elements.splice(i, 1);
-            this._stage.removeChild(this._stage.children[i]);
-        }
+        this._elements = [];
+        this._stage.removeChildren();
     }
 
     /**
@@ -67,16 +63,11 @@ export default class Stage {
      * Zmienia skalę, w której rysowany jest obiekt
      */
     setScale (scale) {
-        this._stage.scale.x = scale.x;
-        this._stage.scale.y = scale.y;
+        this._stage.scale = scale;
     }
 
     getElement (id) {
-        for (var i = 0; i < this._elements.length; i++) {
-            if (this._elements[i].getId && this._elements[i].getId() === id) {
-                return this._elements[i];
-            }
-        }
+        return this._elements.find((element) => element.getId() === id);
     }
 
     getId () {

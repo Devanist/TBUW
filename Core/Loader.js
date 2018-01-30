@@ -48,10 +48,10 @@ export default class Loader {
             //Show loading screen
             const Container = new Stage();
             Container.add(new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off")));
-            var progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
+            const progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
             progressbar.move({x: -255, y: 50});
             Container.add(progressbar);
-            var blurFilter = new PIXI.filters.BlurFilter();
+            const blurFilter = new PIXI.filters.BlurFilter();
             progressbar._sprite.filters = [blurFilter];
             rootStage.add(Container);
 
@@ -144,16 +144,14 @@ export default class Loader {
 
     loadCinematicConfig (config, cinematicConfig, stage, cinematic) {
         config.frames.forEach((frame) => {
-            stage.add(
-                new GUI.Image(frame, {x: -2000, y: 2000}, PIXI.Texture.fromFrame(frame))
-            );
+            stage.add(new GUI.Image(frame, {x: -2000, y: 2000}, PIXI.Texture.fromFrame(frame)));
         })
 
         config.animations.forEach((animation) => {
             cinematicConfig.push(animation);
         })
 
-        const music = cfg.music_offset !== undefined
+        const music = !cfg.music_offset
             ? {
                 name: cfg.music,
                 offset: cfg.music_offset
@@ -171,7 +169,7 @@ export default class Loader {
         }
 
         const loaderContext = this;
-        var ls = 0;
+        let ls = 0;
 
         function soundOnLoad () {
             ls += 1; //eslint-disable-line no-magic-numbers
@@ -193,9 +191,7 @@ export default class Loader {
     }
 
     loadWinConditions (array, config) {
-        config.forEach((winCondition) => {
-            array.push(winCondition);
-        })
+        config.forEach((winCondition) => { array.push(winCondition) });
     }
 
     /**

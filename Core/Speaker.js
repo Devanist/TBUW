@@ -1,16 +1,13 @@
-import Utils from './Utils';
-    
-class Speaker{
-
-    constructor(){
+export default class Speaker {
+    constructor () {
         this._context = null;
-        if(typeof AudioContext !== "undefined"){
+        if (typeof AudioContext !== "undefined") {
             this._context = new AudioContext();
         }
-        else if(typeof webkitAudioContext !== "undefined"){
+        else if (typeof webkitAudioContext !== "undefined") {
             this._context = new webkitAudioContext();
         }
-        else{
+        else {
             throw new Error("AudioContext not supported!");
         }
         this._gainNode = this._context.createGain();
@@ -19,101 +16,86 @@ class Speaker{
         this._soundsPlaying = [];
     }
 
-    addSoundToLibrary(audioData, name){
-        var that = this;
-        this._context.decodeAudioData(audioData, function(soundBuffer){
-            that._soundsLibrary[name] = soundBuffer;
-        });
+    addSoundToLibrary (audioData, name) {
+        this._context.decodeAudioData(audioData, (soundBuffer) => { this._soundsLibrary[name] = soundBuffer });
     }
-    
-    update(sounds){
-        var t = null;
-        if(this._gainNode.gain.value < 1){
+
+    update (sounds) {
+        if (this._gainNode.gain.value < 1) {
             this._gainNode.gain.value += 0.005;
-            if(this._gainNode.gain.value > 1){
+            if (this._gainNode.gain.value > 1) {
                 this._gainNode.gain.value = 1;
             }
         }
-        for(let i = 0; i < sounds.length; i+=1){
-            t = sounds[i];
-            if(t.stop && (this._soundsLibrary.hasOwnProperty(t.name) || t.name === "all")){
-                this.stop(t.name);
+
+        sounds.forEach((sound) => {
+            if (sound.stop && (sound.name in this._soundsLibrary || sound.name === "all")) {
+                this.stop(sound.name);
             }
-            else if(this._soundsLibrary.hasOwnProperty(t.name)){
-                if(!this.isSoundPlaying(t.name)){
-                    this.play(t);
-                }
+            else if (sound.name in this._soundsLibrary) {
+                if (!this.isSoundPlaying(sound.name)) this.play(sound);
             }
-            else{
-                console.error("There is no sound like " + t.name);
+            else {
+                throw new Error(`There is no sound like ${sound.name}`);
             }
-        }
+        });
     }
-    
-    play(sound){
-        var that = this;
-        var node = this._context.createBufferSource();
-        var offset = 0;
-        if(typeof sound === "string"){
+
+    play (sound) {
+        const FROM_BEGINNING = 0;
+        const DEFAULT_OFFSET = 0;
+        const MUTED = 0;
+
+        const node = this._context.createBufferSource();
+        let offset = DEFAULT_OFFSET;
+
+        if (typeof sound === "string") {
             node.name = sound;
         }
-        else if(typeof sound === "object"){
+        else if (typeof sound === "object") {
             node.name = sound.name;
-            offset = sound.offset || 0;
+            offset = sound.offset || DEFAULT_OFFSET;
         }
+
         node.buffer = this._soundsLibrary[node.name];
-        if(sound.effect !== undefined){
-            switch(sound.effect){
+        if (sound.effect) {
+            switch (sound.effect) {
                 case "fadeIn":
-                    this._gainNode.gain.value = 0;
+                    this._gainNode.gain.value = MUTED;
                     node.connect(this._gainNode);
                     break;
                 default:
-                    console.log('There is no effect like ' + sound.effect);
-                    break;
+                    throw new Error(`There is no effect like ${sound.effect}`);
             }
         }
-        else{
+        else {
             node.connect(this._context.destination);
         }
-        node.onended = function(){
-            for(var i = 0; i < that._soundsPlaying.length; i+=1){
-                if(that._soundsPlaying[i] && that._soundsPlaying[i].name === node.name){
-                    that._soundsPlaying.splice(i,1);
-                }
-            }
+
+        node.onended = () => {
+            this._soundsPlaying.forEach((soundPlaying, index) => {
+                if (soundPlaying && soundPlaying.name === node.name) this._soundsPlaying.splice(index, 1);
+            });
         };
+
         this._soundsPlaying.push(node);
-        node.start(0, offset);
-    }
-    
-    isSoundPlaying(sound){
-        var l = this._soundsPlaying.length;
-        for(var i = 0; i < l; i+=1){
-            if(this._soundsPlaying[i].name === sound){
-                return true;
-            }
-        }
-        return false;
+        node.start(FROM_BEGINNING, offset);
     }
 
-    stop(sound){
-        if(sound === "all"){
-            for(let i = 0; i < this._soundsPlaying.length; i++){
-                this._soundsPlaying[i].stop();
-            }
+    isSoundPlaying (sound) {
+        return this._soundsPlaying.some((soundPlaying) => soundPlaying.name === sound);
+    }
+
+    stop (sound) {
+        const ONLY_ELEMENT = 0;
+        if (sound === "all") {
+            this._soundsPlaying.forEach((soundPlaying) => { soundPlaying.stop() });
             this._soundsPlaying = [];
         }
-        else{
-            for(let i = 0; i < this._soundsPlaying.length; i++){
-                if(this._soundsPlaying[i].name === sound){
-                    this._soundsPlaying[i].stop();
-                    delete this._soundsPlaying.splice(i,1)[0];
-                }
-            }
+        else {
+            const soundIndex = this._soundsPlaying.findIndex((soundPlaying) => soundPlaying.name === sound);
+            this._soundsPlaying[soundIndex].stop();
+            delete this._soundsPlaying.splice(soundIndex, 1)[ONLY_ELEMENT];
         }
     }
-
 }
-
-export default Speaker;

@@ -230,10 +230,9 @@ export default class GameScreen extends Screen {
 
         //Mouse clicks handling
         clicks.forEach((click) => {
-            this._guiStage._elements.forEach((elem) => {
-                if (elem.triggerCallback && elem._sprite.containsPoint({x: click.clientX, y: click.clientY})) {
-                    elem.triggerCallback();
-                }
+            const { clientX: x, clientY: y } = click;
+            this._guiStage._elements.forEach((element) => {
+                if (element.triggerCallback && element._sprite.containsPoint({x, y})) element.triggerCallback();
             });
         });
 
@@ -242,10 +241,9 @@ export default class GameScreen extends Screen {
             this._touchController.updateState(touches);
 
             touches.forEach((touch) => {
+                const { pageX: x, pageY: y } = touch;
                 this._guiStage._elements.forEach((elem) => {
-                    if (elem.triggerCallback && elem._sprite.containsPoint({x: touch.pageX, y: touch.pageY})) {
-                        elem.triggerCallback();
-                    }
+                    if (elem.triggerCallback && elem._sprite.containsPoint({x, y})) elem.triggerCallback();
                 });
             });
         }

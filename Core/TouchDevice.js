@@ -1,101 +1,74 @@
-define([
-    
-], function(){
-    
-    var TouchDevice = function(){
+export default class TouchDevice {
+    constructor () {
         this._onGoingTouches = [];
-    };
-    
-    TouchDevice.prototype = {
-        
-        handleTouchStart : function(e){
-            e.preventDefault();
-            console.log(e);
-            if (e.changedTouches === undefined) {
-                this._onGoingTouches.push(this.copyTouch(e));
-            }
-            else {
-                var touches = e.changedTouches;
-                for (var i = 0; i < touches.length; i++) {
-                    this._onGoingTouches.push(this.copyTouch(touches[i]));
-                }
-            }
-            
-        },
-        
-        handleTouchEnd : function(e){
-            e.preventDefault();
-            if (e.changedTouches) {
-                var touches = e.changedTouches;
-                for (var i = 0; i < touches.length; i++) {
-                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
-                    this._onGoingTouches.splice(idx, 1);
-                }
-            }
-            else {
-                var idx = this.ongoingTouchIndexById(e.pointerId);
-                this._onGoingTouches.splice(idx, 1);
-            }
-        },
-        
-        handleTouchCancel : function(e){
-            e.preventDefault();
-            if (e.changedTouches) {
-                var touches = e.changedTouches;
-                for (var i = 0; i < touches.length; i++) {
-                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
-                    this._onGoingTouches.splice(idx, 1);
-                }
-            }
-            else {
-                var idx = this.ongoingTouchIndexById(e.pointerId);
-                this._onGoingTouches.splice(idx, 1);
-            }
-        },
-        
-        handleTouchMove : function(e){
-            e.preventDefault();
-            if (e.changedTouches) {
-                var touches = e.changedTouches;
-                for (var i = 0; i < touches.length; i++) {
-                    var idx = this.ongoingTouchIndexById(touches[i].identifier);
-                    if (idx >= 0) {
-                        this._onGoingTouches.splice(idx, 1, this.copyTouch(touches[i]));
-                    }
-                }
-            }
-            else {
-                var idx = this.ongoingTouchIndexById(e.pointerId);
-                if (idx >= 0) {
-                    this._onGoingTouches.splice(idx, 1, this.copyTouch(e));
-                }
-            }
-        },
-        
-        copyTouch: function (touch) {
-            if (touch.pointerId) {
-                return { identifier: touch.pointerId, pageX: touch.pageX, pageY: touch.pageY };
-            }
-            return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
-        },
-        
-        ongoingTouchIndexById: function(idToFind) {
-            for (var i = 0; i < this._onGoingTouches.length; i++) {
-                var id = this._onGoingTouches[i].identifier;
-                
-                if (id == idToFind) {
-                    return i;
-                }
-            }
-            return -1;
-        },
-        
-        getTouches : function(){
-            return this._onGoingTouches;
+    }
+
+    handleTouchStart (event) {
+        event.preventDefault();
+        if (!event.changedTouches) {
+            this._onGoingTouches.push(this.copyTouch(event));
+            return;
         }
-        
-    };
-    
-    return TouchDevice;
-    
-});
+        event.changedTouches.forEach((touch) => {
+            this._onGoingTouches.push(this.copyTouch(touch));
+        });
+    }
+
+    handleTouchEnd (event) {
+        event.preventDefault();
+
+        if (!event.changedTouches) {
+            const index = this.ongoingTouchIndexById(event.pointerId);
+            this._onGoingTouches.splice(index, 1);
+            return;
+        }
+
+        event.changedTouches.forEach((touch) => {
+            const index = this.ongoingTouchIndexById(touch.identifier);
+            this._onGoingTouches.splice(index, 1);
+        });
+    }
+
+    handleTouchCancel (event) {
+        event.preventDefault();
+        if (!event.changedTouches) {
+            const index = this.ongoingTouchIndexById(event.pointerId);
+            this._onGoingTouches.splice(index, 1);
+            return;
+        }
+
+        event.changedTouches.forEach((touch) => {
+            const index = this.ongoingTouchIndexById(touch.identifier);
+            this._onGoingTouches.splice(index, 1);
+        });
+    }
+
+    handleTouchMove (event) {
+        event.preventDefault();
+        if (event.changedTouches) {
+            event.changedTouches.forEach((touch) => {
+                const index = this.ongoingTouchIndexById(touch.identifier);
+                if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(touch));
+            });
+        }
+        else {
+            const index = this.ongoingTouchIndexById(event.pointerId);
+            if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(event));
+        }
+    }
+
+    copyTouch (touch) {
+        const identifier = touch.pointerId ? touch.pointerId : touch.identifier;
+        const { pageX, pageY } = touch;
+        return { identifier, pageX, pageY };
+    }
+
+    ongoingTouchIndexById (idToFind) {
+        return this._onGoingTouches.findIndex((touch) => touch.identifier === idToFind);
+    }
+
+    getTouches () {
+        return this._onGoingTouches;
+    }
+
+}

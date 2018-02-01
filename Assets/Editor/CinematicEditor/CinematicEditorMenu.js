@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 
-import Assets from '../Assets/assets.json';
+import Assets from '../../assets.json';
 
 import LoadFileButton from '../common/LoadFileButton'
 import SaveLink from '../common/SaveLink';
@@ -64,7 +64,7 @@ class CinematicEditorMenu extends Component {
     }
 
     changeMusic () {
-        
+
     }
 }
 

@@ -69,6 +69,7 @@ self.onmessage = function (e) {
 
         if (playerHasFallen) {
             world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y / world.SMALL;
+            world.LOSE = true;
         }
     }
 

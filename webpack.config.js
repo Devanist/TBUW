@@ -8,26 +8,24 @@ module.exports = {
         filename: "walrus.js"
     },
     module: {
-        loaders: [
+        rules: [
             {test: /\.scss$/, loader: "style-loader!css-loader!sass-loader"},
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        query: {
+                            presets: ['react', 'es2015'],
+                            plugins: ['transform-object-rest-spread', 'transform-regenerator']
+                        }
+                    },
+                    { loader: 'eslint-loader'},
+                ],
                 exclude: /node_modules/,
-                query: {
-                    presets: ['react', 'es2015'],
-                    plugins: ['transform-object-rest-spread', 'transform-regenerator']
-                }
             },
             {test: /\.json$/, loader: "json-loader"},
         ]
     },
-    rules: [
-        {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: "eslint-loader"
-        }
-    ],
-    node : { fs : "empty"}
+    node: { fs: "empty"}
 };

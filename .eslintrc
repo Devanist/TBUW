@@ -27,7 +27,10 @@
         "Worker": true,
         "navigator": true,
         "AudioContext": true,
-        "webkitAudioContext": true
+        "webkitAudioContext": true,
+        "require": true,
+        "module": true,
+        "__dirname": true
     },
     "rules": {
         "no-cond-assign": "error",

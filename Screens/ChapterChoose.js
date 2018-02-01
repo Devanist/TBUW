@@ -1,20 +1,45 @@
 import Screen from '../Core/Screen';
 import cfg from '../Assets/Chapters.json';
 import GUI from '../GUI/GUI';
-import Utils from '../Core/Utils';
+import { getScreenFactor } from '../Core/Utils';
 import * as PIXI from 'pixi.js';
-    
+import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+
+function generateItemsPositions () {
+    const ROWS_NUMBER = 2;
+    const COLUMNS_NUMBER = 3;
+    const X_OFFSET = 300;
+    const Y_OFFSET = 200;
+
+    const itemPositions = [];
+
+    for (let i = 1; i <= ROWS_NUMBER; i++) {
+        for (let j = 1; j <= COLUMNS_NUMBER; j++) {
+            itemPositions.push({
+                x: X_OFFSET * j,
+                y: Y_OFFSET * i
+            });
+        }
+    }
+
+    return itemPositions;
+}
+
+const FIRST_ITEM = 0;
+const ITEM_LABEL_OFFSET_X = 158;
+const ITEM_LABEL_OFFSET_Y = 120;
+const LABEL_FONT_SIZE = 20;
+
 /**
  * Chapter choosing screen.
  * @class
  * @extends Screen
  */
-class ChapterChoose extends Screen{
-
-    constructor(){
+export default class ChapterChoose extends Screen {
+    constructor () {
         super();
 
-        this._small = window.innerWidth <= 640 ? 2 : 1;
+        this._screenFactor = getScreenFactor();
         this._buttonPressedDown = false;
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
@@ -29,11 +54,8 @@ class ChapterChoose extends Screen{
 
         this._chapters = cfg;
         this._chaptersPositions = [];
-        for(let i = 0; i < 2; i++){
-            for(var j = 0; j < 3; j++){
-                this._chaptersPositions.push({x: 300 * (j + 1), y: 200 * (i + 1)});
-            }
-        }
+
+        this._chaptersPositions = generateItemsPositions();
 
         this._chapters.forEach((chapter, index) => {
             this._guiStage.add(
@@ -42,7 +64,7 @@ class ChapterChoose extends Screen{
                     this._chaptersPositions[index],
                     PIXI.loader.resources.sprites.textures[chapter.sprite],
                     "",
-                    index === 0 ? {active: true} : {},
+                    index === FIRST_ITEM ? {active: true} : {},
                     () => {
                         this._onUpdateAction = "CHANGE";
                         this._nextScreen = "level_choose";
@@ -56,11 +78,11 @@ class ChapterChoose extends Screen{
                 new GUI.Label(
                     chapter.name + '_label',
                     {
-                        x: this._chaptersPositions[index].x - 158,
-                        y: this._chaptersPositions[index].y + 120
+                        x: this._chaptersPositions[index].x - ITEM_LABEL_OFFSET_X,
+                        y: this._chaptersPositions[index].y + ITEM_LABEL_OFFSET_Y
                     },
                     chapter.name,
-                    {bitmap: true, fontSize: 20 / this._small, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}
+                    {bitmap: true, fontSize: LABEL_FONT_SIZE / this._screenFactor, fontFamily: "Cyberdyne Expanded", fill: 0xffffff, align: "center"}
                 )
             )
         });
@@ -68,7 +90,7 @@ class ChapterChoose extends Screen{
         this._stage.add(this._background);
     }
 
-    everythingLoaded(){
+    everythingLoaded () {
         this._guiStage.getElement("RETURN").setCallback(
             () => {
                 this._onUpdateAction = "CHANGE";
@@ -80,101 +102,24 @@ class ChapterChoose extends Screen{
     /**
      * Method that handles user input and returns information to the application logic.
      */
-    update(keysState, clicks, touches){
+    update (keysState, clicks, touches) {
+        const MAX_DISPLACEMENT_Y_SCALE = 6;
+        const INITIAL_DISPLACEMENT_Y_SCALE = 1;
 
-        var i = 0,j = 0, temp;
-        //Keyboard handling
-        if(keysState.ARROW_DOWN || keysState.S){
-            if(this._buttonPressedDown === false){
-                this._buttonPressedDown = true;
-                while(i != 2){
-                    if(j == this._guiStage._elements.length){
-                        j = 0;
-                    }
-                    temp = this._guiStage._elements[j];
-                    if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
-                        temp._data.active = false;
-                        temp._sprite.filters = null;
-                        i = 1;
-                        j+=1;
-                        continue;
-                    }
-                    if(i == 1 && temp !== null && temp !== undefined && temp.isEnabled()){
-                        temp._data.active = true;
-                        i = 2;
-                    }
-                    else{
-                        j+=1;
-                    }
-                }
-            }
-        }
-        
-        if(keysState.ARROW_UP || keysState.W){
-            if(this._buttonPressedDown === false){
-                this._buttonPressedDown = true;
-                while(i != 2){
-                    if(j == -1){
-                        j = this._guiStage._elements.length - 1;
-                    }
-                    temp = this._guiStage._elements[j];
-                    if(temp !== undefined && temp !== null && temp.isEnabled() && temp.isActive()){
-                        temp._data.active = false;
-                        temp._sprite.filters = null;
-                        i = 1;
-                        j-=1;
-                        continue;
-                    }
-                    if(i == 1 && temp !== undefined && temp !== null && temp.isEnabled()){
-                        temp._data.active = true;
-                        i = 2;
-                    }
-                    else{
-                        j-=1;
-                    }
-                }
-            }
-        }
-        
-        if(keysState.ENTER){
-            this._guiStage._elements.forEach(element => {
-                if(element && element.isActive()) element.triggerCallback();
-            });
-        }
-        
-        if(!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W){
-            this._buttonPressedDown = false;
-        }
-        
-        clicks.forEach(click => {
-            this._guiStage._elements.forEach(element => {
-                if(element.triggerCallback && element._sprite.containsPoint({x: click.clientX, y: click.clientY}))
-                    element.triggerCallback();
-            });
-        });
-        
-        if(Utils.isTouchDevice()){
-            touches.forEach(touch => {
-                this._guiStage._elements.forEach(element => {
-                    if(element.triggerCallback && element._sprite.containsPoint({x: touch.pageX, y: touch.pageY}))
-                        element.triggerCallback();
-                });
-            });
-        }
+        handleKeyboardInput.call(this, keysState);
+        handleMouseInput.call(this, clicks);
+        handleTouchInput.call(this, touches);
 
-        this._guiStage._elements.forEach(element => {
-            if(element.isEnabled() && element.isActive()){
-                if(this._displacement.scale.y < 6){
-                    this._displacement.scale.y += 0.1;
-                }
-                else{
-                    this._displacement.scale.y = 1;
-                }
+        this._guiStage._elements.forEach((element) => {
+            if (element.isEnabled() && element.isActive()) {
+                this._displacement.scale.y = this._displacement.scale.y < MAX_DISPLACEMENT_Y_SCALE
+                    ? this._displacement.scale.y + 0.1 //eslint-disable-line no-magic-numbers
+                    : INITIAL_DISPLACEMENT_Y_SCALE;
                 element._sprite.filters = [this._displacement];
             }
         });
-        
-        return  {
+
+        return {
             action: this._onUpdateAction,
             changeTo: this._nextScreen,
             params: this._nextScreenParams,
@@ -183,5 +128,3 @@ class ChapterChoose extends Screen{
         };
     }
 }
-
-export default ChapterChoose;

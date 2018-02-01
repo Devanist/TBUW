@@ -1,8 +1,29 @@
 import Screen from '../Core/Screen';
 import Stage from '../Core/Stage';
-import Utils from '../Core/Utils';
+import { isTouchDevice, getScreenFactor} from '../Core/Utils';
 import TouchController from '../Core/TouchController';
 import * as PIXI from 'pixi.js';
+import { handleTouchInput, handleMouseInput, handleKeyboardInput } from './commonChoosingScreensHandlers';
+
+const BACKGROUND_IMAGE_INDEX = 0;
+const MAX_DISPLACEMENT_Y_SCALE = 6;
+const INITIAL_DISPLACEMENT_Y_SCALE = 1;
+
+function setUpDisplacementFilter () {
+    const displacementMap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
+    displacementMap.r = 1;
+    displacementMap.g = 1;
+
+    const displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
+    displacement.scale.x = 1.5;
+    displacement.scale.y = 2;
+    displacement.offset = {
+        x: 0,
+        y: 0
+    };
+
+    return displacement;
+}
 
 /**
  * Game screen. Here is all logic responsible for displaying actual gameplay.
@@ -14,6 +35,8 @@ export default class GameScreen extends Screen {
     constructor (params) {
         super();
         this._gameStage = new Stage();
+        this._touchController = new TouchController();
+
         this._stage.add(this._background);
         this._stage.add(this._gameStage);
         this._stage.add(this._guiStage);
@@ -26,93 +49,63 @@ export default class GameScreen extends Screen {
         this._back = params.back;
         this._retry = params;
 
+        this._smallScreenFactor = getScreenFactor();
+        this._displacement = setUpDisplacementFilter();
+
+        if (isTouchDevice()) this._stage.add(this._touchController.getStage());
+
+        this._GRAVITY = 0.7 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
+        this._AIR_RES = 0.2 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
+
         this._buttonPressedDown = false;
-
-        this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
-        this._displacementmap.r = 1;
-        this._displacementmap.g = 1;
-        this._displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
-        this._displacement.scale.x = 1.5;
-        this._displacement.scale.y = 2;
-        this._displacement.offset = {
-            x: 0,
-            y: 0
-        };
-
-        this._smallScreenFactor = window.innerWidth <= 640 ? 2 : 1;
-
-        this._touchController = new TouchController();
-        if (Utils.isTouchDevice()) {
-            this._stage.add(this._touchController.getStage());
-        }
-
-        this._GRAVITY = 0.7 / this._smallScreenFactor;
-        this._AIR_RES = 0.2 / this._smallScreenFactor;
         this._escapeDown = true;
         this._isPause = false;
+
+        this._player = null;
+
         this._updateWorker = new Worker('Screens/GameWorker.js');
-
-        this._updateWorker.onmessage = function (respond) {
-            const anwser = JSON.parse(respond.data);
-            if (anwser.LOSE) {
-                this._lose = true;
-            }
-            else if (anwser.WON && !this._isPause) {
-                this._won = true;
-                this._guiStage.getElement("pauseBackground").display(true);
-                this._guiStage.getElement("wonLabel").display(true);
-                this._guiStage.getElement("wonButton").display(true).active(true);
-
-                this._isPause = true;
-            }
-            this._sounds = anwser.SOUNDS;
-            this._gameStage.getStage().position = anwser.CONTAINER;
-
-            anwser.ELEMENTS.forEach((elem, index) => {
-                const temp = this._gameStage._elements[index];
-                if (!this._player && temp._data.type === "Player") {
-                    this._player = temp;
-                }
-                temp._data = elem;
-                temp._sprite.rotation = elem.currentRotationAngle;
-
-                if (temp.update) {
-                    temp.update();
-                }
-
-                if (temp._data.type === "Player" && temp.getPosition().y > 1000) {
-                    this._lose = true;
-                }
-
-                if (this._lose === true && !this._isPause) {
-                    this._guiStage.getElement("pauseBackground").display(true);
-                    this._guiStage.getElement("LOSE").display(true);
-                    this._guiStage.getElement("RETRY").display(true).active(true);
-
-                    this._isPause = true;
-                    this._updateWorker.terminate();
-                    return;
-                }
-            });
-
-            this._player.nextFrame((this._player._data.state.moving / 10) | 0);
-
-            anwser.REMOVE_LIST.forEach((item) => {
-                this._gameStage._elements.forEach((elem) => {
-                    if (item === elem.getId()) {
-                        if (elem.getType() === "BlockCoin") {
-                            if (elem._data.toBeRemoved) {
-                                this._gameStage.remove(item);
-                                this._sounds.push({ name: "collect_coin" });
-                            }
-                            this._player.collectCurrency(elem.collect());
-                        }
-                        return;
-                    }
-                });
-            });
-        }.bind(this);
+        this._updateWorker.onmessage = this.handleWorkerMessage;
     }
+
+    getPlayerReference () {
+        return this._gameStage._elements.find((element) => element._data.type === "Player");
+    }
+
+    handleWorkerMessage (respond) {
+        const anwser = JSON.parse(respond.data);
+        if (anwser.LOSE) {
+            this._lose = true;
+        }
+        else if (anwser.WON && !this._isPause) {
+            this._won = true;
+            this._guiStage.getElement("pauseBackground").display(true);
+            this._guiStage.getElement("wonLabel").display(true);
+            this._guiStage.getElement("wonButton").display(true).active(true);
+
+            this._isPause = true;
+        }
+        if (this._lose === true && !this._isPause) {
+            this._guiStage.getElement("pauseBackground").display(true);
+            this._guiStage.getElement("LOSE").display(true);
+            this._guiStage.getElement("RETRY").display(true).active(true);
+
+            this._isPause = true;
+            this._updateWorker.terminate();
+        }
+        this._sounds = anwser.SOUNDS;
+        this._gameStage.getStage().position = anwser.CONTAINER;
+
+        anwser.ELEMENTS.forEach((element, index) => {
+            const stageElement = this._gameStage._elements[index];
+            stageElement._data = element;
+            stageElement._sprite.rotation = element.currentRotationAngle;
+
+            if (stageElement.update) stageElement.update();
+        });
+
+        this._player.nextFrame((this._player._data.state.moving / 10) | 0); // eslint-disable-line no-magic-numbers
+        this.clearStage(anwser.REMOVE_LIST);
+    };
 
     /**
      * Returns the screen main stage.
@@ -213,7 +206,55 @@ export default class GameScreen extends Screen {
                 this._nextScreenParams = this._retry;
             }
         );
+        this._player = this.getPlayerReference();
     };
+
+    clearStage (elementsToRemove) {
+        elementsToRemove.forEach((item) => {
+            this._gameStage._elements.forEach((elem) => {
+                if (item === elem.getId()) {
+                    if (elem.getType() === "BlockCoin") {
+                        if (elem._data.toBeRemoved) {
+                            this._gameStage.remove(item);
+                            this._sounds.push({ name: "collect_coin" });
+                        }
+                        this._player.collectCurrency(elem.collect());
+                    }
+                }
+            });
+        });
+    }
+
+    prepareDataForWorker (keysState) {
+        const data = {
+            SMALL: this._smallScreenFactor,
+            CONTAINER: {
+                x: this._gameStage.getStage().position._x,
+                y: this._gameStage.getStage().position._y
+            },
+            KEYS_STATE: keysState,
+            LEVEL_END_X: this._levelEndX,
+            WINDOW_WIDTH: window.innerWidth,
+            VCONTROLLER: this._touchController.getState(),
+            GRAVITY: this._GRAVITY,
+            AIR_RES: this._AIR_RES,
+            SOUNDS: [{name: this._music}],
+            PAUSE: this._isPause,
+            ELEMENTS: [],
+            WIN_CONDITIONS: this._winConditions,
+            PLAYER_CURRENCIES: this._player
+                ? { BlockCoin: this._player._currencies.getQuantity("BlockCoin")}
+                : {}
+        };
+
+        this._gameStage._elements.forEach((elem) => {
+            elem._data.size.width = elem._sprite.width;
+            elem._data.size.height = elem._sprite.height;
+            data.ELEMENTS.push(elem._data);
+        });
+
+        return data;
+    }
 
     /**
      * Method that prepares data and send it to worker. It also handle the user input that must be handled in main thread.
@@ -224,31 +265,14 @@ export default class GameScreen extends Screen {
      */
     update (keysState, clicks, touches) {
         //Background scaling
-        this._background._elements[0]._sprite.width = this._background._elements[0]._sprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
+        const backgroundImageSprite = this._background._elements[BACKGROUND_IMAGE_INDEX]._sprite;
+        backgroundImageSprite.width = backgroundImageSprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
 
-        var temp = null;
+        handleMouseInput.call(this, clicks);
+        if (isTouchDevice()) this._touchController.updateState(touches);
+        handleTouchInput.call(this, touches);
 
-        //Mouse clicks handling
-        clicks.forEach((click) => {
-            const { clientX: x, clientY: y } = click;
-            this._guiStage._elements.forEach((element) => {
-                if (element.triggerCallback && element._sprite.containsPoint({x, y})) element.triggerCallback();
-            });
-        });
-
-        //Touch handling
-        if (Utils.isTouchDevice()) {
-            this._touchController.updateState(touches);
-
-            touches.forEach((touch) => {
-                const { pageX: x, pageY: y } = touch;
-                this._guiStage._elements.forEach((elem) => {
-                    if (elem.triggerCallback && elem._sprite.containsPoint({x, y})) elem.triggerCallback();
-                });
-            });
-        }
-
-        //Handling escape key here, because if pause is on, worker is not working.
+        // Handling escape key here so it can work both in and outside pause menu.
         if (keysState.ESCAPE) {
             this.pauseHandler();
         }
@@ -256,125 +280,26 @@ export default class GameScreen extends Screen {
             this._escapeDown = true;
         }
 
-        if (!this._isPause) {
-            //Preparing data and sending it to worker.
-            const data = {
-                SMALL: this._smallScreenFactor,
-                CONTAINER: {
-                    x: this._gameStage.getStage().position._x,
-                    y: this._gameStage.getStage().position._y
-                },
-                KEYS_STATE: keysState,
-                LEVEL_END_X: this._levelEndX,
-                WINDOW_WIDTH: window.innerWidth,
-                VCONTROLLER: this._touchController.getState(),
-                GRAVITY: this._GRAVITY,
-                AIR_RES: this._AIR_RES,
-                SOUNDS: [{name: this._music}],
-                PAUSE: this._isPause,
-                ELEMENTS: [],
-                WIN_CONDITIONS: this._winConditions,
-                PLAYER_CURRENCIES: {}
-            };
+        if (this._isPause) {
+            handleKeyboardInput.call(this, keysState);
 
-            if (this._player) {
-                data.PLAYER_CURRENCIES = {
-                    BlockCoin: this._player._currencies.getQuantity("BlockCoin")
-                };
-            }
-
-            this._gameStage._elements.forEach((elem) => {
-                elem._data.size.width = elem._sprite.width;
-                elem._data.size.height = elem._sprite.height;
-                data.ELEMENTS.push(elem._data);
+            this._guiStage._elements.forEach((element) => {
+                if (element.isEnabled() && element.isActive()) {
+                    this._displacement.scale.y = this._displacement.scale.y < MAX_DISPLACEMENT_Y_SCALE
+                        ? this._displacement.scale.y + 0.1 // eslint-disable-line no-magic-numbers
+                        : INITIAL_DISPLACEMENT_Y_SCALE;
+                    element._text.filters = [this._displacement];
+                }
             });
+        }
+        else {
+            this._updateWorker.postMessage( JSON.stringify( this.prepareDataForWorker(keysState) ));
 
             this._guiStage._elements.forEach((element) => {
                 element._data.currentRotationAngle += element._data.rotation;
                 element._sprite.rotation = element._data.currentRotationAngle;
                 if (element.getId() === "blockcoinValue" && this._player) {
                     element.setText(this._player._currencies.getQuantity("BlockCoin"));
-                }
-            });
-            this._updateWorker.postMessage(JSON.stringify(data));
-        }
-        else {
-            let i = 0, 
-                j = 0;
-            if (keysState.ARROW_DOWN || keysState.S) {
-                if (this._buttonPressedDown === false) {
-                    this._buttonPressedDown = true;
-                    while (i != 2) {
-                        if (j == this._guiStage._elements.length) {
-                            j = 0;
-                        }
-                        temp = this._guiStage._elements[j];
-                        if (temp.isEnabled() && temp.isActive()) {
-                            temp.active(false);
-                            temp._text.filters = null;
-                            i = 1;
-                            j+= 1;
-                            continue;
-                        }
-                        if (i == 1 && temp.isEnabled()) {
-                            temp.active(true);
-                            i = 2;
-                        }
-                        else {
-                            j+= 1;
-                        }
-                    }
-                }
-            }
-
-            if (keysState.ARROW_UP || keysState.W) {
-                if (this._buttonPressedDown === false) {
-                    this._buttonPressedDown = true;
-                    while (i != 2) {
-                        if (j == -1) {
-                            j = this._guiStage._elements.length - 1;
-                        }
-                        temp = this._guiStage._elements[j];
-                        if (temp.isEnabled() && temp.isActive()) {
-                            temp.active(false);
-                            temp._text.filters = null;
-                            i = 1;
-                            j-= 1;
-                            continue;
-                        }
-                        if (i == 1 && temp.isEnabled()) {
-                            temp.active(true);
-                            i = 2;
-                        }
-                        else {
-                            j-= 1;
-                        }
-                    }
-                }
-            }
-
-            if (keysState.ENTER) {
-                this._guiStage._elements.forEach((element) => {
-                    if (element && element.isActive()) {
-                        element.triggerCallback();
-                    }
-                });
-            }
-
-            if (!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W) {
-                this._buttonPressedDown = false;
-            }
-
-            this._guiStage._elements.forEach((element) => {
-                if (element.isActive() && keysState.ENTER) {
-                    element.triggerCallback();
-                }
-            });
-
-            this._guiStage._elements.forEach((element) => {
-                if (element.isEnabled() && element.isActive()) {
-                    this._displacement.scale.y = this._displacement.scale.y < 6 ? this._displacement.scale.y += 0.1 : 1;
-                    element._text.filters = [this._displacement];
                 }
             });
         }

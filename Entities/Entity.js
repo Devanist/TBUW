@@ -1,3 +1,6 @@
+const LEFT_TURNED = -1;
+const RIGHT_TURNED = 1;
+
 /**
  * Klasa reprezentująca wszystkie obiekty w grze.
  */
@@ -71,11 +74,15 @@ export default class Entity {
     }
 
     update () {
-        if (this._sprite.scale.x > 0 && this._data.direction === -1) {
+        const REVERSION_BREAKPOINT = 0;
+        const ORIGINALLY_VIEWED = this._sprite.scale.x > REVERSION_BREAKPOINT;
+        const REVERSED_VIEWED = this._sprite.scale.x < REVERSION_BREAKPOINT;
+
+        if ( ORIGINALLY_VIEWED && this._data.direction === LEFT_TURNED) {
             this._sprite.scale.x *= this._data.direction;
             this._sprite.anchor.x = 1;
         }
-        else if (this._sprite.scale.x < 0 && this._data.direction === 1) {
+        else if ( REVERSED_VIEWED && this._data.direction === RIGHT_TURNED) {
             this._sprite.scale.x *= -this._data.direction;
             this._sprite.anchor.x = 0;
         }

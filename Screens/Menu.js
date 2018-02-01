@@ -1,12 +1,13 @@
 import Screen from '../Core/Screen';
-import Utils from '../Core/Utils';
 import * as PIXI from 'pixi.js';
+import { getScreenFactor } from '../Core/Utils';
+import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
 
 export default class MenuScreen extends Screen {
     constructor () {
         super();
 
-        this._small = window.innerWidth <= 640 ? 2 : 1;
+        this._screenFactor = getScreenFactor();
         this._sounds = [{name: "home_beforethenight"}];
         this._buttonPressedDown = false;
 
@@ -36,107 +37,30 @@ export default class MenuScreen extends Screen {
             );
     }
 
-    handleKeyboardInputs (keysState) {
-        let temp, i, j;
-        if ((keysState.ARROW_DOWN || keysState.S) && this._buttonPressedDown === false) {
-            this._buttonPressedDown = true;
-            while (i != 2) {
-                if (j == this._guiStage._elements.length) {
-                    j = 0;
-                }
-                temp = this._guiStage._elements[j];
-                if (temp.isEnabled() && temp.isActive()) {
-                    temp._data.active = false;
-                    temp._text.filters = null;
-                    i = 1;
-                    j+=1;
-                    continue;
-                }
-                if (i == 1 && temp.isEnabled()) {
-                    temp._data.active = true;
-                    i = 2;
-                }
-                else {
-                    j+=1;
-                }
-            }
-        }
-
-        if ((keysState.ARROW_UP || keysState.W) && this._buttonPressedDown === false) {
-            this._buttonPressedDown = true;
-            while (i != 2) {
-                if (j == -1) {
-                    j = this._guiStage._elements.length - 1;
-                }
-                temp = this._guiStage._elements[j];
-                if (temp.isEnabled() && temp.isActive()) {
-                    temp._data.active = false;
-                    temp._text.filters = null;
-                    i = 1;
-                    j-=1;
-                    continue;
-                }
-                if (i == 1 && temp.isEnabled()) {
-                    temp._data.active = true;
-                    i = 2;
-                }
-                else {
-                    j-=1;
-                }
-            }
-        }
-
-        if (keysState.ENTER) {
-            this._guiStage._elements.forEach((element) => {
-                if (element.isActive()) element.triggerCallback();
-            });
-        }
-
-        if (!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W) {
-            this._buttonPressedDown = false;
-        }
-    }
-
-    handleMouseInput (clicks) {
-        clicks.forEach((click) => {
-            const { clientX: x, clientY: y } = click;
-            this._guiStage._elements.forEach((element) => {
-                if (element._sprite.containsPoint({x, y})) element.triggerCallback();
-            });
-        });
-    }
-
-    handleTouch (touches) {
-        if (!Utils.isTouchDevice()) return;
-
-        touches.forEach((touch) => {
-            const { pageX: x, pageY: y } = touch;
-            this._guiStage._elements.forEach((element) => {
-                if (element._sprite.containsPoint({x, y})) element.triggerCallback();
-            });
-        });
-    }
-
     update (keysState, clicks, touches) {
-        this._background._elements[0]._sprite.width = this._small === 1
-            ? window.innerWidth / (window.innerHeight * 1.6 / 1280)
-            : this._background._elements[0]._sprite.width = 640;
+        const MAX_DISPLACEMENT_Y_SCALE = 6;
+        const INITIAL_DISPLACEMENT_Y_SCALE = 1;
+        const BIG_SCREEN_FACTOR = 1;
+        const BACKGROUND_INDEX = 0;
+        const background = this._background._elements[BACKGROUND_INDEX];
 
-        this.handleKeyboardInputs(keysState);
-        this.handleMouseInput(clicks);
-        this.handleTouch(touches);
+        background._sprite.width = this._screenFactor === BIG_SCREEN_FACTOR
+            ? window.innerWidth / (window.innerHeight * 1.6 / 1280) //eslint-disable-line no-magic-numbers
+            : background._sprite.width = 640; //eslint-disable-line no-magic-numbers
+
+        handleKeyboardInput.call(this, keysState);
+        handleMouseInput.call(this, clicks);
+        handleTouchInput.call(this, touches);
 
         this._guiStage._elements.forEach((element) => {
             if (element.isEnabled() && element.isActive()) {
-                this._displacement.scale.y = this._displacement.scale.y < 6
-                    ? this._displacement.scale.y + 1
-                    : 1;
+                this._displacement.scale.y = this._displacement.scale.y < MAX_DISPLACEMENT_Y_SCALE
+                    ? this._displacement.scale.y + 0.1 //eslint-disable-line no-magic-numbers
+                    : INITIAL_DISPLACEMENT_Y_SCALE;
                 element._text.filters = [this._displacement];
             }
         });
 
         return {action: this._onUpdateAction, changeTo: this._nextScreen, playSound: this._sounds, sameMusic: true};
-
     }
-
 }

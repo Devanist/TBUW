@@ -18,7 +18,7 @@ export default class Collectible extends Entity {
             quantity: this._currency.getQuantity(),
             name: this._currency.getName()
         };
-        this._currency.setQuantity(0);
+        this._currency.setQuantity(0); //eslint-disable-line no-magic-numbers
         return q;
     };
 

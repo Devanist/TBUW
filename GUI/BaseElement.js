@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import isSmallScreen from '../Core/Utils/commonVars';
 
 /**
  * Abstract class which is a base for GUI elements.
@@ -11,30 +12,30 @@ import * as PIXI from 'pixi.js';
  */
 export default class BaseElement {
     constructor (id, position, sprite) {
-        const isSmallScreen = window.innerWidth <= 640;
+        const isScreenSmall = isSmallScreen();
         this._sprite = new PIXI.Sprite(sprite);
         if (typeof(position) === "string") {
             if (position === "center") {
-                this._sprite.position = isSmallScreen
+                this._sprite.position = isScreenSmall
                     ? {
-                        x: window.innerWidth / 2 - this._sprite.width / 2,
-                        y: window.innerHeight / 2 - this._sprite.height /2
+                        x: window.innerWidth / 2 - this._sprite.width / 2, //eslint-disable-line no-magic-numbers
+                        y: window.innerHeight / 2 - this._sprite.height /2 //eslint-disable-line no-magic-numbers
                     }
                     : {
-                        x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
-                        y: window.innerHeight / 2 - this._sprite.height / 2
+                        x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2, //eslint-disable-line no-magic-numbers
+                        y: window.innerHeight / 2 - this._sprite.height / 2 //eslint-disable-line no-magic-numbers
                     };
             }
             else if (position === "bottom-right") {
                 this._sprite.anchor.x = 1;
                 this._sprite.anchor.y = 1;
-                this._sprite.position = isSmallScreen
+                this._sprite.position = isScreenSmall
                     ? {
                         x: window.innerWidth,
                         y: window.innerHeight
                     }
                     : {
-                        x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4,
+                        x: window.innerWidth / (window.innerHeight * 1.6 / 1280) + 4, //eslint-disable-line no-magic-numbers
                         y: 806 //window.innerHeight / this._sprite.scale.y
                     };
             }
@@ -46,10 +47,10 @@ export default class BaseElement {
             }
         }
         else {
-            this._sprite.position = isSmallScreen
+            this._sprite.position = isScreenSmall
                 ? {
-                    x: position.x / 2,
-                    y: position.y / 2
+                    x: position.x / 2, //eslint-disable-line no-magic-numbers
+                    y: position.y / 2 //eslint-disable-line no-magic-numbers
                 }
                 : {
                     x: position.x,

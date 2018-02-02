@@ -1,14 +1,14 @@
 import Screen from '../Core/Screen';
 import * as PIXI from 'pixi.js';
-import { getScreenFactor } from '../Core/Utils';
 import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+import { getScreenFactor } from '../Core/Utils/commonVars';
 
 export default class MenuScreen extends Screen {
     constructor () {
         super();
 
         this._screenFactor = getScreenFactor();
-        this._sounds = [{name: "home_beforethenight"}];
+        this._sounds = [];
         this._buttonPressedDown = false;
 
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
@@ -35,6 +35,7 @@ export default class MenuScreen extends Screen {
                     this._nextScreen = "chapter_choose";
                 }
             );
+        this._sounds.push({name: "home_beforethenight"});
     }
 
     update (keysState, clicks, touches) {

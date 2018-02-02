@@ -34,8 +34,8 @@ export default class Stage {
         const ONLY_ITEM = 0;
 
         const erasedElementIndex = this._elements.findIndex((element) => element.getId() === id);
-        const erasedElement = this._elements.splice(erasedElementIndex, 1)[ONLY_ITEM];
-        this._stage.removeChild(erasedElement.getSprite());
+        const erasedElement = this._elements.splice(erasedElementIndex, 1)[ONLY_ITEM]; // eslint-disable-line no-magic-numbers
+        if (erasedElement) this._stage.removeChild(erasedElement.getSprite());
     }
 
     removeAll () {

@@ -1,5 +1,5 @@
 import Screen from '../Core/Screen';
-import { getScreenFactor } from '../Core/Utils';
+import { getScreenFactor } from '../Core/Utils/commonVars';
 
 const MILISECONDS_BETWEEN_FRAMES = 16.666;
 const INSTANT = 0;
@@ -56,7 +56,9 @@ export default class Cinematic extends Screen {
         };
     }
 
-    countMovementStep (animatedObjectPosition, currentAnimation) {
+    countMovementStep (currentAnimation) {
+        const animatedObjectPosition = this._animatedObject.getPosition();
+
         return {
             x: -(animatedObjectPosition.x - currentAnimation.moveTo.x) / currentAnimation.moveTo.time,
             y: -(animatedObjectPosition.y - currentAnimation.moveTo.y) / (currentAnimation.moveTo.time / MILISECONDS_BETWEEN_FRAMES)
@@ -80,9 +82,9 @@ export default class Cinematic extends Screen {
         this._step = null;
     }
 
-    nextAnimationFrame () {
+    nextAnimationFrame (currentAnimation) {
         if (this._stepCounter === 0) { //eslint-disable-line no-magic-numbers
-            this._step = this.countMovementStep();
+            this._step = this.countMovementStep(currentAnimation);
         }
         this._animatedObject.move(this._step);
         this._stepCounter++;
@@ -106,7 +108,7 @@ export default class Cinematic extends Screen {
                 this.completeAnimation(currentAnimation);
             }
             else {
-                this.nextAnimationFrame();
+                this.nextAnimationFrame(currentAnimation);
                 if (this.isAnimationFinished(currentAnimation)) this.completeAnimation(currentAnimation);
             }
         }

@@ -1,6 +1,6 @@
 import Stage from './Stage';
 import GUI from '../GUI/GUI';
-import getScreenFactor from './Utils/commonVars';
+import { getScreenFactor } from './Utils/commonVars';
 
 const STICK_INITIAL_POSITION_X = 140;
 const STICK_INITIAL_POSITION_Y = 600;

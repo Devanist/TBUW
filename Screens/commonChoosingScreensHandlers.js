@@ -1,4 +1,4 @@
-import { isTouchDevice } from '../Core/Utils';
+import isTouchDevice from "../Core/Utils/isTouchDevice";
 
 export function handleKeyboardInput (keysState) {
     const FIRST_ELEMENT = 0;

@@ -1,6 +1,8 @@
 const COLLISION_TYPES = [
     "Platform",
-    "MovingPlatform"
+    "MovingPlatform",
+    "BlockCoin",
+    "LasersFromGround"
 ];
 const CAMERA_OFFSET = 350;
 const CAMERA_OFFSET_Y = 518;
@@ -9,18 +11,22 @@ function isDescendantOfObstacle (element) {
     return element.inheritedTypes && element.inheritedTypes.some((type) => type === "Obstacle");
 }
 
+let playerReleasedKeyAfterJump = false;
+
 self.onmessage = function (e) {
     const world = JSON.parse(e.data);
+    world.LOSE = false;
+    world.WON = false;
     world.REMOVE_LIST = [];
     let PLAYER;
-    let playerCollisionOccured = false;
     let playerInFinalPosition = false;
 
     function updatePlayerPositionAndState () {
-        PLAYER.state.canDoubleJump =
+        PLAYER.state.canDoubleJump = (
             PLAYER.state.inAir === true &&
             PLAYER.velocity.y > -4 / world.SMALL &&
-            world.KEYS_STATE.ARROW_UP === false;
+            world.KEYS_STATE.ARROW_UP === false
+        );
 
         if (PLAYER.velocity.x === 0) {
             PLAYER.state.moving = 0;
@@ -58,7 +64,8 @@ self.onmessage = function (e) {
     function fixCameraPosition () {
         const cameraWentRightSide = world.CONTAINER.x >= 0;
         const cameraWentLeftSideTillEndOfLevel = world.CONTAINER.x - (world.WINDOW_WIDTH - CAMERA_OFFSET) <= -world.LEVEL_END_X;
-        const playerHasFallen = PLAYER.position.y < 1100;
+        const playerHasFallen = PLAYER.position.y > 1000;
+        const playerAboveFallLine = PLAYER.position.y < 1100;
 
         if (cameraWentRightSide) {
             world.CONTAINER.x = 0;
@@ -67,8 +74,10 @@ self.onmessage = function (e) {
             world.CONTAINER.x = -(world.LEVEL_END_X - (world.WINDOW_WIDTH - CAMERA_OFFSET));
         }
 
-        if (playerHasFallen) {
+        if (playerAboveFallLine) {
             world.CONTAINER.y = -PLAYER.position.y + CAMERA_OFFSET_Y / world.SMALL;
+        }
+        else if (playerHasFallen) {
             world.LOSE = true;
         }
     }
@@ -102,31 +111,35 @@ self.onmessage = function (e) {
                 PLAYER.velocity.y -= 16 / world.SMALL;
                 world.SOUNDS.push({name: "jump"});
             }
-            else if (PLAYER.state.doubleJumped === false && PLAYER.state.canDoubleJump === true) {
+            else if (!PLAYER.state.doubleJumped && PLAYER.state.canDoubleJump && playerReleasedKeyAfterJump) {
                 PLAYER.state.doubleJumped = true;
                 PLAYER.velocity.y = -16 / world.SMALL;
                 world.SOUNDS.push({name: "jump"});
             }
+            playerReleasedKeyAfterJump = false;
+        }
+        else {
+            playerReleasedKeyAfterJump = true;
         }
     }
 
     function getCornerPoints (element) {
         if (element.anchor) {
-            const tx = element.position.x - element.anchor.x * element.size.width;
-            const ty = element.position.y - element.anchor.y * element.size.height;
+            const elementX = element.position.x - element.anchor.x * element.size.width;
+            const elementY = element.position.y - element.anchor.y * element.size.height;
             return {
-                tx,
-                tex: tx + element.size.width,
-                ty,
-                tey: ty + element.size.height,
+                elementX,
+                elementEndX: elementX + element.size.width,
+                elementY,
+                elementEndY: elementY + element.size.height,
             }
         }
 
         return {
-            tx: element.position.x,
-            tex: element.position.endX,
-            ty: element.position.y,
-            tey: element.position.endY,
+            elementX: element.position.x,
+            elementEndX: element.position.endX,
+            elementY: element.position.y,
+            elementEndY: element.position.endY,
         };
     }
 
@@ -160,43 +173,59 @@ self.onmessage = function (e) {
         return conditionsMet === world.WIN_CONDITIONS.length;
     }
 
-    function checkForPlayerCollision () {
+    function hasPlayerCollisionOccurred () {
         const { position: playerPosition} = PLAYER;
+        let collisionOccurred = false;
         world.ELEMENTS.forEach((element) => {
-            if (isCollisionType(element)) {
-                const { tx, tex, ty, tey } = getCornerPoints(element);
+            if (isCollisionType(element.type)) {
+                const { elementX, elementEndX, elementY, elementEndY } = getCornerPoints(element);
 
                 if (isDescendantOfObstacle(element)) {
                     element.state.collisionItems.forEach((collisionItem) => {
                         if ( !(
-                            playerPosition.x + 10 > collisionItem.currentPosition.ex + tx ||
-                            playerPosition.endX - 10 < collisionItem.currentPosition.x + tx ||
-                            playerPosition.y + 10 > collisionItem.currentPosition.ey + ty ||
-                            playerPosition.endY - 10 < collisionItem.currentPosition.y + ty
+                            playerPosition.x + 10 > collisionItem.currentPosition.ex + elementX ||
+                            playerPosition.endX - 10 < collisionItem.currentPosition.x + elementX ||
+                            playerPosition.y + 10 > collisionItem.currentPosition.ey + elementY ||
+                            playerPosition.endY - 10 < collisionItem.currentPosition.y + elementY
                         )) {
                             world.LOSE = true;
                         }
                     });
                 }
 
-                if ( ! (playerPosition.x > tex || playerPosition.endX < tx || playerPosition.y > tey || playerPosition.endY < ty) ) {
+                if ( ! (playerPosition.x > elementEndX || playerPosition.endX < elementX || playerPosition.y > elementEndY || playerPosition.endY < elementY) ) {
                     if (element.type === "BlockCoin") {
                         world.REMOVE_LIST.push(element.id);
                         return;
                     }
 
-                    playerCollisionOccured = true;
+                    collisionOccurred = true;
 
-                    const playerAboveCollidingEntity = playerPosition.y < ty && tey >= playerPosition.endY && oldPlayerPosition.ey <= ty && (playerPosition.endX - 10 > tx || playerPosition.x + 10 < tex);
-                    const playerUnderCollidingEntity = playerPosition.y >= ty && tey <= playerPosition.endY && oldPlayerPosition.y >= tey;
-                    const playerLeftToCollidingEntity = playerPosition.endX >= tx && playerPosition.x <= tx;
-                    const playerRightToCollidingEntity = playerPosition.x <= tex && tex <= playerPosition.endX;
+                    const playerAboveCollidingEntity = (
+                        playerPosition.y < elementY &&
+                        playerPosition.endY < elementEndY &&
+                        oldPlayerPosition.y < elementY &&
+                        (playerPosition.endX - 10 > elementX || playerPosition.x + 10 < elementEndX)
+                    );
+                    const playerUnderCollidingEntity = (
+                        playerPosition.y >= elementY &&
+                        playerPosition.endY > elementEndY &&
+                        oldPlayerPosition.y >= elementEndY
+                    );
+                    const playerLeftToCollidingEntity = (
+                        playerPosition.endX >= elementX &&
+                        playerPosition.x < elementX
+                    );
+                    const playerRightToCollidingEntity = (
+                        playerPosition.x <= elementEndX &&
+                        playerPosition.endX > elementEndX
+                    );
 
                     if (playerAboveCollidingEntity) {
                         PLAYER.state.inAir = false;
                         PLAYER.state.doubleJumped = false;
                         PLAYER.velocity.y = 0;
-                        PLAYER.position.y = ty - PLAYER.size.height;
+                        PLAYER.position.y = elementY - PLAYER.size.height;
                         if (element.type === "MovingPlatform") {
                             PLAYER.position.x += element.moveBy.x;
                             PLAYER.position.y += element.moveBy.y;
@@ -204,11 +233,11 @@ self.onmessage = function (e) {
                     }
                     else if (playerUnderCollidingEntity) {
                         PLAYER.velocity.y = 1;
-                        PLAYER.position.y = tey + 1;
+                        PLAYER.position.y = elementEndY + 1;
                     }
                     else if (playerLeftToCollidingEntity) {
                         PLAYER.velocity.x = 0;
-                        PLAYER.position.x = tx - (PLAYER.size.width + 1);
+                        PLAYER.position.x = elementX - (PLAYER.size.width + 1);
                     }
                     else if (playerRightToCollidingEntity) {
                         PLAYER.velocity.x = 0;
@@ -217,6 +246,8 @@ self.onmessage = function (e) {
                 }
             }
         });
+
+        return collisionOccurred;
     }
 
     function moveBackgroundElementsWithParallaxEffect () {
@@ -269,8 +300,7 @@ self.onmessage = function (e) {
     handleUserInput();
     updatePlayerPositionAndState();
 
-    playerCollisionOccured = checkForPlayerCollision();
-    if (!playerCollisionOccured) PLAYER.state.inAir = true;
+    if (!hasPlayerCollisionOccurred()) PLAYER.state.inAir = true;
 
     fixPlayerPositionAndVelocity()
     moveBackgroundElementsWithParallaxEffect();

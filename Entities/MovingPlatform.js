@@ -1,13 +1,20 @@
 import Platform from './Platform';
+import { getScreenFactor } from '../Core/Utils/commonVars';
 
 export default class MovingPlatform extends Platform {
     constructor (id, sprite, startPosition, endPosition, time) {
         super(id, sprite);
-        this._smallScreenFactor = window.innerWidth <= 640 ? 2 : 1;
+        this._smallScreenFactor = getScreenFactor();
         this._isStatic = false;
         this._data.type = "MovingPlatform";
         this._data.movingSpeedFactor = 1;
-        this._isPlatformMovingHorizontally = this._data.moveBy.x !== 0;
+        this._timeToMove = time;
+        const FRAMES_IN_ANIMATION = this._timeToMove / 1000 * 60; // eslint-disable-line no-magic-numbers
+        this._data.moveBy = {
+            x: Math.abs(endPosition.x - startPosition.x) / (FRAMES_IN_ANIMATION),
+            y: Math.abs(endPosition.y - startPosition.y) / (FRAMES_IN_ANIMATION)
+        };
+        this._isPlatformMovingHorizontally = this._data.moveBy.x !== 0; // eslint-disable-line no-magic-numbers
 
         this._startPosition = {
             x: startPosition.x / this._smallScreenFactor,
@@ -18,14 +25,6 @@ export default class MovingPlatform extends Platform {
             x: endPosition.x / this._smallScreenFactor,
             y: endPosition.y / this._smallScreenFactor
         };
-
-        this._timeToMove = time;
-
-        this._data.moveBy = {
-            x: Math.abs(endPosition.x - startPosition.x) / (this._timeToMove / 1000 * 60),
-            y: Math.abs(endPosition.y - startPosition.y) / (this._timeToMove / 1000 * 60)
-        };
-
     }
 
     reverseMovementDirection () {

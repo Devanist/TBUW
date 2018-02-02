@@ -1,6 +1,8 @@
 import BlockCoinCurrency from '../Currencies/BlockCoin';
 import Collectible from './Collectible';
 
+const COLLECT_ANIMATION_STEPS = 15;
+
 export default class BlockCoin extends Collectible {
     constructor (id, quantity, position) {
         super(id, PIXI.loader.resources.sprites.textures["blockcoin"], position);
@@ -24,27 +26,31 @@ export default class BlockCoin extends Collectible {
         return {quantity: 0, name: "BlockCoin"};
     }
 
-    update () {
-        if (this._data.collected) {
-            const dest = {};
-            dest.x = -this._sprite.parent.position.x + 140;
-            dest.y = -this._sprite.parent.position.y + 40;
+    moveToContainerIfCollected () {
+        if (!this._data.collected) return;
 
-            var step = {
-                x: (dest.x - this._data.originPosition.x) / 15,
-                y: (dest.y - this._data.originPosition.y) / 15
-            };
+        const destination = {
+            x: -this._sprite.parent.position.x + 140, // eslint-disable-line no-magic-numbers
+            y: -this._sprite.parent.position.y + 40 // eslint-disable-line no-magic-numbers
+        };
 
-            this._data.position.x += step.x;
-            this._data.position.y += step.y;
-            if (this._data.position.x < dest.x && this._data.position.y < dest.y) {
-                this._data.toBeRemoved = true;
-            }
-            else {
-                this._sprite.position.x = this._data.position.x;
-                this._sprite.position.y = this._data.position.y;
-            }
+        var step = {
+            x: (destination.x - this._data.originPosition.x) / COLLECT_ANIMATION_STEPS,
+            y: (destination.y - this._data.originPosition.y) / COLLECT_ANIMATION_STEPS
+        };
+
+        this._data.position.x += step.x;
+        this._data.position.y += step.y;
+        this._sprite.position.x = this._data.position.x;
+        this._sprite.position.y = this._data.position.y;
+
+        if (this._data.position.x < destination.x && this._data.position.y < destination.y) {
+            this._data.toBeRemoved = true;
         }
+    }
+
+    update () {
+        this.moveToContainerIfCollected();
     }
 
     static get Properties () {
@@ -56,5 +62,4 @@ export default class BlockCoin extends Collectible {
             }
         }
     }
-
 }

@@ -1,15 +1,13 @@
 ///https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData
 
-import cfg from '../Assets/assets.json';
+import assets from '../Assets/assets.json';
 import Entities from '../Entities/Entities';
 import BoundaryBox from '../Debug/BoundaryBox';
 import Stage from './Stage';
 import GUI from '../GUI/GUI';
+import { isSmallScreen, getScreenFactor } from './Utils/commonVars';
 
-const MOBILE_WIDTH = 640;
 const GRAPHIC_NAME_OFFSET = -5;
-const MOBILE_FACTOR = 2;
-const DESKTOP_FACTOR = 1;
 const ARE_ASSETS_LOADED_CHECK_INTERVAL = 100;
 
 /**
@@ -20,7 +18,7 @@ const ARE_ASSETS_LOADED_CHECK_INTERVAL = 100;
  */
 export default class Loader {
     constructor () {
-        this._cfg = cfg;
+        this._cfg = assets;
         this._preloaded = false;
         this._progressCb = null;
         this._loadedAssets = 0;
@@ -37,47 +35,52 @@ export default class Loader {
         PIXI.loader.load();
     }
 
+    showLoadingScreen (rootStage) {
+        const Container = new Stage();
+        Container.add(new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off")));
+        const progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
+        progressbar.move({x: -255, y: 50});
+        Container.add(progressbar);
+        const blurFilter = new PIXI.filters.BlurFilter();
+        progressbar._sprite.filters = [blurFilter];
+        rootStage.add(Container);
+
+        return { Container, progressbar };
+    }
+
+    loadGraphics () {
+        this._cfg.graphics.forEach((graphic) => {
+            if (isSmallScreen() && graphic.name.substr(GRAPHIC_NAME_OFFSET) === "small") {
+                this._graphicAssets++;
+                PIXI.loader.add(graphic.name, graphic.path);
+            }
+            else if (!isSmallScreen() && graphic.name.substr(GRAPHIC_NAME_OFFSET) !== "small") {
+                this._graphicAssets++;
+                PIXI.loader.add(graphic.name, graphic.path);
+            }
+            this._allAssets = this._graphicAssets + this._cfg.sounds.length;
+        });
+    }
+
+    loadFonts () {
+        this._cfg.fonts.forEach((font) => {
+            this._graphicAssets += 1;
+            PIXI.loader.add(font.name, font.path);
+        });
+    }
+
     /**
      * Method loading all assets given in config. When they all are loaded it triggers given callback function.
      * @param {function} callback Callback method
      */
     loadAssets (callback, speaker, rootStage) {
-        const that = this;
-
         if (this._preloaded) {
-            //Show loading screen
-            const Container = new Stage();
-            Container.add(new GUI.Image("loadingScreen", "center", PIXI.Texture.fromFrame("loading_off")));
-            const progressbar = new GUI.Image("progressbar", "center", PIXI.Texture.fromFrame("loading_progressbar"));
-            progressbar.move({x: -255, y: 50});
-            Container.add(progressbar);
-            const blurFilter = new PIXI.filters.BlurFilter();
-            progressbar._sprite.filters = [blurFilter];
-            rootStage.add(Container);
+            const that = this;
+            const { Container, progressbar } = this.showLoadingScreen(rootStage);
 
-            //Load assets
-            this._cfg.graphics.forEach((graphic) => {
-                if (window.innerWidth <= MOBILE_WIDTH) {
-                    if (graphic.name.substr(GRAPHIC_NAME_OFFSET) === "small") {
-                        this._graphicAssets++;
-                        PIXI.loader.add(graphic.name, graphic.path);
-                    }
-                }
-                else {
-                    if (graphic.name.substr(GRAPHIC_NAME_OFFSET) !== "small") {
-                        this._graphicAssets++;
-                        PIXI.loader.add(graphic.name, graphic.path);
-                    }
-                }
-                this._allAssets = this._graphicAssets + this._cfg.sounds.length;
-            });
-
-            this._cfg.fonts.forEach((font) => {
-                this._graphicAssets += 1;
-                PIXI.loader.add(font.name, font.path);
-            });
-
-            this.loadSounds(cfg.sounds, speaker);
+            this.loadGraphics();
+            this.loadFonts();
+            this.loadSounds(assets.sounds, speaker);
 
             PIXI.loader.once('complete', function cb () {
                 if (that._areSoundsLoaded) {
@@ -151,12 +154,12 @@ export default class Loader {
             cinematicConfig.push(animation);
         })
 
-        const music = !cfg.music_offset
-            ? {
-                name: cfg.music,
-                offset: cfg.music_offset
-            }
-            : cfg.music;
+        const music = !config.music_offset
+            ? config.music
+            : {
+                name: config.music,
+                offset: config.music_offset
+            };
 
         cinematic.setMusic(music);
         cinematic.hasLoaded();
@@ -169,15 +172,16 @@ export default class Loader {
         }
 
         const loaderContext = this;
-        let ls = 0;
+        let loadedSounds = 0;
 
-        function soundOnLoad () {
-            ls += 1; //eslint-disable-line no-magic-numbers
-            speaker.addSoundToLibrary(this.response, this.assetName);
-            loaderContext._progressCb();
-            if (ls === config.length) {
-                loaderContext._areSoundsLoaded = true;
-            }
+        function onSoundLoaded () {
+            speaker.addSoundToLibrary(this.response, this.assetName, () => {
+                loadedSounds += 1; //eslint-disable-line no-magic-numbers
+                loaderContext._progressCb();
+                if (loadedSounds === config.length) {
+                    loaderContext._areSoundsLoaded = true;
+                }
+            });
         };
 
         config.forEach((sound) => {
@@ -185,7 +189,7 @@ export default class Loader {
             request.open("GET", sound.path, true);
             request.responseType = "arraybuffer";
             request.assetName = sound.name;
-            request.onload = soundOnLoad;
+            request.onload = onSoundLoaded;
             request.send();
         });
     }
@@ -235,7 +239,7 @@ export default class Loader {
                 default: throw new Error(`No such type as: ${entity.type}`);
             }
 
-            const small = window.innerWidth <= MOBILE_WIDTH ? MOBILE_FACTOR : DESKTOP_FACTOR;
+            const small = getScreenFactor();
 
             if (entity.rotation) element.setRotationAngle(entity.rotation);
             if (entity.anchor) element.setAnchor(entity.anchor);
@@ -275,15 +279,14 @@ export default class Loader {
             });
 
         function configToElements ( object ) {
-            let element;
-            const small = window.innerWidth <= MOBILE_WIDTH ? MOBILE_FACTOR : DESKTOP_FACTOR;
+            const small = getScreenFactor();
 
             if (object.options && object.options.fontSize && object.options.fontFamily) {
                 object.options.font = `${parseInt(object.options.fontSize) / small}px ${object.options.fontFamily}`;
             }
 
             const texture = object.texture ? PIXI.loader.resources.sprites.textures[object.texture] : null;
-
+            let element;
             switch (object.type) {
                 case "Image":
                     element = new GUI.Image(object.id, object.position, texture);
@@ -299,7 +302,7 @@ export default class Loader {
             }
 
             if (object.move) element.move(object.move);
-            if (object.visible) element.display(object.visible);
+            if (object.visible !== undefined) element.display(object.visible);
 
             return element;
         }

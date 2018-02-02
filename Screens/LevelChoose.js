@@ -1,8 +1,8 @@
 import Screen from '../Core/Screen';
 import GUI from '../GUI/GUI';
 import * as PIXI from 'pixi.js';
-import getScreenFactor from '../Core/Utils/commonVars';
 import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+import { getScreenFactor } from '../Core/Utils/commonVars';
 
 export default class LevelChoose extends Screen {
     constructor (params) {

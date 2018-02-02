@@ -52,7 +52,7 @@ export default class Mouse {
      * @returns {array}
      */
     getClicks () {
-        return this._clicks.splice(0);
+        return this._clicks.splice(0); // eslint-disable-line no-magic-numbers
     }
 
     /**

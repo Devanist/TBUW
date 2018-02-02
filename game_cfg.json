@@ -1,4 +1,4 @@
 {
     "initScreen": "menu",
-    "showBorderLines": false
+    "showBorderLines": true
 }

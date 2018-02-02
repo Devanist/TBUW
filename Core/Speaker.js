@@ -1,32 +1,44 @@
+const MAX_GAIN_VALUE = 1;
+
+function createAudioContext () {
+    if (typeof AudioContext !== "undefined") {
+        return new AudioContext();
+    }
+    else if (typeof webkitAudioContext !== "undefined") {
+        return new webkitAudioContext();
+    }
+    else {
+        throw new Error("AudioContext not supported!");
+    }
+}
+
 export default class Speaker {
     constructor () {
-        this._context = null;
-        if (typeof AudioContext !== "undefined") {
-            this._context = new AudioContext();
-        }
-        else if (typeof webkitAudioContext !== "undefined") {
-            this._context = new webkitAudioContext();
-        }
-        else {
-            throw new Error("AudioContext not supported!");
-        }
+        this._context = createAudioContext();
         this._gainNode = this._context.createGain();
         this._gainNode.connect(this._context.destination);
         this._soundsLibrary = {};
         this._soundsPlaying = [];
     }
 
-    addSoundToLibrary (audioData, name) {
-        this._context.decodeAudioData(audioData, (soundBuffer) => { this._soundsLibrary[name] = soundBuffer });
+    addSoundToLibrary (audioData, name, successCallback) {
+        this._context.decodeAudioData(audioData, (soundBuffer) => {
+            this._soundsLibrary[name] = soundBuffer;
+            successCallback();
+        });
     }
 
-    update (sounds) {
-        if (this._gainNode.gain.value < 1) {
+    increaseGainIfNotMax () {
+        if (this._gainNode.gain.value < MAX_GAIN_VALUE) {
             this._gainNode.gain.value += 0.005;
-            if (this._gainNode.gain.value > 1) {
+            if (this._gainNode.gain.value > MAX_GAIN_VALUE) {
                 this._gainNode.gain.value = 1;
             }
         }
+    }
+
+    update (sounds) {
+        this.increaseGainIfNotMax();
 
         sounds.forEach((sound) => {
             if (sound.stop && (sound.name in this._soundsLibrary || sound.name === "all")) {
@@ -74,7 +86,7 @@ export default class Speaker {
 
         node.onended = () => {
             this._soundsPlaying.forEach((soundPlaying, index) => {
-                if (soundPlaying && soundPlaying.name === node.name) this._soundsPlaying.splice(index, 1);
+                if (soundPlaying && soundPlaying.name === node.name) this._soundsPlaying.splice(index, 1); // eslint-disable-line no-magic-numbers
             });
         };
 
@@ -88,6 +100,7 @@ export default class Speaker {
 
     stop (sound) {
         const ONLY_ELEMENT = 0;
+
         if (sound === "all") {
             this._soundsPlaying.forEach((soundPlaying) => { soundPlaying.stop() });
             this._soundsPlaying = [];
@@ -95,7 +108,7 @@ export default class Speaker {
         else {
             const soundIndex = this._soundsPlaying.findIndex((soundPlaying) => soundPlaying.name === sound);
             this._soundsPlaying[soundIndex].stop();
-            delete this._soundsPlaying.splice(soundIndex, 1)[ONLY_ELEMENT];
+            delete this._soundsPlaying.splice(soundIndex, 1)[ONLY_ELEMENT]; // eslint-disable-line no-magic-numbers
         }
     }
 }

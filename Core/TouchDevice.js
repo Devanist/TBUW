@@ -19,13 +19,13 @@ export default class TouchDevice {
 
         if (!event.changedTouches) {
             const index = this.ongoingTouchIndexById(event.pointerId);
-            this._onGoingTouches.splice(index, 1);
+            this._onGoingTouches.splice(index, 1); // eslint-disable-line no-magic-numbers
             return;
         }
 
         event.changedTouches.forEach((touch) => {
             const index = this.ongoingTouchIndexById(touch.identifier);
-            this._onGoingTouches.splice(index, 1);
+            this._onGoingTouches.splice(index, 1); // eslint-disable-line no-magic-numbers
         });
     }
 
@@ -33,13 +33,13 @@ export default class TouchDevice {
         event.preventDefault();
         if (!event.changedTouches) {
             const index = this.ongoingTouchIndexById(event.pointerId);
-            this._onGoingTouches.splice(index, 1);
+            this._onGoingTouches.splice(index, 1); // eslint-disable-line no-magic-numbers
             return;
         }
 
         event.changedTouches.forEach((touch) => {
             const index = this.ongoingTouchIndexById(touch.identifier);
-            this._onGoingTouches.splice(index, 1);
+            this._onGoingTouches.splice(index, 1); // eslint-disable-line no-magic-numbers
         });
     }
 
@@ -48,12 +48,12 @@ export default class TouchDevice {
         if (event.changedTouches) {
             event.changedTouches.forEach((touch) => {
                 const index = this.ongoingTouchIndexById(touch.identifier);
-                if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(touch));
+                if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(touch)); // eslint-disable-line no-magic-numbers
             });
         }
         else {
             const index = this.ongoingTouchIndexById(event.pointerId);
-            if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(event));
+            if (index > -1) this._onGoingTouches.splice(index, 1, this.copyTouch(event)); // eslint-disable-line no-magic-numbers
         }
     }
 

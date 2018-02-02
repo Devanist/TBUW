@@ -7,6 +7,7 @@ import TouchDevice from './Core/TouchDevice';
 import Mouse from './Core/Mouse';
 import Utils from './Core/Utils';
 import Speaker from './Core/Speaker';
+import { isSmallScreen } from './Core/Utils/commonVars';
 
 const MOBILE_WIDTH = 640;
 const MOBILE_HEIGHT = 360;
@@ -23,7 +24,7 @@ const keyboard = new Keyboard();
 const speaker = new Speaker();
 const touch = new TouchDevice();
 const mouse = new Mouse();
-var logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
+const logic = new Logic(loader, rootStage, speaker, keyboard, mouse, touch);
 
 Application.backgroundColor = 0x000000;
 Application.autoResize = true;
@@ -45,8 +46,33 @@ loader.setProgressCb(function () {
     loader.incrementLoadedAssets();
     console.log('Loaded ' + loader.assetsLoaded() + ' of total ' + loader.allAssets());
 });
-loader.loadAssets(function (datloader, resources) {
-    //Here assets are already loaded, init the game, set input listeners.
+loader.loadAssets(onAssetsLoaded, speaker, rootStage);
+
+function animate () {
+    Application.stage.addChild(rootStage.getStage());
+    requestAnimationFrame(animate);
+}
+
+function calculateScale () {
+    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+    return isSmallScreen()
+        ? {
+            x: windowWidth / MOBILE_WIDTH,
+            y: windowHeight / MOBILE_HEIGHT
+        }
+        : {
+            // Not using innerWidth so I can have always 16:10 ratio on desktop.
+            y: windowHeight / 800, // eslint-disable-line no-magic-numbers
+            x: windowHeight * 1.6 / 1280 // eslint-disable-line no-magic-numbers
+        };
+}
+
+function onAssetsLoaded () {
+    addEventListenersOnInputs();
+    logic.run();
+}
+
+function addEventListenersOnInputs () {
     window.addEventListener("keydown", keyboard.handleKeyDown.bind(keyboard), false);
     window.addEventListener("keyup", keyboard.handleKeyUp.bind(keyboard), false);
 
@@ -66,28 +92,4 @@ loader.loadAssets(function (datloader, resources) {
             window.addEventListener("touchmove", touch.handleTouchMove.bind(touch), false);
         }
     }
-    logic.run();
-}, speaker, rootStage);
-
-function animate () {
-    Application.stage.addChild(rootStage.getStage());
-    requestAnimationFrame(animate);
-}
-
-function calculateScale () {
-    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
-    return isMobile()
-        ? {
-            x: windowWidth / MOBILE_WIDTH,
-            y: windowHeight / MOBILE_HEIGHT
-        }
-        : {
-            // Not using innerWidth so I can have always 16:10 ratio on desktop.
-            y: windowHeight / 800, // eslint-disable-line no-magic-numbers
-            x: windowHeight * 1.6 / 1280 // eslint-disable-line no-magic-numbers
-        };
-}
-
-function isMobile () {
-    return window.innerWidth <= MOBILE_WIDTH;
 }

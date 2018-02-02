@@ -1,64 +1,55 @@
 import BaseElement from './BaseElement';
-    
-class Label extends BaseElement{
+import { isSmallScreen } from '../Core/Utils/commonVars';
 
-    constructor(id, position, text, style){
+export default class Label extends BaseElement {
+    constructor (id, position, text, style = {}) {
         super(id, position, null);
-        style = style || {};
-        if(style.bitmap){
+        if (style.bitmap) {
             style.font = {
-				size : style.fontSize,
-				name : style.fontFamily
+                size: style.fontSize,
+                name: style.fontFamily
             };
-            console.log(text);
-            console.log(style);
             this._sprite = new PIXI.extras.BitmapText(text, style);
-            this._sprite.containsPoint = function(pos){
-                if( pos.x >= this.position.x &&
+            this._sprite.containsPoint = function (pos) {
+                return ( pos.x >= this.position.x &&
                     pos.x <= this.position.x + this.textWidth &&
                     pos.y >= this.position.y &&
-                    pos.y <= this.position.y + this.textHeight){
-                        return true;
-                }
-                return false;
-
+                    pos.y <= this.position.y + this.textHeight);
             };
         }
-        else{
+        else {
             this._sprite = new PIXI.Text(text, style);
             this._sprite.anchor.x = 0.5;
             this._sprite.anchor.y = 0.5;
         }
-        if(typeof(position) === "string"){
-            if(position === "center"){
-                if(window.innerWidth <= 640){
-                    position = {
-                        x: window.innerWidth / 2 - this._sprite.width / 2,
-                        y: window.innerHeight / 2 - this._sprite.height /2
+        if (typeof(position) === "string") {
+            let elementPosition;
+            if (position === "center") {
+                elementPosition = isSmallScreen()
+                    ? {
+                        x: window.innerWidth / 2 - this._sprite.width / 2, // eslint-disable-line no-magic-numbers
+                        y: window.innerHeight / 2 - this._sprite.height /2 // eslint-disable-line no-magic-numbers
+                    }
+                    : {
+                        x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2, // eslint-disable-line no-magic-numbers
+                        y: window.innerHeight / 2 - this._sprite.height / 2 // eslint-disable-line no-magic-numbers
                     };
-                }
-                else{
-                    position = {
-                        x: (window.innerWidth / (window.innerHeight * 1.6 / 1280)) / 2 - this._sprite.width / 2,
-                        y: window.innerHeight / 2 - this._sprite.height / 2
-                    };
-                }
             }
-            this._sprite.position = position;
-            this._data.position = position;
+            this._sprite.position = elementPosition;
+            this._data.position = elementPosition;
         }
-        else{
-            if(window.innerWidth <= 640){
+        else {
+            if (isSmallScreen()) {
                 this._sprite.position = {
-                    x: position.x / 2,
-                    y: position.y / 2
+                    x: position.x / 2, // eslint-disable-line no-magic-numbers
+                    y: position.y / 2 // eslint-disable-line no-magic-numbers
                 };
                 this._data.position = {
-                    x: position.x / 2,
-                    y: position.y / 2
+                    x: position.x / 2, // eslint-disable-line no-magic-numbers
+                    y: position.y / 2 // eslint-disable-line no-magic-numbers
                 };
             }
-            else{
+            else {
                 this._sprite.position = {
                     x: position.x,
                     y: position.y
@@ -70,57 +61,53 @@ class Label extends BaseElement{
             }
         }
     }
-    
-    setText(text){
+
+    setText (text) {
         this._sprite.text = text;
     }
 
-    static get Properties(){
+    static get Properties () {
         return {
-            text : {
-                name : "Text",
-                type : "Text",
-                defaultValue : "Default text"
+            text: {
+                name: "Text",
+                type: "Text",
+                defaultValue: "Default text"
             },
-            options : {
-				name : "Options",
-				subFields : [
-					{
-						label : "Is bitmap",
-						name : "bitmap",
-						type : "Boolean",
-						defaultValue : false,
-					},
-					{
-						label : "Font size",
-						name : "fontSize",
-						type : "Number",
-						defaultValue : "14"
-					},
-					{
-						label : "Font family",
-						name : "fontFamily",
-						type : "Text",
-						defaultValue : "Arial"
-					},
-					{
-						label : "Fill color",
-						name : "fill",
-						type : "Text",
-						defaultValue : "0xffffff"
-					},
-					{
-						label : "Text align",
-						name : "align",
-						type : "Text",
-						defaultValue : "center"
-					}
-				]
-			}
+            options: {
+                name: "Options",
+                subFields: [
+                    {
+                        label: "Is bitmap",
+                        name: "bitmap",
+                        type: "Boolean",
+                        defaultValue: false,
+                    },
+                    {
+                        label: "Font size",
+                        name: "fontSize",
+                        type: "Number",
+                        defaultValue: "14"
+                    },
+                    {
+                        label: "Font family",
+                        name: "fontFamily",
+                        type: "Text",
+                        defaultValue: "Arial"
+                    },
+                    {
+                        label: "Fill color",
+                        name: "fill",
+                        type: "Text",
+                        defaultValue: "0xffffff"
+                    },
+                    {
+                        label: "Text align",
+                        name: "align",
+                        type: "Text",
+                        defaultValue: "center"
+                    }
+                ]
+            }
         };
     }
-
 }
-
-
-export default Label;

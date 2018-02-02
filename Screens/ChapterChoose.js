@@ -1,9 +1,9 @@
 import Screen from '../Core/Screen';
 import cfg from '../Assets/Chapters.json';
 import GUI from '../GUI/GUI';
-import { getScreenFactor } from '../Core/Utils';
 import * as PIXI from 'pixi.js';
 import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+import { getScreenFactor } from '../Core/Utils/commonVars';
 
 function generateItemsPositions () {
     const ROWS_NUMBER = 2;

@@ -1,6 +1,7 @@
 import Screen from '../Core/Screen';
 import Stage from '../Core/Stage';
-import { isTouchDevice, getScreenFactor} from '../Core/Utils';
+import Utils from '../Core/Utils';
+import { getScreenFactor} from '../Core/Utils/commonVars';
 import TouchController from '../Core/TouchController';
 import * as PIXI from 'pixi.js';
 import { handleTouchInput, handleMouseInput, handleKeyboardInput } from './commonChoosingScreensHandlers';
@@ -14,7 +15,7 @@ function setUpDisplacementFilter () {
     displacementMap.r = 1;
     displacementMap.g = 1;
 
-    const displacement = new PIXI.filters.DisplacementFilter(this._displacementmap);
+    const displacement = new PIXI.filters.DisplacementFilter(displacementMap);
     displacement.scale.x = 1.5;
     displacement.scale.y = 2;
     displacement.offset = {
@@ -52,7 +53,7 @@ export default class GameScreen extends Screen {
         this._smallScreenFactor = getScreenFactor();
         this._displacement = setUpDisplacementFilter();
 
-        if (isTouchDevice()) this._stage.add(this._touchController.getStage());
+        if (Utils.isTouchDevice()) this._stage.add(this._touchController.getStage());
 
         this._GRAVITY = 0.7 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
         this._AIR_RES = 0.2 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
@@ -64,7 +65,7 @@ export default class GameScreen extends Screen {
         this._player = null;
 
         this._updateWorker = new Worker('Screens/GameWorker.js');
-        this._updateWorker.onmessage = this.handleWorkerMessage;
+        this._updateWorker.onmessage = this.handleWorkerMessage.bind(this);
     }
 
     getPlayerReference () {
@@ -73,23 +74,18 @@ export default class GameScreen extends Screen {
 
     handleWorkerMessage (respond) {
         const anwser = JSON.parse(respond.data);
+
         if (anwser.LOSE) {
             this._lose = true;
         }
         else if (anwser.WON && !this._isPause) {
             this._won = true;
-            this._guiStage.getElement("pauseBackground").display(true);
-            this._guiStage.getElement("wonLabel").display(true);
-            this._guiStage.getElement("wonButton").display(true).active(true);
-
-            this._isPause = true;
+            this.showWinWindow();
+            this._updateWorker.terminate();
         }
-        if (this._lose === true && !this._isPause) {
-            this._guiStage.getElement("pauseBackground").display(true);
-            this._guiStage.getElement("LOSE").display(true);
-            this._guiStage.getElement("RETRY").display(true).active(true);
 
-            this._isPause = true;
+        if (this._lose && !this._isPause) {
+            this.showLoseWindow();
             this._updateWorker.terminate();
         }
         this._sounds = anwser.SOUNDS;
@@ -156,37 +152,63 @@ export default class GameScreen extends Screen {
             this._escapeDown = false;
 
             if (this._isPause === true) {
-                this._guiStage.getElement("pauseBackground").display(true);
-                this._guiStage.getElement("pauseLabel").display(true);
-                this._guiStage.getElement("resumeButton")
-                    .display(true)
-                    .active(true)
-                    .setCallback(
-                        () => {
-                            this.pauseHandler();
-                        }
-                    );
-
-                this._guiStage.getElement("returnButton")
-                    .display(true)
-                    .setCallback(
-                        () => {
-                            this._onUpdateAction = this.EVENT.CHANGE;
-                            this._nextScreen = "level_choose";
-                            this._nextScreenParams = {
-                                cfg: this._back
-                            };
-                        }
-                    );
+                this.showPauseWindow();
             }
             else {
-                this._guiStage.getElement("pauseBackground").display(false);
-                this._guiStage.getElement("pauseLabel").display(false);
-                this._guiStage.getElement("resumeButton").display(false);
-                this._guiStage.getElement("returnButton").display(false);
+                this.showPauseWindow(false);
             }
         }
     };
+
+    showPauseWindow (shouldShow = true) {
+        if (shouldShow) {
+            this._guiStage.getElement("pauseBackground").display(true);
+            this._guiStage.getElement("pauseLabel").display(true);
+
+            this._guiStage.getElement("resumeButton")
+                .display(true)
+                .active(true)
+                .setCallback(
+                    () => {
+                        this.pauseHandler();
+                    }
+                );
+
+            this._guiStage.getElement("returnButton")
+                .display(true)
+                .setCallback(
+                    () => {
+                        this._onUpdateAction = this.EVENT.CHANGE;
+                        this._nextScreen = "level_choose";
+                        this._nextScreenParams = {
+                            cfg: this._back
+                        };
+                    }
+                );
+        }
+        else {
+            this._guiStage.getElement("pauseBackground").display(false);
+            this._guiStage.getElement("pauseLabel").display(false);
+            this._guiStage.getElement("resumeButton").display(false);
+            this._guiStage.getElement("returnButton").display(false);
+        }
+    }
+
+    showWinWindow () {
+        this._guiStage.getElement("pauseBackground").display(true);
+        this._guiStage.getElement("wonLabel").display(true);
+        this._guiStage.getElement("wonButton").display(true).active(true);
+
+        this._isPause = true;
+    }
+
+    showLoseWindow () {
+        this._guiStage.getElement("pauseBackground").display(true);
+        this._guiStage.getElement("LOSE").display(true);
+        this._guiStage.getElement("RETRY").display(true).active(true);
+
+        this._isPause = true;
+    }
 
     everythingLoaded () {
         this._guiStage.getElement("wonButton").setCallback(
@@ -210,15 +232,15 @@ export default class GameScreen extends Screen {
     };
 
     clearStage (elementsToRemove) {
-        elementsToRemove.forEach((item) => {
-            this._gameStage._elements.forEach((elem) => {
-                if (item === elem.getId()) {
-                    if (elem.getType() === "BlockCoin") {
-                        if (elem._data.toBeRemoved) {
-                            this._gameStage.remove(item);
+        elementsToRemove.forEach((itemToRemove) => {
+            this._gameStage._elements.forEach((element) => {
+                if (itemToRemove === element.getId()) {
+                    if (element.getType() === "BlockCoin") {
+                        if (element._data.toBeRemoved) {
+                            this._gameStage.remove(itemToRemove);
                             this._sounds.push({ name: "collect_coin" });
                         }
-                        this._player.collectCurrency(elem.collect());
+                        this._player.collectCurrency(element.collect());
                     }
                 }
             });
@@ -269,7 +291,7 @@ export default class GameScreen extends Screen {
         backgroundImageSprite.width = backgroundImageSprite._texture.baseTexture.realWidth * window.innerWidth / window.innerHeight;
 
         handleMouseInput.call(this, clicks);
-        if (isTouchDevice()) this._touchController.updateState(touches);
+        if (Utils.isTouchDevice()) this._touchController.updateState(touches);
         handleTouchInput.call(this, touches);
 
         // Handling escape key here so it can work both in and outside pause menu.

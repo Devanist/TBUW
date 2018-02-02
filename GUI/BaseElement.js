@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import isSmallScreen from '../Core/Utils/commonVars';
+import { isSmallScreen } from '../Core/Utils/commonVars';
 
 /**
  * Abstract class which is a base for GUI elements.
@@ -14,6 +14,7 @@ export default class BaseElement {
     constructor (id, position, sprite) {
         const isScreenSmall = isSmallScreen();
         this._sprite = new PIXI.Sprite(sprite);
+
         if (typeof(position) === "string") {
             if (position === "center") {
                 this._sprite.position = isScreenSmall
@@ -61,7 +62,10 @@ export default class BaseElement {
         this._data = {
             enabled: false,
             active: false,
-            position: {x: this._sprite.position.x, y: this._sprite.position.y},
+            position: {
+                x: this._sprite.position.x,
+                y: this._sprite.position.y
+            },
             type: "",
             rotation: 0,
             currentRotationAngle: 0

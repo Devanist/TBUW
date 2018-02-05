@@ -1,6 +1,6 @@
 import Screen from '../Core/Screen';
 import * as PIXI from 'pixi.js';
-import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+import GUIInputHandler from '../Core/GUIInputHandler';
 import { getScreenFactor } from '../Core/Utils/commonVars';
 
 export default class MenuScreen extends Screen {
@@ -9,7 +9,6 @@ export default class MenuScreen extends Screen {
 
         this._screenFactor = getScreenFactor();
         this._sounds = [];
-        this._buttonPressedDown = false;
 
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
@@ -49,9 +48,7 @@ export default class MenuScreen extends Screen {
             ? window.innerWidth / (window.innerHeight * 1.6 / 1280) //eslint-disable-line no-magic-numbers
             : background._sprite.width = 640; //eslint-disable-line no-magic-numbers
 
-        handleKeyboardInput.call(this, keysState);
-        handleMouseInput.call(this, clicks);
-        handleTouchInput.call(this, touches);
+        GUIInputHandler.call(this, keysState, clicks, touches);
 
         this._guiStage._elements.forEach((element) => {
             if (element.isEnabled() && element.isActive()) {

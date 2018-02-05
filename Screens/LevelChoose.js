@@ -1,7 +1,7 @@
 import Screen from '../Core/Screen';
 import GUI from '../GUI/GUI';
 import * as PIXI from 'pixi.js';
-import { handleMouseInput, handleKeyboardInput, handleTouchInput } from './commonChoosingScreensHandlers';
+import GUIInputHandler from '../Core/GUIInputHandler';
 import { getScreenFactor } from '../Core/Utils/commonVars';
 
 export default class LevelChoose extends Screen {
@@ -9,7 +9,6 @@ export default class LevelChoose extends Screen {
         super();
 
         this._levels = params.cfg;
-        this._buttonPressedDown = false;
         this._displacementmap = PIXI.Sprite.fromImage("Assets/Gfx/displacement_map.png");
         this._displacementmap.r = 1;
         this._displacementmap.g = 1;
@@ -70,9 +69,7 @@ export default class LevelChoose extends Screen {
         const MAX_DISPLACEMENT_Y_SCALE = 6;
         const INITIAL_DISPLACEMENT_Y_SCALE = 1;
 
-        handleKeyboardInput.call(this, keysState);
-        handleMouseInput.call(this, clicks);
-        handleTouchInput.call(this, touches);
+        GUIInputHandler.call(this, keysState, clicks, touches);
 
         this._guiStage._elements.forEach((element) => {
             if (element.isEnabled() && element.isActive()) {

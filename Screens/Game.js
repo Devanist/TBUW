@@ -4,7 +4,7 @@ import Utils from '../Core/Utils';
 import { getScreenFactor} from '../Core/Utils/commonVars';
 import TouchController from '../Core/TouchController';
 import * as PIXI from 'pixi.js';
-import { handleTouchInput, handleMouseInput, handleKeyboardInput } from './commonChoosingScreensHandlers';
+import { handleTouchInput, handleMouseInput, handleKeyboardInput } from '../Core/GUIInputHandler';
 
 const BACKGROUND_IMAGE_INDEX = 0;
 const MAX_DISPLACEMENT_Y_SCALE = 6;
@@ -58,7 +58,6 @@ export default class GameScreen extends Screen {
         this._GRAVITY = 0.7 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
         this._AIR_RES = 0.2 / this._smallScreenFactor; // eslint-disable-line no-magic-numbers
 
-        this._buttonPressedDown = false;
         this._escapeDown = true;
         this._isPause = false;
 

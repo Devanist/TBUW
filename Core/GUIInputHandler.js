@@ -1,15 +1,18 @@
 import isTouchDevice from "../Core/Utils/isTouchDevice";
 
+let buttonPressedDown = false;
+
 export function handleKeyboardInput (keysState) {
     const FIRST_ELEMENT = 0;
     const LAST_ELEMENT = this._guiStage._elements.length - 1; //eslint-disable-line no-magic-numbers
 
     const OLD_ELEMENT_HIGHLIGHTED = 1;
     const NEW_ELEMENT_HIGHLIGHTED = 2;
-    let element, step, elementIndex;
+    let element, step, elementIndex = FIRST_ELEMENT;
 
-    if ((keysState.ARROW_DOWN || keysState.S) && !this._buttonPressedDown) {
-        this._buttonPressedDown = true;
+
+    if ((keysState.ARROW_DOWN || keysState.S) && !buttonPressedDown) {
+        buttonPressedDown = true;
         while (step !== NEW_ELEMENT_HIGHLIGHTED) {
             if (elementIndex === this._guiStage._elements.length) elementIndex = FIRST_ELEMENT;
 
@@ -31,8 +34,8 @@ export function handleKeyboardInput (keysState) {
         }
     }
 
-    if ((keysState.ARROW_UP || keysState.W) && this._buttonPressedDown === false) {
-        this._buttonPressedDown = true;
+    if ((keysState.ARROW_UP || keysState.W) && buttonPressedDown === false) {
+        buttonPressedDown = true;
         while (step !== NEW_ELEMENT_HIGHLIGHTED) {
             if (elementIndex === -1) { //eslint-disable-line no-magic-numbers
                 elementIndex = LAST_ELEMENT;
@@ -62,7 +65,7 @@ export function handleKeyboardInput (keysState) {
     }
 
     if (!keysState.ARROW_DOWN && !keysState.S && !keysState.ARROW_UP && !keysState.W) {
-        this._buttonPressedDown = false;
+        buttonPressedDown = false;
     }
 }
 
@@ -84,4 +87,10 @@ export function handleTouchInput (touches) {
             if (element.triggerCallback && element._sprite.containsPoint({x, y})) element.triggerCallback();
         });
     });
+}
+
+export default function GUIInputHandler (keysState, clicks, touches) {
+    handleKeyboardInput.call(this, keysState);
+    handleMouseInput.call(this, clicks);
+    handleTouchInput.call(this, touches);
 }

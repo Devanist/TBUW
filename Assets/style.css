@@ -1,4 +1,4 @@
-body{
+body {
 	margin: 0;
 	border: 0;
 	padding: 0;
@@ -6,7 +6,8 @@ body{
     -ms-touch-action: none;
 	touch-action: none;
 }
-canvas{
+
+canvas {
     -ms-touch-action: none;
 	touch-action: none;
 }

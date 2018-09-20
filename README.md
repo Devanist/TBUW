@@ -1,10 +1,4 @@
-# Przemyslaw_Lewandowski_187755
-
-Na branchy master rozwijana jest wersja na przeglądarki, jako, 
-że dużą część gry piszę na laptopie, na którym niestety Visual Studio się nie mieści.
-
-Na branchy visual natomiast, jest projekt z VS, do którego przenoszone są zmiany z mastera
-i w miarę potrzeb dostosowywane.
+# HTML5 Game creating tool with demo
 
 ##game_cfg.json
 Plik konfiguracyjny gry. Poniżej są opisane jego pola i ich wartości.
@@ -20,7 +14,7 @@ Plik konfiguracyjny gry. Poniżej są opisane jego pola i ich wartości.
 	+ true
 	+ false
 
-##Muzyka w grze
+## Muzyka w grze
 Muzyka w grze jest na licencji Creative Commons Attribution 3.0 - http://bit.ly/RFP_CClicense  
 Znaleziona w serwisie YouTube na kanale RoyaltyFreePlanet https://www.youtube.com/channel/UC6-wx-04aMXk6a3m_fSXLEw/featured  
 Lista utworów wykorzystanych w projekcie:  

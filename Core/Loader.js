@@ -267,44 +267,44 @@ export default class Loader {
     loadGUILayer (GUI_stage, Background_stage, config) {
 
         config.Background.children
-            .map(configToElements)
+            .map(this.configToElements)
             .forEach( (el) => {
                 Background_stage.add(el);
             });
 
         config.GUI.children
-            .map(configToElements)
+            .map(this.configToElements)
             .forEach( (el) => {
                 GUI_stage.add(el);
             });
+    }
 
-        function configToElements ( object ) {
-            const small = getScreenFactor();
+    configToElements ( object ) {
+        const small = getScreenFactor();
 
-            if (object.options && object.options.fontSize && object.options.fontFamily) {
-                object.options.font = `${parseInt(object.options.fontSize) / small}px ${object.options.fontFamily}`;
-            }
-
-            const texture = object.texture ? PIXI.loader.resources.sprites.textures[object.texture] : null;
-            let element;
-            switch (object.type) {
-                case "Image":
-                    element = new GUI.Image(object.id, object.position, texture);
-                    break;
-                case "Label":
-                    element = new GUI.Label(object.id, object.position, object.text, object.options);
-                    break;
-                case "Button":
-                    element = new GUI.Button(object.id, object.position, texture, object.text, object.options);
-                    break;
-                default:
-                    throw new Error(`Bad type: ${object.type}`);
-            }
-
-            if (object.move) element.move(object.move);
-            if (object.visible !== undefined) element.display(object.visible);
-
-            return element;
+        if (object.options && object.options.fontSize && object.options.fontFamily) {
+            object.options.font = `${parseInt(object.options.fontSize) / small}px ${object.options.fontFamily}`;
         }
+
+        const texture = object.texture ? PIXI.loader.resources.sprites.textures[object.texture] : null;
+        let element;
+        switch (object.type) {
+            case "Image":
+                element = new GUI.Image(object.id, object.position, texture);
+                break;
+            case "Label":
+                element = new GUI.Label(object.id, object.position, object.text, object.options);
+                break;
+            case "Button":
+                element = new GUI.Button(object.id, object.position, texture, object.text, object.options);
+                break;
+            default:
+                throw new Error(`Bad type: ${object.type}`);
+        }
+
+        if (object.move) element.move(object.move);
+        if (object.visible !== undefined) element.display(object.visible);
+
+        return element;
     }
 }
